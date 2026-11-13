@@ -70,7 +70,7 @@ from pawz.ui.controllers_page import ControllersPage
 from pawz.ui.rendering import ScalableIconLabel, configure_text_rendering, vector_icon
 
 ASSETS_DIR = Path(__file__).resolve().parent / "assets"
-APP_ICON = ASSETS_DIR / "squid.png"
+APP_ICON = ASSETS_DIR / "paws.png"
 SECTION_CONTENT_GAP = 18
 CONTROL_ROW_GAP = 12
 SHORTCUT_ROW_GAP = 6

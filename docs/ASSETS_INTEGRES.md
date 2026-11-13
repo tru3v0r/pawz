@@ -6,6 +6,8 @@ Les 18 modèles nommés du catalogue utilisent désormais chacun un SVG original
 
 Les dessins complets commerciaux du pack principal AL2009man ne sont toujours pas redistribués. Les paragraphes ci-dessous concernant ce pack restent applicables aux ressources effectivement importées.
 
+Le logo provisoire de pawz (deux empreintes de patte, dans l’esprit de l’émoji 🐾) est un dessin original : `ui/assets/paws.svg`, rendu en `paws.png` pour l’interface et en `paws.ico` (16 à 256 px) pour l’exécutable. Il ne reprend pas le dessin de l’émoji de Windows, qui appartient à Microsoft.
+
 Les icônes d’action de pawz sont des SVG originaux sous `ui/assets/icons/` (crayon, croix, duplication, réglages, profils et icône de site). Leurs variantes désactivées restent vectorielles. Les en-têtes rendent leur `QIcon` à la résolution courante, sans bitmap intermédiaire de 16 ou 20 px. Ces dessins reprennent les primitives déjà utilisées dans le code de pawz, sous la licence du projet.
 
 ## Bibliothèque AL2009man
