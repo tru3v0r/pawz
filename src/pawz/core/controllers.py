@@ -130,6 +130,8 @@ class ControllerManager(QObject):
         self._game_override: tuple[str, bool] | None = None
         self._game_checked = 0.0
         self.scroll_acc: dict[str, float] = {}
+        # (device, stick) pairs seen at rest since the device connected; see _stick().
+        self._sticks_at_rest: set[tuple[str, str]] = set()
         # perf_counter: time.monotonic() only advances in ~15.6 ms steps on Windows,
         # which gave 3 ticks out of 4 a zero dt (zero movement) at 250 Hz.
         self.last_poll = time.perf_counter()
@@ -228,6 +230,8 @@ class ControllerManager(QObject):
         for device in set(self.gestures.devices) - set(discovered):
             self._apply(self.gestures.remove_device(device))
         self.scroll_acc = {key: value for key, value in self.scroll_acc.items() if key in discovered}
+        kept = set(discovered) & previous  # a newly connected device starts unarmed
+        self._sticks_at_rest = {pair for pair in self._sticks_at_rest if pair[0] in kept}
         self._device_info = info
         self._mapping_cache = {}
         # Whole-dict replacement: the Qt thread may read these at any time.
@@ -367,6 +371,20 @@ class ControllerManager(QObject):
     def _release_button(self, device, button):
         self._apply(self.gestures.release(device, normalize_trigger(button)))
 
+    def _stick(self, key: str, stick: str, x: float, y: float,
+               deadzone: float) -> tuple[float, float]:
+        """Deadzoned stick position, ignored until the stick has been seen at rest.
+
+        Right after connecting, SDL can report a stale off-center position for a
+        Switch Pro controller until the stick physically moves, which drove the
+        pointer on its own. A stick only counts once it has been inside the deadzone.
+        """
+        if (key, stick) not in self._sticks_at_rest:
+            if radial_deadzone(x, y, deadzone) != (0.0, 0.0):
+                return 0.0, 0.0
+            self._sticks_at_rest.add((key, stick))
+        return radial_deadzone(x, y, deadzone)
+
     def poll(self):
         try:
             pygame.event.pump()
@@ -416,7 +434,7 @@ class ControllerManager(QObject):
                 if self.gestures.capture_active:
                     continue
                 # Speed normalized to ~60 Hz; right stick vertical scroll with accumulation.
-                x, y = radial_deadzone(axis(0), axis(1), p.deadzone)
+                x, y = self._stick(key, "LEFT", axis(0), axis(1), p.deadzone)
                 if x or y:
                     # Magnetism is always on in automatic mode, otherwise while ZR is held.
                     magnet_on = p.magnet_auto or self.gestures.is_pressed(key, MAGNET_TRIGGER)
@@ -425,7 +443,7 @@ class ControllerManager(QObject):
                                          p.mouse_speed * 60, p.magnet_background)
                     if event and p.magnet_haptics:
                         self._rumble(key, event)
-                _, scroll_y = radial_deadzone(axis(2), axis(3), p.deadzone)
+                _, scroll_y = self._stick(key, "RIGHT", axis(2), axis(3), p.deadzone)
                 wheel = scroll_y * p.scroll_speed * dt * 10
                 acc = self.scroll_acc.get(key, 0) - wheel
                 steps = int(acc)

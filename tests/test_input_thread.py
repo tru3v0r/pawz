@@ -36,6 +36,13 @@ def bridge():
     return SimpleNamespace(domain=lambda _process: "")
 
 
+def at_rest(manager):
+    """Mark every stick as already seen centered, as after normal use."""
+    manager._sticks_at_rest |= {(key, stick) for key in manager.controllers
+                                for stick in ("LEFT", "RIGHT")}
+    return manager
+
+
 def test_input_side_reads_a_private_copy_until_sync(qapp, fake_sdl):
     settings = Settings.defaults()
     manager = ControllerManager(settings, bridge(), threaded=False)
@@ -102,7 +109,7 @@ def test_every_tick_moves_the_cursor_even_if_the_coarse_clock_stalls(qapp, fake_
     monkeypatch.setattr(controllers.time, "monotonic", lambda: 100.0)
     moves = []
     monkeypatch.setattr(controllers.windows, "move", lambda dx, dy, *_args: moves.append(dx))
-    manager = ControllerManager(Settings.defaults(), bridge(), threaded=False)
+    manager = at_rest(ControllerManager(Settings.defaults(), bridge(), threaded=False))
     for _ in range(8):
         clock[0] += 0.004
         manager.poll()
@@ -120,7 +127,7 @@ def test_magnet_events_rumble_the_controller_that_moved_the_cursor(qapp, fake_sd
     fake_sdl.append(pad)
     events = iter(["captured", None, "released"])
     monkeypatch.setattr(controllers.windows, "move", lambda *_args: next(events))
-    manager = ControllerManager(Settings.defaults(), bridge(), threaded=False)
+    manager = at_rest(ControllerManager(Settings.defaults(), bridge(), threaded=False))
     for _ in range(3):
         manager.poll()
     assert [c.args for c in pad.rumble.call_args_list] == [
@@ -145,7 +152,7 @@ def test_no_rumble_when_haptics_are_disabled_in_the_profile(qapp, fake_sdl, monk
     monkeypatch.setattr(controllers.windows, "move", lambda *_args: "captured")
     settings = Settings.defaults()
     settings.profiles["Default"].magnet_haptics = False
-    manager = ControllerManager(settings, bridge(), threaded=False)
+    manager = at_rest(ControllerManager(settings, bridge(), threaded=False))
     manager.poll()
     pad.rumble.assert_not_called()
     manager.stop()
@@ -162,13 +169,64 @@ def test_without_automatic_mode_the_magnet_only_works_while_zr_is_held(
                         lambda _dx, _dy, strength, *_args: strengths.append(strength))
     settings = Settings.defaults()
     settings.profiles["Default"].magnet_auto = False
-    manager = ControllerManager(settings, bridge(), threaded=False)
+    manager = at_rest(ControllerManager(settings, bridge(), threaded=False))
     manager.poll()
     trigger[0] = 1.0
     manager.poll()
     trigger[0] = 0.0
     manager.poll()
     assert strengths == [0, 50, 0]
+    manager.stop()
+
+
+def test_stick_off_center_at_connection_is_ignored_until_seen_at_rest(
+        qapp, fake_sdl, monkeypatch):
+    # Switch Pro over SDL: a stale off-center position right after connecting
+    # used to drive the pointer until the stick was touched.
+    left_x = [0.5]
+    pad = joystick(1)
+    pad.get_axis = lambda index: left_x[0] * 32767 if index == 0 else 0
+    fake_sdl.append(pad)
+    moves = []
+    monkeypatch.setattr(controllers.windows, "move", lambda dx, *_args: moves.append(dx))
+    manager = ControllerManager(Settings.defaults(), bridge(), threaded=False)
+    for _ in range(3):
+        manager.poll()
+    assert moves == []
+    left_x[0] = 0.05  # back inside the deadzone: the stick is now trusted
+    manager.poll()
+    left_x[0] = 0.8
+    manager.poll()
+    assert len(moves) == 1 and moves[0] > 0
+    manager.stop()
+
+
+def test_stale_right_stick_does_not_scroll_until_seen_at_rest(qapp, fake_sdl, monkeypatch):
+    pad = joystick(1)
+    pad.get_axis = lambda index: 0.9 * 32767 if index == 3 else 0
+    fake_sdl.append(pad)
+    scrolls = []
+    monkeypatch.setattr(controllers.windows, "scroll", scrolls.append)
+    manager = ControllerManager(Settings.defaults(), bridge(), threaded=False)
+    for _ in range(20):
+        manager.poll()
+    assert scrolls == []
+    manager.stop()
+
+
+def test_reconnected_device_must_center_its_sticks_again(qapp, fake_sdl, monkeypatch):
+    fake_sdl.append(joystick(1))
+    moves = []
+    monkeypatch.setattr(controllers.windows, "move", lambda dx, *_args: moves.append(dx))
+    manager = at_rest(ControllerManager(Settings.defaults(), bridge(), threaded=False))
+    fake_sdl.clear()
+    manager.poll()
+    stale = joystick(2)  # same pad back, reporting a stale off-center stick
+    stale.get_axis = lambda index: 0.5 * 32767 if index == 0 else 0
+    fake_sdl.append(stale)
+    for _ in range(3):
+        manager.poll()
+    assert moves == []
     manager.stop()
 
 
