@@ -1,14 +1,193 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "profiles": {
     "Default": {
       "name": "Default",
-      "global_bindings": {"x": {"action":"left_click"}, "y": {"action":"right_click"}, "l": {"action":"previous"}, "r": {"action":"next"}, "minus": {"action":"volume_down"}, "plus": {"action":"volume_up"}, "home": {"action":"win"}, "right_stick": {"action":"middle_click"}, "dpad_up": {"action":"key_combo","keys":"up"}, "dpad_down": {"action":"key_combo","keys":"down"}, "dpad_left": {"action":"key_combo","keys":"left"}, "dpad_right": {"action":"key_combo","keys":"right"}},
-      "apps": {"firefox.exe":{"l":{"action":"tab_previous"},"r":{"action":"tab_next"}},"brave.exe":{"l":{"action":"tab_previous"},"r":{"action":"tab_next"}},"vlc.exe":{"a":{"action":"play_pause"}}},
-      "sites": {"youtube.com":{"x":{"action":"play_pause"},"y":{"action":"fullscreen"}}},
-      "mouse_speed": 16, "scroll_speed": 3, "deadzone": 0.18, "magnet_strength": 50
+      "global_bindings": {
+        "EAST": {
+          "action": "left_click",
+          "keys": ""
+        },
+        "SOUTH": {
+          "action": "right_click",
+          "keys": ""
+        },
+        "NORTH": {
+          "action": "key_combo",
+          "keys": "ctrl+c"
+        },
+        "WEST": {
+          "action": "key_combo",
+          "keys": "ctrl+v"
+        },
+        "LEFT_SHOULDER": {
+          "action": "previous",
+          "keys": ""
+        },
+        "RIGHT_SHOULDER": {
+          "action": "next",
+          "keys": ""
+        },
+        "BACK": {
+          "action": "volume_down",
+          "keys": ""
+        },
+        "START": {
+          "action": "volume_up",
+          "keys": ""
+        },
+        "GUIDE": {
+          "action": "win",
+          "keys": ""
+        },
+        "RIGHT_STICK": {
+          "action": "middle_click",
+          "keys": ""
+        },
+        "DPAD_UP": {
+          "action": "key_combo",
+          "keys": "up"
+        },
+        "DPAD_DOWN": {
+          "action": "key_combo",
+          "keys": "down"
+        },
+        "DPAD_LEFT": {
+          "action": "key_combo",
+          "keys": "left"
+        },
+        "DPAD_RIGHT": {
+          "action": "key_combo",
+          "keys": "right"
+        },
+        "SOUTH+LEFT_TRIGGER": {
+          "action": "key_combo",
+          "keys": "ctrl+z"
+        },
+        "EAST+LEFT_TRIGGER": {
+          "action": "key_combo",
+          "keys": "ctrl+y"
+        },
+        "NORTH+LEFT_TRIGGER": {
+          "action": "key_combo",
+          "keys": "ctrl+x"
+        },
+        "WEST+LEFT_TRIGGER": {
+          "action": "key_combo",
+          "keys": "ctrl+a"
+        },
+        "START+LEFT_TRIGGER": {
+          "action": "key_combo",
+          "keys": "ctrl+s"
+        },
+        "BACK+LEFT_TRIGGER": {
+          "action": "key_combo",
+          "keys": "backspace"
+        },
+        "DPAD_UP+LEFT_TRIGGER": {
+          "action": "key_combo",
+          "keys": "shift+up"
+        },
+        "DPAD_DOWN+LEFT_TRIGGER": {
+          "action": "key_combo",
+          "keys": "shift+down"
+        },
+        "DPAD_LEFT+LEFT_TRIGGER": {
+          "action": "key_combo",
+          "keys": "shift+left"
+        },
+        "DPAD_RIGHT+LEFT_TRIGGER": {
+          "action": "key_combo",
+          "keys": "shift+right"
+        },
+        "BACK+START": {
+          "action": "game_mode",
+          "keys": ""
+        }
+      },
+      "apps": {
+        "firefox.exe": {
+          "LEFT_SHOULDER": {
+            "action": "tab_previous",
+            "keys": ""
+          },
+          "RIGHT_SHOULDER": {
+            "action": "tab_next",
+            "keys": ""
+          }
+        },
+        "brave.exe": {
+          "LEFT_SHOULDER": {
+            "action": "tab_previous",
+            "keys": ""
+          },
+          "RIGHT_SHOULDER": {
+            "action": "tab_next",
+            "keys": ""
+          }
+        },
+        "chrome.exe": {
+          "LEFT_SHOULDER": {
+            "action": "tab_previous",
+            "keys": ""
+          },
+          "RIGHT_SHOULDER": {
+            "action": "tab_next",
+            "keys": ""
+          }
+        },
+        "msedge.exe": {
+          "LEFT_SHOULDER": {
+            "action": "tab_previous",
+            "keys": ""
+          },
+          "RIGHT_SHOULDER": {
+            "action": "tab_next",
+            "keys": ""
+          }
+        },
+        "vlc.exe": {
+          "SOUTH": {
+            "action": "play_pause",
+            "keys": ""
+          }
+        }
+      },
+      "sites": {
+        "youtube.com": {
+          "WEST": {
+            "action": "play_pause",
+            "keys": ""
+          },
+          "NORTH": {
+            "action": "fullscreen",
+            "keys": ""
+          }
+        }
+      },
+      "mouse_speed": 16.0,
+      "scroll_speed": 3.0,
+      "deadzone": 0.18,
+      "magnet_strength": 50.0,
+      "profile_id": "00000000-0000-0000-0000-000000000001",
+      "magnet_haptics": true,
+      "magnet_auto": true,
+      "magnet_background": false
     }
   },
-  "assignments": {}, "default_profile": "Default", "known_devices": {}, "browser_token": "GENERATED_AT_FIRST_LAUNCH", "port": 8765,
-  "startup_enabled": false, "start_minimized": false
+  "assignments": {},
+  "known_devices": {},
+  "browser_token": "GENERATED_AT_FIRST_LAUNCH",
+  "port": 8765,
+  "primary_device": null,
+  "startup_enabled": false,
+  "start_minimized": false,
+  "debug_window_on_startup": false,
+  "default_profile": "Default",
+  "controller_mappings": {},
+  "device_preferences": {},
+  "display_controller_model": "generic.sdl-gamecontroller",
+  "game_mode_auto": true,
+  "games": [],
+  "non_games": []
 }

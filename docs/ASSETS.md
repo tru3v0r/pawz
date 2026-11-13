@@ -1,19 +1,27 @@
-# Provenance des visuels
+# Bundled assets and their licences
 
-**État actuel :** voir [les SVG et polices intégrés](ASSETS_INTEGRES.md). Les 148 prompts autorisés et l’icône générique de la bibliothèque sont désormais embarqués, ainsi que Super Water. Le texte ci-dessous conserve la décision initiale, avant cette sélection ressource par ressource.
+## Original artwork (project licence, GPL-3.0-or-later)
 
-## État initial archivé
+- **Logo** (provisional): two paw prints in the spirit of the 🐾 emoji, drawn for pawz: `ui/assets/paws.svg`, rendered to `paws.png` for the interface and `paws.ico` (16 to 256 px) for the executable. It does not reuse Windows' emoji artwork, which belongs to Microsoft.
+- **Controller models**: each of the 18 named models has its own stylized SVG under `controllers/models/` (Xbox 360/One/One S/Series/Elite/Adaptive, DualShock/DualSense, Switch Pro/Joy-Con, Logitech F310/F510/F710, Steam Controller/Deck), with no manufacturer image or logo. They are not a hardware certification or calibration plans. The four X/Y axis icons are under `controllers/input-icons/`. `scripts/generate-controller-illustrations.py` regenerates them and the catalogue's SVG references.
+- **Action icons** (pencil, cross, duplicate, settings, profiles, website) under `ui/assets/icons/`, with vector disabled variants.
 
-Les quatre fichiers `src/pawz/ui/assets/controllers/{generic,xbox,playstation,nintendo}.svg` sont des illustrations vectorielles abstraites originales créées pour pawz. Ils sont distribués sous la licence GPL-3.0 du projet, sans reprise d’image, logo ou police de fabricant. Les SVG de raccourcis sont construits par le code Qt à partir de libellés textuels. Les marques citées identifient les modèles ; elles n’impliquent aucune affiliation.
+Brand names identify controller models; they imply no affiliation.
 
-## Gamepad Asset Pack : examen du 8 novembre 2026
+## AL2009man libraries (MIT)
 
-Source : https://github.com/AL2009man/Gamepad-Asset-Pack
+- **148 button SVGs** from [Gamepad Prompt Asset Pack](https://github.com/AL2009man/Gamepad-Prompt-Asset-Pack), revision `552d6448ffc4a6f84d488454878357ea375a59bd`, under `ui/assets/controllers/prompts/`: Shared, Nintendo, PlayStation and Xbox buttons, sticks, triggers, D-pads, paddles and context keys. Platform-specific Guide buttons are excluded, following the author's redistribution exception.
+- **Generic controller icon** from [Gamepad Asset Pack](https://github.com/AL2009man/Gamepad-Asset-Pack), revision `a6d1113b0b3b2438bbbcb08a33f9a25eb2391d7c`, file `Connection Icon Pack/Controller Type/SVG/VSCView Generic Controller.svg`, shipped as `library-generic.svg`.
 
-La racine distingue `Controller Asset Pack`, `Connection Icon Pack` et le sous-module `Gamepad-Prompt-Asset-Pack`. `Controller Asset Pack` contient notamment les dossiers DualSense, DualShock 4, Generic Controller Type, Nintendo Switch, Steam Controller, Steam Deck, Xbox 360 et Xbox Wireless. Le README décrit des SVG Inkscape, PNG et XCF, ainsi que certaines variantes contenues dans un même SVG.
+Author: **Al. Lopez / AL2009man**. Full MIT licences: `controllers/prompts/LICENSE.txt` and `controllers/Gamepad-Asset-Pack-LICENSE.txt`; the sub-pack README is kept. Files are stored unmodified; Qt selects the "Style - Outline (Black)" layer and composes combinations in memory. Prompt glyphs are vector paths, so Open Sans (which the author cites as the source of the letters) need not be installed. Coloured `-Color.svg` variants are preferred when they exist; colours never change logical ids or actions.
 
-Le dépôt annonce MIT, mais son README indique que la majorité des illustrations sont reprises de sources officielles ou recréées, et déconseille leur utilisation pour des produits commerciaux. Il cite également des symboles de touchpad d’un contributeur tiers. Cette licence globale ne permet pas de confirmer les droits sur chaque illustration de fabricant.
+`controllers/upstream-manifest.json` records the exact revision URL and SHA-256 of each file; `scripts/vendor-controller-assets.py` reproduces the download. Nothing is downloaded when the app runs.
 
-**Aucune ressource de ce pack n’est redistribuée par cette intégration.** L’alternative livrée est originale et libre. L’intégration des dessins exacts reste conditionnée à une vérification ressource par ressource. Un futur ajout devra conserver la notice MIT et les attributions spécifiques, documenter la source et la preuve d’autorisation. L’import utilisateur permet d’utiliser un dessin choisi sans l’inclure dans la distribution du projet.
+The full commercial controller drawings of the main pack are **not** redistributed: its README says most are taken or recreated from official sources, and the global MIT licence does not establish the rights on each manufacturer image. Users can import a drawing of their choice instead.
 
-Sources consultées : README et LICENSE à la racine ; arborescence de `Controller Asset Pack`. Aucune affirmation de licence sur une image individuelle n’est déduite de son seul emplacement.
+## Fonts
+
+- **Inter Regular / SemiBold**: `fonts/Inter-Regular.ttf` and `fonts/Inter-SemiBold.ttf`, SIL Open Font License 1.1 (`fonts/OFL.txt`). Their internal family name, `Inter 18pt`, is the one used in the stylesheet.
+- **Super Water**: original file distributed by fsuarez913 / All Super Font on [DaFont](https://www.dafont.com/super-water.font), shipped as `fonts/SuperWater.ttf`. The author states "Free for personal use & commercial use"; the archive has no separate licence. Its origin and that statement are kept in `fonts/SuperWater-NOTICE.txt`, without relicensing it under GPL or OFL.
+
+Qt loads the three fonts from the bundled files with `QFontDatabase.addApplicationFont` before creating any window; installed fonts are not needed.
