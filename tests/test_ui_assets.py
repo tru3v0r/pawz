@@ -23,9 +23,9 @@ def test_all_fonts_registered_from_bundle_without_system_font_lookup(qapp, monke
     monkeypatch.setattr(QFontDatabase, "families", system_lookup)
     windows._LOADED_FONT_PATHS.clear()
     windows.load_fonts()
-    assert {path.name for path in registered} == {"Inter-Regular.ttf", "Inter-SemiBold.ttf", "SuperWater.ttf"}
+    assert {path.name for path in registered} == {"Inter-Regular.ttf", "Inter-SemiBold.ttf", "MatchaStyle.ttf"}
     assert all(path.parent == windows.ASSETS_DIR / "fonts" for path in registered)
-    assert QFontInfo(QFont("Super Water", 12)).family() == "Super Water"
+    assert QFontInfo(QFont("Matcha Style", 12)).family() == "Matcha Style"
     assert QFontInfo(QFont("Inter 18pt", 12)).family() == "Inter 18pt"
 
 

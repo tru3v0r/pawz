@@ -1,0 +1,12 @@
+Matcha Style — Khurasan Studio (Jal Khurasan)
+
+Original unmodified font file: Matcha Style.ttf (packaged as MatchaStyle.ttf).
+Author's portfolio: https://www.behance.net/khurasan
+Author's site: https://www.khurasanstudio.com/
+
+The "More Info.txt" file shipped with the font states:
+"This product 100% free for personal use & commercial use."
+
+The downloaded archive contains no separate license file.
+This notice records its origin and the author's published permission; it does
+not relicense the font under the project's GPL or Inter's OFL.

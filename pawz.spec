@@ -70,7 +70,7 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['src/pawz/ui/assets/paws.ico'],
+    icon=['src/pawz/ui/assets/logo.ico'],
 )
 coll = COLLECT(
     exe,

@@ -26,7 +26,7 @@ try {
     if (-not $Result.started -or -not $Result.svg_valid -or $Result.models -lt 1) {
         throw "Startup/resource validation failed: $(ConvertTo-Json $Result -Compress)"
     }
-    if ($Result.fonts.'Super Water' -ne 'Super Water' -or $Result.fonts.'Inter 18pt' -ne 'Inter 18pt' -or -not $Result.library_prompt_valid) {
+    if ($Result.fonts.'Matcha Style' -ne 'Matcha Style' -or $Result.fonts.'Inter 18pt' -ne 'Inter 18pt' -or -not $Result.library_prompt_valid) {
         throw 'Bundled fonts or library SVG prompts failed to load.'
     }
     if (-not $Result.vector_icon_native_dpi) { throw 'Native-DPI SVG icon rendering failed.' }

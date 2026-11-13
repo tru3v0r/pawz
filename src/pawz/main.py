@@ -71,7 +71,7 @@ def main():
                 "svg_valid": bool(illustration and renderer_for(illustration).isValid()),
                 "devices": len(manager.controllers),
                 "fonts": {name: QFontInfo(QFont(name, 12)).family()
-                          for name in ("Super Water", "Inter 18pt")},
+                          for name in ("Matcha Style", "Inter 18pt")},
                 "library_prompt_valid": bool(prompt.renderer.isValid() and prompt.property("svgSources")),
                 "vector_icon_native_dpi": (not native_icon.isNull() and native_icon.width() == 36
                                            and native_icon.devicePixelRatio() == 2.0),

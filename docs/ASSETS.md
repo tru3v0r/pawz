@@ -2,7 +2,7 @@
 
 ## Original artwork (project licence, GPL-3.0-or-later)
 
-- **Logo** (provisional): two paw prints in the spirit of the 🐾 emoji, drawn for pawz: `ui/assets/paws.svg`, rendered to `paws.png` for the interface and `paws.ico` (16 to 256 px) for the executable. It does not reuse Windows' emoji artwork, which belongs to Microsoft.
+- **Logo**: a controller with four coloured buttons spelling P A W Z as the toes of a paw, drawn for pawz: `ui/assets/logo.png` (512 px) for the interface and `logo.ico` (16 to 256 px) for the executable. Working files (PSD, SVG, drafts) live in the git-ignored `design/` folder.
 - **Controller models**: each of the 18 named models has its own stylized SVG under `controllers/models/` (Xbox 360/One/One S/Series/Elite/Adaptive, DualShock/DualSense, Switch Pro/Joy-Con, Logitech F310/F510/F710, Steam Controller/Deck), with no manufacturer image or logo. They are not a hardware certification or calibration plans. The four X/Y axis icons are under `controllers/input-icons/`. `scripts/generate-controller-illustrations.py` regenerates them and the catalogue's SVG references.
 - **Action icons** (pencil, cross, duplicate, settings, profiles, website) under `ui/assets/icons/`, with vector disabled variants.
 
@@ -22,6 +22,6 @@ The full commercial controller drawings of the main pack are **not** redistribut
 ## Fonts
 
 - **Inter Regular / SemiBold**: `fonts/Inter-Regular.ttf` and `fonts/Inter-SemiBold.ttf`, SIL Open Font License 1.1 (`fonts/OFL.txt`). Their internal family name, `Inter 18pt`, is the one used in the stylesheet.
-- **Super Water**: original file distributed by fsuarez913 / All Super Font on [DaFont](https://www.dafont.com/super-water.font), shipped as `fonts/SuperWater.ttf`. The author states "Free for personal use & commercial use"; the archive has no separate licence. Its origin and that statement are kept in `fonts/SuperWater-NOTICE.txt`, without relicensing it under GPL or OFL.
+- **Matcha Style**: original file by Khurasan Studio, shipped as `fonts/MatchaStyle.ttf` and used for the app title. The author states "100% free for personal use & commercial use"; the archive has no separate licence. Its origin and that statement are kept in `fonts/MatchaStyle-NOTICE.txt`, without relicensing it under GPL or OFL.
 
 Qt loads the three fonts from the bundled files with `QFontDatabase.addApplicationFont` before creating any window; installed fonts are not needed.

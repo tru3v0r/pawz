@@ -70,7 +70,7 @@ from pawz.ui.controllers_page import ControllersPage
 from pawz.ui.rendering import ScalableIconLabel, configure_text_rendering, vector_icon
 
 ASSETS_DIR = Path(__file__).resolve().parent / "assets"
-APP_ICON = ASSETS_DIR / "paws.png"
+APP_ICON = ASSETS_DIR / "logo.png"
 SECTION_CONTENT_GAP = 18
 CONTROL_ROW_GAP = 12
 SHORTCUT_ROW_GAP = 6
@@ -84,7 +84,7 @@ def load_fonts():
     font_paths = [
         inter_fonts / "Inter-Regular.ttf",
         inter_fonts / "Inter-SemiBold.ttf",
-        inter_fonts / "SuperWater.ttf",
+        inter_fonts / "MatchaStyle.ttf",
     ]
 
     for font_path in font_paths:
@@ -134,7 +134,7 @@ QMainWindow, QDialog { background:#223d68; }
 QToolTip { color:#f5f7fb; background:#1b355b; border:1px solid #4b6c97; padding:4px 7px; }
 QWidget#mainSurface { background:#223d68; border:1px solid #627895; }
 QWidget#mainSurface QWidget { font:13pt 'Inter 18pt'; }
-QWidget#mainSurface QLabel#brand { font:24.8pt 'Super Water'; }
+QWidget#mainSurface QLabel#brand { font:24.8pt 'Matcha Style'; }
 QWidget#mainSurface QWidget#controllerSlot QLabel#controllerName { font:10pt 'Inter 18pt'; }
 QWidget#mainSurface QWidget#controllerSlot QLabel#batteryLabel { font:9.1pt 'Inter 18pt'; }
 QWidget#mainSurface QWidget#controllerSlot QComboBox#profilePicker { font:9.1pt 'Inter 18pt'; }
@@ -142,8 +142,8 @@ QWidget#mainSurface QWidget#controllerSlot QPushButton#forgetController,
 QWidget#mainSurface QWidget#controllerSlot QPushButton#setPrimary { font:9.1pt 'Inter 18pt'; }
 QWidget#mainSurface QPushButton#primaryAction { font:11.8pt 'Inter 18pt'; }
 QWidget#mainSurface QPushButton#windowControl { font:22pt 'Inter 18pt'; }
-QLabel#brand { color:#3989cf; font: 31pt 'Super Water'; }
-QLabel#settingsBrand { color:#3989cf; font: 22pt 'Super Water'; }
+QLabel#brand { color:#3989cf; font: 31pt 'Matcha Style'; }
+QLabel#settingsBrand { color:#3989cf; font: 22pt 'Matcha Style'; }
 QWidget#settingsPage { background:transparent; border:0; }
 QWidget#settingsHeader { background:#223d68; }
 QTabWidget#settingsTabs { background:transparent; }
@@ -243,7 +243,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical { background:transp
 QTabWidget::pane { background:#223d68; border:1px solid #4d6c95; border-radius:8px; }
 QTabBar::tab { color:#b9d5ff; background:#1b355b; border:1px solid #4b6c97; border-bottom:0; border-top-left-radius:7px; border-top-right-radius:7px; padding:8px 18px; }
 QTabBar::tab:selected { color:#ffffff; background:#20527b; border-color:#3187c7; }
-QLabel#debugHeading { color:#3989cf; font: 30pt 'Super Water'; }
+QLabel#debugHeading { color:#3989cf; font: 30pt 'Matcha Style'; }
 QTextEdit#debugEventList { color:#f5f7fb; background:#1b355b; border:1px solid #20385c; border-radius:10px; padding:10px; font: 10pt 'Inter 18pt'; }
 QPushButton:checked { background:#28618e; border-color:#54a5e0; }
 """

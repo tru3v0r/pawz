@@ -959,7 +959,7 @@ def test_main_window_lists_known_controllers_and_scrolls_overflow(monkeypatch):
     assert window.size().width() == 770
     assert window.height() == 440
     assert "font: 9.1pt" in CSS
-    assert "font: 31pt 'Super Water'" in CSS
+    assert "font: 31pt 'Matcha Style'" in CSS
     brand = window.findChild(QLabel, "brand")
     brand_icon = window.findChild(QLabel, "brandIcon")
     assert brand is not None

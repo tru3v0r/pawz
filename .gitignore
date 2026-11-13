@@ -8,3 +8,6 @@ dist/
 !pawz.spec
 *.egg-info/
 .ruff_cache/
+
+# Working design files (PSD, PPTX, drafts). Files the app uses live in src/pawz/ui/assets/.
+/design/
