@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=75", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pawz"
+version = "0.1.0"
+description = "Windows controller-to-desktop mapper"
+requires-python = ">=3.11"
+dependencies = ["PySide6>=6.8,<7", "pygame>=2.6,<3", "psutil>=6,<8", "jsonschema>=4.22,<5", "pywin32>=308; sys_platform == 'win32'", "comtypes>=1.4; sys_platform == 'win32'"]
+
+[project.optional-dependencies]
+build = ["pyinstaller>=6.11,<7"]
+test = ["pytest>=8,<10", "pytest-qt>=4.4,<5"]
+dev = ["ruff>=0.8", "pyright>=1.1.390"]
+
+[project.scripts]
+pawz = "pawz.main:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+pawz = ["data/controllers/*.json", "ui/assets/**/*", "ui/assets/*"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 110
+extend-exclude = ["build", "dist"]
+
+[tool.ruff.lint]
+# Correctness first; style rules can be tightened once the UI module is split.
+select = ["E4", "E7", "E9", "F", "B", "UP", "I", "SIM", "RUF"]
+ignore = [
+    "E701", "E702", "RUF001", "RUF002", "RUF003",  # compact one-liners, French text
+    "RUF012", "B905", "SIM102", "SIM105", "SIM108", "SIM112",
+]
+
+[tool.pyright]
+include = ["src"]
+pythonVersion = "3.11"
+typeCheckingMode = "basic"

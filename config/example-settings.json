@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "profiles": {
+    "Default": {
+      "name": "Default",
+      "global_bindings": {"x": {"action":"left_click"}, "y": {"action":"right_click"}, "l": {"action":"previous"}, "r": {"action":"next"}, "minus": {"action":"volume_down"}, "plus": {"action":"volume_up"}, "home": {"action":"win"}, "right_stick": {"action":"middle_click"}, "dpad_up": {"action":"key_combo","keys":"up"}, "dpad_down": {"action":"key_combo","keys":"down"}, "dpad_left": {"action":"key_combo","keys":"left"}, "dpad_right": {"action":"key_combo","keys":"right"}},
+      "apps": {"firefox.exe":{"l":{"action":"tab_previous"},"r":{"action":"tab_next"}},"brave.exe":{"l":{"action":"tab_previous"},"r":{"action":"tab_next"}},"vlc.exe":{"a":{"action":"play_pause"}}},
+      "sites": {"youtube.com":{"x":{"action":"play_pause"},"y":{"action":"fullscreen"}}},
+      "mouse_speed": 16, "scroll_speed": 3, "deadzone": 0.18, "magnet_strength": 50
+    }
+  },
+  "assignments": {}, "default_profile": "Default", "known_devices": {}, "browser_token": "GENERATED_AT_FIRST_LAUNCH", "port": 8765,
+  "startup_enabled": false, "start_minimized": false
+}

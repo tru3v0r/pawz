@@ -1,0 +1,4 @@
+# Preserve upstream files byte-for-byte: their SHA-256 values are recorded.
+src/pawz/ui/assets/controllers/prompts/** -text -whitespace
+src/pawz/ui/assets/controllers/library-generic.svg -text -whitespace
+src/pawz/ui/assets/controllers/Gamepad-Asset-Pack-LICENSE.txt -text -whitespace

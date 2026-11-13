@@ -1,0 +1,762 @@
+[
+  {
+    "file": "prompts/Nintendo/nintendo-C.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Nintendo/nintendo-C.svg",
+    "sha256": "caa32a5584d99031cf50e2758df1ae14e8831043cb72b765716c00a0c7771f7b"
+  },
+  {
+    "file": "prompts/Nintendo/nintendo-L Click.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Nintendo/nintendo-L%20Click.svg",
+    "sha256": "9d73932841a21d21bf4641900972e40601ae99ae06347567124f6a0ce2cfe080"
+  },
+  {
+    "file": "prompts/Nintendo/nintendo-L.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Nintendo/nintendo-L.svg",
+    "sha256": "6e079d2b840a3e1c9404d3496e5b6c0b37f8cf002dcaf5d7b271eea71b930d0c"
+  },
+  {
+    "file": "prompts/Nintendo/nintendo-Minus.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Nintendo/nintendo-Minus.svg",
+    "sha256": "164c03f5f1d238a18117cd7a72999db27dcfae62bafba6ae303db93c61a2b823"
+  },
+  {
+    "file": "prompts/Nintendo/nintendo-Plus.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Nintendo/nintendo-Plus.svg",
+    "sha256": "3d79598f7cb5227dd4d6a85d5d9e58f35661ab833b06c527328b33f4e624ee55"
+  },
+  {
+    "file": "prompts/Nintendo/nintendo-R Click.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Nintendo/nintendo-R%20Click.svg",
+    "sha256": "b503181f350b1c6ea828f4e8d38b6056d4c364a1fabb2938ac473774940f249d"
+  },
+  {
+    "file": "prompts/Nintendo/nintendo-R.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Nintendo/nintendo-R.svg",
+    "sha256": "81bb98cfb467f36909e070c90be9531a2b7c6293c0a962b7cd9ce24a950ac1f5"
+  },
+  {
+    "file": "prompts/Nintendo/nintendo-SL.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Nintendo/nintendo-SL.svg",
+    "sha256": "af159b3c9f6985e8078f30df55908258f3ab1171fddfece7ee9bcd7c67c54206"
+  },
+  {
+    "file": "prompts/Nintendo/nintendo-SR.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Nintendo/nintendo-SR.svg",
+    "sha256": "a0543031a108b7413afaec3fc81ada802ae1e1c3f256421032027531e62e6b62"
+  },
+  {
+    "file": "prompts/Nintendo/nintendo-Z.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Nintendo/nintendo-Z.svg",
+    "sha256": "87503552a177b6a9d3915b28b36e91acf1c620d536a4676cbb589e1f28745aff"
+  },
+  {
+    "file": "prompts/Nintendo/nintendo-ZL.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Nintendo/nintendo-ZL.svg",
+    "sha256": "679e57911aea3fc58f0894f04d32020f5b77197cdda31cf4230aaa99ba09ded9"
+  },
+  {
+    "file": "prompts/Nintendo/nintendo-ZR.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Nintendo/nintendo-ZR.svg",
+    "sha256": "c0997dc6e6647a13dcec1fab878410e77453fe473fbfc761abe00515c821ec34"
+  },
+  {
+    "file": "prompts/Nintendo/nintendo-positional prompt A.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Nintendo/nintendo-positional%20prompt%20A.svg",
+    "sha256": "ffcda77cc1d045701f48000441c279cc7c99ef51bf0a7ed34fe3ad697abf8afb"
+  },
+  {
+    "file": "prompts/Nintendo/nintendo-positional prompt B.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Nintendo/nintendo-positional%20prompt%20B.svg",
+    "sha256": "b6785b65c4a4e022d523b56ea6081afc435d5a54ce19a6bf58032a1053a914cf"
+  },
+  {
+    "file": "prompts/Nintendo/nintendo-positional prompt X.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Nintendo/nintendo-positional%20prompt%20X.svg",
+    "sha256": "afcdccfbd814da88c13ba4237db415d090605dbdc5cc9d5bcccffdb6abad761b"
+  },
+  {
+    "file": "prompts/Nintendo/nintendo-positional prompt Y.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Nintendo/nintendo-positional%20prompt%20Y.svg",
+    "sha256": "636959f26b67301ad76b51a63d04e3a5c015f470c56b5a256bf3574455358cf8"
+  },
+  {
+    "file": "prompts/Nintendo/nintendo-positional prompt.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Nintendo/nintendo-positional%20prompt.svg",
+    "sha256": "45cfac154ce405f895deee744ca3bb832a3622bc0b632e4e82110e2d2faf7fb6"
+  },
+  {
+    "file": "prompts/Nintendo/nintendoswitch-Capture.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Nintendo/nintendoswitch-Capture.svg",
+    "sha256": "83f51d240f664fcdebc3356b951dbbb0003db21126b32e098fb93110f77dcdbd"
+  },
+  {
+    "file": "prompts/Nintendo/nintendoswitch-JoyCon D-PAD Down.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Nintendo/nintendoswitch-JoyCon%20D-PAD%20Down.svg",
+    "sha256": "a6759ceae08556c4102d08bc28742683f0aefe6491cb123bbb472a335fd16e7d"
+  },
+  {
+    "file": "prompts/Nintendo/nintendoswitch-JoyCon D-PAD Left.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Nintendo/nintendoswitch-JoyCon%20D-PAD%20Left.svg",
+    "sha256": "bae4382d1d3aa9409c53bbf66950cdd57845de12f62993bafa97c2f4301d948d"
+  },
+  {
+    "file": "prompts/Nintendo/nintendoswitch-JoyCon D-PAD Right.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Nintendo/nintendoswitch-JoyCon%20D-PAD%20Right.svg",
+    "sha256": "eae4e0de0cec19a2c9b7edf2347ab0c2cdf51a804c98f4aa1a09e26decb548e3"
+  },
+  {
+    "file": "prompts/Nintendo/nintendoswitch-JoyCon D-PAD Up.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Nintendo/nintendoswitch-JoyCon%20D-PAD%20Up.svg",
+    "sha256": "bd440cd30524986ff27918d42e1113875e57dd1c8bf5d0fb4d81bde2c9cd7d6c"
+  },
+  {
+    "file": "prompts/Nintendo/nintendoswitch-JoyCon D-PAD.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Nintendo/nintendoswitch-JoyCon%20D-PAD.svg",
+    "sha256": "874ca4f2ab9f050be9cb0206c97cafde87ed63309705481b15bb5d4027ee011a"
+  },
+  {
+    "file": "prompts/Nintendo/nintendoswitch-positional prompts JoyCon D-PAD Down.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Nintendo/nintendoswitch-positional%20prompts%20JoyCon%20D-PAD%20Down.svg",
+    "sha256": "e0553e60cb6b4d250ab72e8fb4b3b8daff1d4af93350e830ed18cab965949b9b"
+  },
+  {
+    "file": "prompts/Nintendo/nintendoswitch-positional prompts JoyCon D-PAD Left.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Nintendo/nintendoswitch-positional%20prompts%20JoyCon%20D-PAD%20Left.svg",
+    "sha256": "70b31e9cc43c858aaacb6280588a457071fabe2e5fd89b2d2d06f5311480da4d"
+  },
+  {
+    "file": "prompts/Nintendo/nintendoswitch-positional prompts JoyCon D-PAD Right.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Nintendo/nintendoswitch-positional%20prompts%20JoyCon%20D-PAD%20Right.svg",
+    "sha256": "4b4ec56fcca76863d08c96061536ed7f7e390bfaada1f8984cf6efa815716c30"
+  },
+  {
+    "file": "prompts/Nintendo/nintendoswitch-positional prompts JoyCon D-PAD Up.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Nintendo/nintendoswitch-positional%20prompts%20JoyCon%20D-PAD%20Up.svg",
+    "sha256": "e2473fd620bb16e69a0e75b4b99ac58b42af2de0c29604387fcfd510a3f1511a"
+  },
+  {
+    "file": "prompts/PlayStation/ps-Circle-Color.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps-Circle-Color.svg",
+    "sha256": "bc7463f19ffa4434e43c90a88a8880107730ca5650c003de6e8ba7df4193d0d9"
+  },
+  {
+    "file": "prompts/PlayStation/ps-Circle.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps-Circle.svg",
+    "sha256": "a18ce981620dc9fb4ce08e8d618195a4d38c74a16e00e2e7c493c5c2cce9c06f"
+  },
+  {
+    "file": "prompts/PlayStation/ps-Cross-Color.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps-Cross-Color.svg",
+    "sha256": "713ff763fe09ee8c97df30ab5e2776c2556e5794b406d360fbf21315c91dce27"
+  },
+  {
+    "file": "prompts/PlayStation/ps-Cross.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps-Cross.svg",
+    "sha256": "b18ac020743e06ce073d618e9ac9aaba7ba8b6355272ae151f3caa00f0bd47a4"
+  },
+  {
+    "file": "prompts/PlayStation/ps-D-PAD Down.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps-D-PAD%20Down.svg",
+    "sha256": "a3149b405f569f70e6c674caa37dafb59740c9de6a9f43247579a9869876e53a"
+  },
+  {
+    "file": "prompts/PlayStation/ps-D-PAD Left.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps-D-PAD%20Left.svg",
+    "sha256": "1a0adb40012e1614beed2596726a28b308889b4fc58529d277be2bb9f7119e5b"
+  },
+  {
+    "file": "prompts/PlayStation/ps-D-PAD Right.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps-D-PAD%20Right.svg",
+    "sha256": "1660ac9a9fae60f04414b87b81aa3b0f0eca34c39b9f600375fd00b1332a314b"
+  },
+  {
+    "file": "prompts/PlayStation/ps-D-PAD Up.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps-D-PAD%20Up.svg",
+    "sha256": "8421d0216ba302c4d8be0fdfec8b524d73112ad966927f095642b72af1de835e"
+  },
+  {
+    "file": "prompts/PlayStation/ps-D-PAD.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps-D-PAD.svg",
+    "sha256": "da85ba0c188e0c97dd64d7805a93658c3f09054b95323a893ef841dfda929448"
+  },
+  {
+    "file": "prompts/PlayStation/ps-Square-Color.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps-Square-Color.svg",
+    "sha256": "af5fa630add867ff09d92ac2b83db6de851434df14fbde60fa4c0c10e9b18843"
+  },
+  {
+    "file": "prompts/PlayStation/ps-Square.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps-Square.svg",
+    "sha256": "9562b43d6b7385abb01d7c2c79c8ec18a321c49eec7dfc3c9d0aa525962a3114"
+  },
+  {
+    "file": "prompts/PlayStation/ps-Triangle-Color.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps-Triangle-Color.svg",
+    "sha256": "0314295ab9f076c4ede3dedb812584f47080cdc790e698ac4303fab309db499e"
+  },
+  {
+    "file": "prompts/PlayStation/ps-Triangle.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps-Triangle.svg",
+    "sha256": "011330865e3424fd086f836aefdbdc77c32cbabacb1adb56ff021afaf4fd5909"
+  },
+  {
+    "file": "prompts/PlayStation/ps-positional prompt Circle-Color.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps-positional%20prompt%20Circle-Color.svg",
+    "sha256": "7143de8e1bbd6e707666525656e071a7c79da7b73f0b11c8313ed43b026de294"
+  },
+  {
+    "file": "prompts/PlayStation/ps-positional prompt Circle.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps-positional%20prompt%20Circle.svg",
+    "sha256": "db92cad5ed9c056bf3b01fc73fe6856adb28e82ab6deba1629ec5b7a2a308795"
+  },
+  {
+    "file": "prompts/PlayStation/ps-positional prompt Cross-Color.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps-positional%20prompt%20Cross-Color.svg",
+    "sha256": "71453c3001abd060f86ba031530a3f4790c2f67b3ddd369b0da88bd78ebb75eb"
+  },
+  {
+    "file": "prompts/PlayStation/ps-positional prompt Cross.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps-positional%20prompt%20Cross.svg",
+    "sha256": "e221170e2d7b19fcf6d4b38c0e2c22a53c7cfe6eff49aa2f23b74d577514a718"
+  },
+  {
+    "file": "prompts/PlayStation/ps-positional prompt Square-Color.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps-positional%20prompt%20Square-Color.svg",
+    "sha256": "11c966db64c66ce79830c9d5164deb5b9aa7dc4d081b5c9747ed8d12fc7c56d8"
+  },
+  {
+    "file": "prompts/PlayStation/ps-positional prompt Square.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps-positional%20prompt%20Square.svg",
+    "sha256": "921828618172ee650e0c57cabb82b08651f403ffb91828d3a64f39089cd84115"
+  },
+  {
+    "file": "prompts/PlayStation/ps-positional prompt Triangle-Color.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps-positional%20prompt%20Triangle-Color.svg",
+    "sha256": "93cab1e86ea57d915b94c5e2577d00385d5bac7edc0b1c3380473f48c31acc92"
+  },
+  {
+    "file": "prompts/PlayStation/ps-positional prompt Triangle.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps-positional%20prompt%20Triangle.svg",
+    "sha256": "390721f67075dad1efb2b7103e15b21126db4fe24e30326619bc04cc9308e379"
+  },
+  {
+    "file": "prompts/PlayStation/ps-positional prompt-color.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps-positional%20prompt-color.svg",
+    "sha256": "2af3f8b753877ea42a3e7c85293b627b3e8c2d9ec0330038d68bc62503f49fe6"
+  },
+  {
+    "file": "prompts/PlayStation/ps-positional prompt.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps-positional%20prompt.svg",
+    "sha256": "14e3769247de84398993b2cb2462a4e49fdcc87b163150840c1d2512f652163a"
+  },
+  {
+    "file": "prompts/PlayStation/ps3-Select.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps3-Select.svg",
+    "sha256": "fe9a1e31c039b68551cf70e2ea330cd77dec1bb31f3a29a79d57adae81db3566"
+  },
+  {
+    "file": "prompts/PlayStation/ps3-Start.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps3-Start.svg",
+    "sha256": "c234837b11dbe5e39d0644dcd82f61c825271164c84e718014b1cd1a476d2686"
+  },
+  {
+    "file": "prompts/PlayStation/ps4-Option-Alt.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps4-Option-Alt.svg",
+    "sha256": "1a28d776c3c0f9ee20af245288cf8447852b1eb5096d39a33eb09d2f9f0b851f"
+  },
+  {
+    "file": "prompts/PlayStation/ps4-Option.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps4-Option.svg",
+    "sha256": "ebd503e152e0c3f9772b6751415d2446779c6042095c104ea9eac7ff7d0ceb10"
+  },
+  {
+    "file": "prompts/PlayStation/ps4-Share-Alt.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps4-Share-Alt.svg",
+    "sha256": "d7de3808355d69a9368fcd374c4f7f1adb8d0f9f488c7b9665926b321b775bcf"
+  },
+  {
+    "file": "prompts/PlayStation/ps4-Share.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps4-Share.svg",
+    "sha256": "a24d9df87094f21619cd1fc8b721cd396b8219d02ab28669dd1f2e378c877563"
+  },
+  {
+    "file": "prompts/PlayStation/ps4-Touchpad Click.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps4-Touchpad%20Click.svg",
+    "sha256": "4812a3229eb643ad5b8e8a6062dfa8c92ae24ae75294937329099969100da13e"
+  },
+  {
+    "file": "prompts/PlayStation/ps4-Touchpad Left Click.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps4-Touchpad%20Left%20Click.svg",
+    "sha256": "035584a2a89a33e36583a4dd6a00c246bd9226407d82b47f4152d5204645c6c4"
+  },
+  {
+    "file": "prompts/PlayStation/ps4-Touchpad Left Touch.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps4-Touchpad%20Left%20Touch.svg",
+    "sha256": "3adb99f67d3c109f70213a5c7c823da35a43bf44ee085f5178a9c7fe940a75f4"
+  },
+  {
+    "file": "prompts/PlayStation/ps4-Touchpad Right Click.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps4-Touchpad%20Right%20Click.svg",
+    "sha256": "0c9e0333bc3aab5067ff543ed774cf881c1c5e67cc7a834676eeca024dfe3539"
+  },
+  {
+    "file": "prompts/PlayStation/ps4-Touchpad Right Touch.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps4-Touchpad%20Right%20Touch.svg",
+    "sha256": "266d6d3d60c1cdb7d7567654c9193a0cbc8ad624bd200f2b3d5492e2ed06be00"
+  },
+  {
+    "file": "prompts/PlayStation/ps4-Touchpad Swipe.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps4-Touchpad%20Swipe.svg",
+    "sha256": "c5b7aaae2a54ece3b00300977b489e7445e25f98614c916a54069f9188005fbf"
+  },
+  {
+    "file": "prompts/PlayStation/ps4-Touchpad Touch.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps4-Touchpad%20Touch.svg",
+    "sha256": "4f7a625620b71141699d90a747bffebe120f8aa763c58fff8c1238cd251070ed"
+  },
+  {
+    "file": "prompts/PlayStation/ps4-Touchpad.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps4-Touchpad.svg",
+    "sha256": "0f1bbc0c277461cb7902156063f011a63421128c7b3bcdc21daf117fb3f02f81"
+  },
+  {
+    "file": "prompts/PlayStation/ps5-Create-Alt.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps5-Create-Alt.svg",
+    "sha256": "fb51dcdeed8b8c9f0cf01548689373241bbb6260d28245e2e1389042e84dc9b4"
+  },
+  {
+    "file": "prompts/PlayStation/ps5-Create.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps5-Create.svg",
+    "sha256": "4b7c9f0fdde9a640802f119b3327d42aa1eed14ce15d57c17f72464a52aee666"
+  },
+  {
+    "file": "prompts/PlayStation/ps5-Left Back.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps5-Left%20Back.svg",
+    "sha256": "03cafbf059664b1eee2d2fdeb212065da8e3f132054c488335145211e63e3da3"
+  },
+  {
+    "file": "prompts/PlayStation/ps5-Mute-Alt.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps5-Mute-Alt.svg",
+    "sha256": "0f22fe7599d2ce18beb5faeef9620ec6119cb8fdd8dfcdbbf276ead42f1327a4"
+  },
+  {
+    "file": "prompts/PlayStation/ps5-Mute.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps5-Mute.svg",
+    "sha256": "163e2c14a54d5b3177ee608a84ac52f41c203f051d5cfdf3067053ace8cc50f5"
+  },
+  {
+    "file": "prompts/PlayStation/ps5-Option-Alt.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps5-Option-Alt.svg",
+    "sha256": "fac2dffeeaf5965531506a60cfd9278d03d39d29e0d295927b8c54c35a4e0efe"
+  },
+  {
+    "file": "prompts/PlayStation/ps5-Option.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps5-Option.svg",
+    "sha256": "562c98a032e0a715dcfa72bf31557242acd64509348b4b5cc7ccfacad4efa3a0"
+  },
+  {
+    "file": "prompts/PlayStation/ps5-Right Back.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps5-Right%20Back.svg",
+    "sha256": "cf52f5a287a4216e4f785c769d5e3feda9080f49ad96032020a640378e4e3d5b"
+  },
+  {
+    "file": "prompts/PlayStation/ps5-Touchpad Click.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps5-Touchpad%20Click.svg",
+    "sha256": "853e711451fa982ffa6761888d355e719f96867bf277448aa16a7bab01f0e8b2"
+  },
+  {
+    "file": "prompts/PlayStation/ps5-Touchpad Left Click.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps5-Touchpad%20Left%20Click.svg",
+    "sha256": "2782f1561050da5d339368c0af8d19a3dc48f148a16b045fef3eedf408f18ca2"
+  },
+  {
+    "file": "prompts/PlayStation/ps5-Touchpad Left Touch.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps5-Touchpad%20Left%20Touch.svg",
+    "sha256": "92be4b51509b6c6f6c6fa9556fecc5d3ac7f5c1c864aaf30fbe0e8741654ea4d"
+  },
+  {
+    "file": "prompts/PlayStation/ps5-Touchpad Right Click.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps5-Touchpad%20Right%20Click.svg",
+    "sha256": "75858ec86ac3a9148d71d398d8fb0825e8a38747a54e541712937fddaa5bccaf"
+  },
+  {
+    "file": "prompts/PlayStation/ps5-Touchpad Right Touch.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps5-Touchpad%20Right%20Touch.svg",
+    "sha256": "abf6995175355d38542b790d68d9d7d230b0eeb6e1c5302ffdd049b036191012"
+  },
+  {
+    "file": "prompts/PlayStation/ps5-Touchpad Swipe.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps5-Touchpad%20Swipe.svg",
+    "sha256": "67152034b5e1947c99d2408644220cb067c1e35fad0f431f037147d46b05172f"
+  },
+  {
+    "file": "prompts/PlayStation/ps5-Touchpad Touch.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps5-Touchpad%20Touch.svg",
+    "sha256": "b7953ceda8c63252d52dec984c223a7d4ee6a5e214adaca8a20e9c0201b7cc6c"
+  },
+  {
+    "file": "prompts/PlayStation/ps5-Touchpad.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/PlayStation/ps5-Touchpad.svg",
+    "sha256": "2f4cdfc78c06956ed231a046fe82b86bdf7957d31938b62db6eff78a7ea96f62"
+  },
+  {
+    "file": "prompts/Shared/shared-A-Color.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-A-Color.svg",
+    "sha256": "c0d60f9d748d06536f9e405680d4295ffaf877e42e40e149fa3019e1226b959f"
+  },
+  {
+    "file": "prompts/Shared/shared-A.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-A.svg",
+    "sha256": "c7642f88d16845bf4b9da72109e79021cddaa696e9ebbb7d6902ca4692e26ba2"
+  },
+  {
+    "file": "prompts/Shared/shared-B-Color.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-B-Color.svg",
+    "sha256": "e337e1c9bc8a2e379867bd4efdb17fef1e5c0596465cacb09b09a838b6560003"
+  },
+  {
+    "file": "prompts/Shared/shared-B.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-B.svg",
+    "sha256": "ea33bb1ffbdfcdf78aedf035218b702a894faf7480b52c7baa9ec80fe53d21ce"
+  },
+  {
+    "file": "prompts/Shared/shared-Back-Alt.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-Back-Alt.svg",
+    "sha256": "f5a815c023e7ad4df8390bb2f178db630e78e625be584a294ceeadd12258c48c"
+  },
+  {
+    "file": "prompts/Shared/shared-D-PA Down.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-D-PA%20Down.svg",
+    "sha256": "c7996221c1d2bc2af51b924ead6623b055d2c0d9bd957fe07103a1a996ad66ba"
+  },
+  {
+    "file": "prompts/Shared/shared-D-PAD Left.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-D-PAD%20Left.svg",
+    "sha256": "2db27534d3074d95ecbdee418ded0deaa914d34ab8bb7acfe4eff9062d6ce772"
+  },
+  {
+    "file": "prompts/Shared/shared-D-PAD Right.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-D-PAD%20Right.svg",
+    "sha256": "a7b3c49a8888a0fbdf06cba6c2db8e99e8fa322bfad6b1db062eeae9b0492992"
+  },
+  {
+    "file": "prompts/Shared/shared-D-PAD Up.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-D-PAD%20Up.svg",
+    "sha256": "463d6964e22fa2c35cd7d9827997dc8617efb48db0a21230ccf96a90956eb010"
+  },
+  {
+    "file": "prompts/Shared/shared-L1.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-L1.svg",
+    "sha256": "0ea9d584f90ac114c5754dc72e3ae37b917b40d119f53cd100541552b0622e04"
+  },
+  {
+    "file": "prompts/Shared/shared-L2.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-L2.svg",
+    "sha256": "3bde76d4bd86565d2c240c95ac3c6b082db6d1352d3138ef13dfbba2f5eca7c3"
+  },
+  {
+    "file": "prompts/Shared/shared-L3 Click.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-L3%20Click.svg",
+    "sha256": "bd88eefffc489bbe69c87851356d7727eb2efed35c3d02359d0f9b0f3c2db29c"
+  },
+  {
+    "file": "prompts/Shared/shared-L4.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-L4.svg",
+    "sha256": "5933fb16b4044c8c9551d0d5f34e30128ce7e0a4fee1c650e6b8f6793086411d"
+  },
+  {
+    "file": "prompts/Shared/shared-L5.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-L5.svg",
+    "sha256": "ea3c1cf2b1f52f6941e202d46d748717494a3f9130d6d690afc02480f42c89b1"
+  },
+  {
+    "file": "prompts/Shared/shared-Left Bumper.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-Left%20Bumper.svg",
+    "sha256": "bea96b3b78296274247d48fcdc68512629d1931df6cd9308310773198dc17e97"
+  },
+  {
+    "file": "prompts/Shared/shared-Left Joystick Down.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-Left%20Joystick%20Down.svg",
+    "sha256": "de018075c2daa7095b8b49932665c6cb66add9f4c48eb7461fc0c13fe83b90e9"
+  },
+  {
+    "file": "prompts/Shared/shared-Left Joystick Left.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-Left%20Joystick%20Left.svg",
+    "sha256": "c960eef7cc28c35c3586db2fe0cce9d191dc3e532c6b6e0369d1beb9016946dd"
+  },
+  {
+    "file": "prompts/Shared/shared-Left Joystick Right.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-Left%20Joystick%20Right.svg",
+    "sha256": "fe9b62137007b220811dadef9cd97de26361652fe94b632461a826e4cd1e5064"
+  },
+  {
+    "file": "prompts/Shared/shared-Left Joystick Up.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-Left%20Joystick%20Up.svg",
+    "sha256": "6c07d8742db254cf1bd65940f000402bb49a6522568997bdd0607db70e481bcf"
+  },
+  {
+    "file": "prompts/Shared/shared-Left Joystick.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-Left%20Joystick.svg",
+    "sha256": "feeffc1e4959ae5c97c64246f3d4dec64614e5f2c0dc187e35f6898b5dc152ed"
+  },
+  {
+    "file": "prompts/Shared/shared-Left Stick Click.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-Left%20Stick%20Click.svg",
+    "sha256": "3ec2c1ecaa930c50aff4746bb40bf765d415967a76d2a9f3198e2ffa2c5224ee"
+  },
+  {
+    "file": "prompts/Shared/shared-Left Trigger.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-Left%20Trigger.svg",
+    "sha256": "7969cb7499a510cd1649264ebe13baba9a9aa0bc568beee39cf5a6ac7f7e2cb7"
+  },
+  {
+    "file": "prompts/Shared/shared-M1.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-M1.svg",
+    "sha256": "649226ae1e0f8c74abed8b20c0cf897ece4f5986ab8b218fc4f6e15efdaff34a"
+  },
+  {
+    "file": "prompts/Shared/shared-M2.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-M2.svg",
+    "sha256": "0eedd1b61e43a0fb7b5f9c1db3343a45a6ab54f11b884e7583d2cf8423cf30c5"
+  },
+  {
+    "file": "prompts/Shared/shared-M3.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-M3.svg",
+    "sha256": "31ee14a44bea77407054f82907b26f4b74b0bffa4df31e08d3a5866d3adc9797"
+  },
+  {
+    "file": "prompts/Shared/shared-M4.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-M4.svg",
+    "sha256": "812b8ceb534144257d6089290c7b4dc92cf7b970b8ece86fd2ee7e3b8d336e63"
+  },
+  {
+    "file": "prompts/Shared/shared-R1.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-R1.svg",
+    "sha256": "f9fa5a95609bceb4ae9a3470e2ea70307f1af31008492d7854aa5a17f876383f"
+  },
+  {
+    "file": "prompts/Shared/shared-R2.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-R2.svg",
+    "sha256": "00fc5f5dbc8b30acfc722dac9e83d891b9c070b5f5b6458dabf2434ae660c7f0"
+  },
+  {
+    "file": "prompts/Shared/shared-R3 Click.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-R3%20Click.svg",
+    "sha256": "d2091830693cef6bc5cd3ad3e172732755d022246d09009c3fb474ac2a09888a"
+  },
+  {
+    "file": "prompts/Shared/shared-R4.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-R4.svg",
+    "sha256": "75933da7a444347e314eea79c846fc33f6450a2776aa144c3c10301bb5c8d7ac"
+  },
+  {
+    "file": "prompts/Shared/shared-R5.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-R5.svg",
+    "sha256": "58133746e06bc0b9a27b62b894db13b706bd4635d22628a75ab88f235245d66a"
+  },
+  {
+    "file": "prompts/Shared/shared-Right Bumper.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-Right%20Bumper.svg",
+    "sha256": "cc8307b4061dc2ee5e368f8b5083748aa6010433942dc6722b4fae68830ef5c8"
+  },
+  {
+    "file": "prompts/Shared/shared-Right Joystick Down.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-Right%20Joystick%20Down.svg",
+    "sha256": "3c6f4b9ea64e50196b556136dd7d0d910fe594465b4c6610d9c9e2b5b1318024"
+  },
+  {
+    "file": "prompts/Shared/shared-Right Joystick Left.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-Right%20Joystick%20Left.svg",
+    "sha256": "ea9e65b25fdd5801695e4a507886c96475eca777d34ec64cae993abc006f1a67"
+  },
+  {
+    "file": "prompts/Shared/shared-Right Joystick Right.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-Right%20Joystick%20Right.svg",
+    "sha256": "d8483ac8e357065f53200900e819a71aa6bc8732a619169245bb7558b9982334"
+  },
+  {
+    "file": "prompts/Shared/shared-Right Joystick Up.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-Right%20Joystick%20Up.svg",
+    "sha256": "9fb07b23ae4feb24183948645e05b822e287061f540713b36805aa853231fbb6"
+  },
+  {
+    "file": "prompts/Shared/shared-Right Joystick.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-Right%20Joystick.svg",
+    "sha256": "876e06319764b90e7c27ef9fe4fdb18caafe69411ba2d14d3d82db47a5146e67"
+  },
+  {
+    "file": "prompts/Shared/shared-Right Stick Click.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-Right%20Stick%20Click.svg",
+    "sha256": "41447950e2a33ed71e0ef0f21781e0c455866aa4e8a53ffca8d43a8b172c3bb3"
+  },
+  {
+    "file": "prompts/Shared/shared-Right Trigger.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-Right%20Trigger.svg",
+    "sha256": "64cf1c05dab5fa7c2570d4b78b94f7b8effb3054bdcc9716374016e14b243733"
+  },
+  {
+    "file": "prompts/Shared/shared-Select.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-Select.svg",
+    "sha256": "1298699bd469044ed328ae1aab631dca9205ded8edff9bc04ddff614402bd91b"
+  },
+  {
+    "file": "prompts/Shared/shared-Start-Alt.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-Start-Alt.svg",
+    "sha256": "fa0a476b0dfd40727e812d90f3746a928da8206a76912003975b969a79d59af5"
+  },
+  {
+    "file": "prompts/Shared/shared-Start.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-Start.svg",
+    "sha256": "d9193cc1351c8e94149a313f59fbb523158d809050eb6f2d3e68a56bdc7b271b"
+  },
+  {
+    "file": "prompts/Shared/shared-X-Color.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-X-Color.svg",
+    "sha256": "3cfe7dcd33a89e0218f037a2d1164f625dba99455864ef8b846f6c08be790601"
+  },
+  {
+    "file": "prompts/Shared/shared-X.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-X.svg",
+    "sha256": "d8a84ffeac0c2f1392c585bd6a5bcf0a4e8209e18047276fbc6bad243f2a9bc9"
+  },
+  {
+    "file": "prompts/Shared/shared-Y-Color.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-Y-Color.svg",
+    "sha256": "b6765a89b069acbe5e81069fb8147e839a7d3a11f56b410edbd7ea617ba26e3f"
+  },
+  {
+    "file": "prompts/Shared/shared-Y.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-Y.svg",
+    "sha256": "db107931da20621161866dc75a9734915f3ef0443b4ef5c7cbe406042a5f70ec"
+  },
+  {
+    "file": "prompts/Shared/shared-positional prompt A-Color.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-positional%20prompt%20A-Color.svg",
+    "sha256": "a3c413e767ac6a014d05acf9b9d45a466c21f73bee677ba0d1cf18c3cca36ca0"
+  },
+  {
+    "file": "prompts/Shared/shared-positional prompt A.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-positional%20prompt%20A.svg",
+    "sha256": "8233a6b941d222b808a0683cd2e8c9465314110675618d3cec6842aae6ca0fdf"
+  },
+  {
+    "file": "prompts/Shared/shared-positional prompt B-Color.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-positional%20prompt%20B-Color.svg",
+    "sha256": "aad214a9882cad9baaa0b8ba33d8ac7d3312af9a51260f9c3eb881266f05d159"
+  },
+  {
+    "file": "prompts/Shared/shared-positional prompt B.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-positional%20prompt%20B.svg",
+    "sha256": "05ed2d1ce1571f7e27e1fb7a8900cc9fda4a4487fc98ad363f9b5b247bdaee42"
+  },
+  {
+    "file": "prompts/Shared/shared-positional prompt East.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-positional%20prompt%20East.svg",
+    "sha256": "945613f0c0889655a349442c316e8d757cccb847db57a2107d9ba139855df40a"
+  },
+  {
+    "file": "prompts/Shared/shared-positional prompt North.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-positional%20prompt%20North.svg",
+    "sha256": "efd1bc239e341689e646199be0f5568e4405c10878f21290febd6d80af97fbda"
+  },
+  {
+    "file": "prompts/Shared/shared-positional prompt South.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-positional%20prompt%20South.svg",
+    "sha256": "6333f088771be85829b34e1fd0c5f1b4f14d8a8d5936a70de8813912d2e858d2"
+  },
+  {
+    "file": "prompts/Shared/shared-positional prompt West.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-positional%20prompt%20West.svg",
+    "sha256": "ea53a883be75e1b23a929920abeb70472184983777616d4f587ebc59549849cf"
+  },
+  {
+    "file": "prompts/Shared/shared-positional prompt X-Color.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-positional%20prompt%20X-Color.svg",
+    "sha256": "127ad908aea4ce8e14c45c49d6e390cc7f332ca0450f95e3ab14cbc36d5c2002"
+  },
+  {
+    "file": "prompts/Shared/shared-positional prompt X.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-positional%20prompt%20X.svg",
+    "sha256": "1a6b82b5ea7e50868d79f75e87fba53d2cc7bcb1232be21325559e1084d21f21"
+  },
+  {
+    "file": "prompts/Shared/shared-positional prompt Y-Color.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-positional%20prompt%20Y-Color.svg",
+    "sha256": "e9ca4a8ba9b193f4acbf897bf648ab63f3288e61990e07bac32833d690f5569d"
+  },
+  {
+    "file": "prompts/Shared/shared-positional prompt Y.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-positional%20prompt%20Y.svg",
+    "sha256": "63b1cf9fddafd4cc15ae164392a83ef7eed86f0fbab8cd1d19f20a518c02f81a"
+  },
+  {
+    "file": "prompts/Shared/shared-positional prompt-Color.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-positional%20prompt-Color.svg",
+    "sha256": "b59d474287a43feb5d718ed427b5ace392c740c6a41469477e66144e67a65050"
+  },
+  {
+    "file": "prompts/Shared/shared-positional prompt.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/shared-positional%20prompt.svg",
+    "sha256": "be053aab5376337f8c02ba2702d7fe8b2fe4f39207f6185312d0ae29285de0ba"
+  },
+  {
+    "file": "prompts/Shared/sharerd-D-PAD.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Shared/sharerd-D-PAD.svg",
+    "sha256": "a6478fdc1e26bed3ec9e4cff322051487ce81805c32e66cdccbc977ca06730a4"
+  },
+  {
+    "file": "prompts/Xbox/xbox-Menu.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Xbox/xbox-Menu.svg",
+    "sha256": "16034ef93b3c51c7ab281b43681487426c6f96ab66fb7bd7a3eb2694883fcf59"
+  },
+  {
+    "file": "prompts/Xbox/xbox-P1.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Xbox/xbox-P1.svg",
+    "sha256": "6947bde2c40395678df11cd3273a06daa4a87c58c60af793ef779da30d3dbfbe"
+  },
+  {
+    "file": "prompts/Xbox/xbox-P2.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Xbox/xbox-P2.svg",
+    "sha256": "f38391382ada248791c71bd68f92c5170fd1e3bade8f361d8fe4d676cc055cbc"
+  },
+  {
+    "file": "prompts/Xbox/xbox-P3.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Xbox/xbox-P3.svg",
+    "sha256": "1a49ed07b2bf85d50e194b67b43c3d2f2b400812593e874f033d9677829ed024"
+  },
+  {
+    "file": "prompts/Xbox/xbox-P4.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Xbox/xbox-P4.svg",
+    "sha256": "221a54d83cf47e92673289d7bf18b0a4f73259443ecb4020f38c2bf0990656d9"
+  },
+  {
+    "file": "prompts/Xbox/xbox-Share.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Xbox/xbox-Share.svg",
+    "sha256": "a72892c7048ba0cbb561a0a71e2aac8264f580eb85c442bf30bb580ddaa03215"
+  },
+  {
+    "file": "prompts/Xbox/xbox-View.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/Xbox/xbox-View.svg",
+    "sha256": "363d3f3c5a19585fa5b0ede825df3bb1f3d656dcd888fe874d5c299b98c09e94"
+  },
+  {
+    "file": "prompts/LICENSE.txt",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/LICENSE",
+    "sha256": "3dd2c5c652ccb8005f7b9f97cad6f941940d731fec7e7836fb1bb8ab8fa37825"
+  },
+  {
+    "file": "prompts/UPSTREAM_README.md",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Prompt-Asset-Pack/552d6448ffc4a6f84d488454878357ea375a59bd/README.md",
+    "sha256": "bc3d3d31b580ca2fb80619521170a83d9f56b0e4d399870c5ff61f976d530d61"
+  },
+  {
+    "file": "library-generic.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Asset-Pack/a6d1113b0b3b2438bbbcb08a33f9a25eb2391d7c/Connection%20Icon%20Pack/Controller%20Type/SVG/VSCView%20Generic%20Controller.svg",
+    "sha256": "7d30b92a833621c73dcc773a4083624933922d434354b1b2e3263dfe953e9f0e"
+  },
+  {
+    "file": "Gamepad-Asset-Pack-LICENSE.txt",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Asset-Pack/a6d1113b0b3b2438bbbcb08a33f9a25eb2391d7c/LICENSE",
+    "sha256": "5031ec24de405dc6bfba19cb1ccdbba6374ee18461caa20a3ad990e5d1f128e1"
+  }
+]

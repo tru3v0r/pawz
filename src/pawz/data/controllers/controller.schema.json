@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pawz.local/schemas/controller-catalog.schema.json",
+  "title": "Pawz controller catalog",
+  "type": "object",
+  "required": ["schema_version", "models"],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "models": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/model"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "model": {
+      "type": "object",
+      "required": [
+        "id",
+        "manufacturer",
+        "model",
+        "family",
+        "known_guids",
+        "physical_labels",
+        "hardware_mapping",
+        "svg",
+        "verified",
+        "provenance"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]*$"
+        },
+        "manufacturer": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string",
+          "minLength": 1
+        },
+        "family": {
+          "type": "string",
+          "minLength": 1
+        },
+        "known_guids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-fA-F]{32}$"
+          }
+        },
+        "physical_labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "hardware_mapping": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "pattern": "^(b[0-9]+|[+-]?a[0-9]+|h[0-9]+\\.[1248])$"
+          }
+        },
+        "svg": {
+          "type": ["string", "null"]
+        },
+        "verified": {
+          "type": "boolean"
+        },
+        "provenance": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
