@@ -48,7 +48,7 @@ def test_unfilled_slider_track_is_dark_blue_and_headers_stay_close(qtbot, qapp):
     qapp.setStyleSheet(windows.CSS)
     dialog = windows.SettingsDialog(Settings.defaults())
     qtbot.addWidget(dialog)
-    dialog.tabs.setCurrentIndex(1)
+    dialog.tabs.setCurrentIndex(2)
     dialog.show()
     qtbot.wait(20)
     slider = dialog.profile_editor.findChild(QSlider, "mouse_speed")
@@ -95,7 +95,7 @@ def test_profile_selectors_share_left_edge_and_label(qtbot, qapp):
     qapp.setStyleSheet(windows.CSS)
     dialog = windows.SettingsDialog(Settings.defaults())
     qtbot.addWidget(dialog)
-    dialog.tabs.setCurrentIndex(1)
+    dialog.tabs.setCurrentIndex(2)
     dialog.show()
     qtbot.wait(20)
     assert dialog.findChild(QLabel, "profilePickerLabel").text() == "Profile"
@@ -114,7 +114,7 @@ def test_shortcuts_have_centered_small_colored_prompts_separators_and_bare_actio
     qapp.setStyleSheet(windows.CSS)
     dialog = windows.SettingsDialog(Settings.defaults())
     qtbot.addWidget(dialog)
-    dialog.tabs.setCurrentIndex(1)
+    dialog.tabs.setCurrentIndex(2)
     dialog.show()
     qtbot.wait(20)
     for width in (708, 900):

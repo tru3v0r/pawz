@@ -149,10 +149,10 @@ def test_three_tabs_default_protection_and_display_change(qtbot, qapp, tmp_path,
     original = settings.profiles["Default"].dump()
     dialog = SettingsDialog(settings)
     qtbot.addWidget(dialog)
-    assert [dialog.tabs.tabText(i) for i in range(3)] == ["GENERAL", "PROFILES", "CONTROLLERS"]
+    assert [dialog.tabs.tabText(i) for i in range(4)] == ["GENERAL", "DISPLAY", "PROFILES", "CONTROLLERS"]
     assert not dialog.findChild(QPushButton, "deleteProfile").isEnabled()
     assert all(dialog.findChild(QPushButton, name) for name in ("duplicateProfile", "renameProfile", "deleteProfile"))
-    dialog.tabs.setCurrentIndex(1)
+    dialog.tabs.setCurrentIndex(2)
     dialog.show()
     qtbot.wait(20)
     before = dialog.profile_editor.findChild(SvgView, "bindingPrompt").grab().toImage()

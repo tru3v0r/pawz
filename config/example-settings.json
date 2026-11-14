@@ -190,5 +190,6 @@
   "game_mode_auto": true,
   "games": [],
   "non_games": [],
-  "language": "auto"
+  "language": "auto",
+  "theme": "comfy_turquoise"
 }

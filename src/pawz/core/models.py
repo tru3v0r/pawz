@@ -174,6 +174,7 @@ class Settings:
     games: list[str] = field(default_factory=list)  # always games
     non_games: list[str] = field(default_factory=list)  # never games
     language: str = "auto"  # "auto" (follow Windows) or a code from pawz.i18n.LANGUAGES
+    theme: str = "comfy_turquoise"  # an id from pawz.ui.themes.THEMES
 
     @classmethod
     def defaults(cls) -> Settings:
@@ -240,7 +241,8 @@ class Settings:
                    deepcopy(preferences),
                    str(raw.get("display_controller_model", "generic.sdl-gamecontroller")),
                    game_mode_auto, games, non_games,
-                   language if isinstance(language := raw.get("language", "auto"), str) else "auto")
+                   language if isinstance(language := raw.get("language", "auto"), str) else "auto",
+                   theme if isinstance(theme := raw.get("theme"), str) else "comfy_turquoise")
 
     def dump(self) -> dict:
         return {"schema_version": self.SCHEMA_VERSION, "profiles": {k: v.dump() for k, v in self.profiles.items()},
@@ -256,7 +258,7 @@ class Settings:
                 "display_controller_model": self.display_controller_model,
                 "game_mode_auto": self.game_mode_auto,
                 "games": list(self.games), "non_games": list(self.non_games),
-                "language": self.language}
+                "language": self.language, "theme": self.theme}
 
     def duplicate_profile(self, name: str, new_name: str) -> Profile:
         self._validate_profile_name(new_name)

@@ -17,7 +17,7 @@ def make_dialog(qtbot):
     load_fonts()
     dialog = SettingsDialog(settings)
     qtbot.addWidget(dialog)
-    dialog.tabs.setCurrentIndex(2)
+    dialog.tabs.setCurrentIndex(3)
     dialog.resize(820, 760)
     dialog.show()
     qtbot.wait(30)

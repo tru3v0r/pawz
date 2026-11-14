@@ -14,7 +14,23 @@ from pawz.infra.debug_events import ETW_HELPER_FLAG
 from pawz.infra.etw_helper import main as etw_helper_main
 from pawz.infra.startup import configure_startup
 from pawz.infra.storage import load
-from pawz.ui.windows import CSS, MainWindow, load_fonts
+from pawz.ui import themes
+from pawz.ui.windows import CSS, RESTART_FLAG, MainWindow, load_fonts, stylesheet
+
+
+def wait_for_previous_instance(argv: list[str]) -> None:
+    """After a restart, wait until the instance that launched us has exited (it
+    holds the browser bridge port), then drop the flag from ``argv``."""
+    if RESTART_FLAG not in argv:
+        return
+    index = argv.index(RESTART_FLAG)
+    pid = argv[index + 1] if index + 1 < len(argv) else ""
+    del argv[index:index + 2]
+    import psutil
+    try:
+        psutil.Process(int(pid)).wait(timeout=15)
+    except (ValueError, psutil.Error):
+        pass  # already gone, or not ours to wait for
 
 
 def main():
@@ -22,6 +38,7 @@ def main():
         return etw_helper_main(sys.argv[2:])
     if os.name != "nt":
         raise SystemExit(f"{APP_NAME} requires Windows 10/11")
+    wait_for_previous_instance(sys.argv)
     app = QApplication(sys.argv)
     load_fonts()
     app.setQuitOnLastWindowClosed(False)
@@ -30,6 +47,8 @@ def main():
     try:
         settings = load()
         i18n.install(app, settings.language)
+        themes.set_current(settings.theme)
+        app.setStyleSheet(stylesheet())
         try:
             if not smoke_report:
                 configure_startup(settings)

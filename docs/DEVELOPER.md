@@ -14,7 +14,7 @@
 - `infra/browser.py`: token-protected loopback HTTP server receiving the active tab.
 - `infra/storage.py`: atomic JSON persistence in `%APPDATA%\pawz\settings.json`, migration from a previous app name.
 - `infra/startup.py`: logon registration in the user's Run key.
-- `ui/`: Qt windows, profile editor, controller pages, notification icon.
+- `ui/`: Qt windows, profile editor, controller pages, notification icon. `ui/themes.py`: colour themes (see Themes below).
 - `i18n.py` and `data/i18n/`: interface language (see Translations below).
 - `main.py`: wiring and lifecycle.
 - `browser-extension/`: Manifest V3 extension for Chrome, Edge, Brave and Firefox; its texts are in `_locales/<language>/messages.json`.
@@ -39,13 +39,19 @@ A test fails while a `.ts` file is out of date with the code, while an entry is 
 
 To add a language: `python scripts/update-translations.py --new de`, translate `pawz_de.ts`, run the script again, then add the code and the language's own name to `LANGUAGES` in `src/pawz/i18n.py`. The language is chosen in Settings (`language` in the settings file: `auto` follows Windows); Qt's own translations of standard dialogs are loaded alongside. For the browser extension, add `browser-extension/_locales/<language>/messages.json`.
 
+## Themes
+The stylesheet (`CSS` in `ui/windows.py`), inline styles and icons are written in Midnight Blue colours. A theme in `ui/themes.py` maps each of them: Comfy Turquoise fills buttons with its accent `#00a8b0` and keeps the luminance ratios between colours: every blue's relative luminance is multiplied by the same factor (accent / button fill, about 4, capped at white) and its hue turned to the accent's. The application name takes the accent too. Neutral and status colours are left alone. Write new colours in Midnight Blue and pass inline styles through `themed()` (the application stylesheet is `stylesheet()`; icons from `vector_icon()` are themed already). A new theme is one `Theme` entry: an accent, the source colour it replaces (`anchor`), and overrides for colours that should not simply follow the ratio. The theme, like the language, is applied at startup; saving a change offers to restart (the new instance waits for the old one to exit, since it holds the browser bridge port).
+
+## Logo
+`design/` (git-ignored) holds the working files. `python scripts/update-logo.py` rebuilds `src/pawz/ui/assets/logo.svg` (framed square, PowerPoint's invisible text layer removed) and `logo.ico` from `design/logo/logo.svg`.
+
 ## Build
 `powershell -ExecutionPolicy Bypass -File scripts\build-windows.ps1`
 
 PyInstaller must run **on Windows**. The build is a `onedir` distribution in `dist\pawz` (do not move the `.exe` alone), with the docs, the example settings, the extension and the licence copied next to it. `pawz.spec` only ships what pawz uses: Qt Core/Gui/Widgets/Svg, the controller part of pygame and Qt's own translations for the target languages. `scripts/test-build-windows.ps1` then starts the executable from `%TEMP%` with isolated settings and checks the catalogue, schema, SVGs and fonts; it catches a library removed by mistake.
 
 ## Settings file
-`schema_version` 2, with a backup and migration from v1. `profiles` maps names to rules; `assignments` maps a registered device id to a profile name (old `GUID#occurrence` keys stay readable). `known_devices` remembers discovered controllers. `game_mode_auto`, `games` and `non_games` drive game mode. `language` is `auto` or a language code. `browser_token` is generated on first launch: never publish a settings file containing it. `config/example-settings.json` shows the defaults.
+`schema_version` 2, with a backup and migration from v1. `profiles` maps names to rules; `assignments` maps a registered device id to a profile name (old `GUID#occurrence` keys stay readable). `known_devices` remembers discovered controllers. `game_mode_auto`, `games` and `non_games` drive game mode. `language` is `auto` or a language code; `theme` is `comfy_turquoise` or `midnight_blue`. `browser_token` is generated on first launch: never publish a settings file containing it. `config/example-settings.json` shows the defaults.
 
 ## Environment variables
 - `PAWZ_DATA_DIR`: settings folder (isolates a test configuration).

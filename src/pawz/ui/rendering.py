@@ -1,24 +1,22 @@
 """Native-DPI icon painting and smooth, scalable text metrics."""
-from functools import lru_cache
 from pathlib import Path
 
 from PySide6.QtCore import QSize, Qt
 from PySide6.QtGui import QFont, QIcon, QPainter
 from PySide6.QtWidgets import QApplication, QLabel
 
+from pawz.ui.themes import themed_icon
+
 ICON_DIR = Path(__file__).resolve().parent / "assets" / "icons"
 
 
-@lru_cache(maxsize=16)
 def vector_icon(name: str) -> QIcon:
+    """An interface icon in the current theme's colours (cached per theme)."""
     path = ICON_DIR / (name + ".svg")
     if not path.is_file():
         raise ValueError(f"Missing vector icon: {name}")
-    icon = QIcon(str(path))
     disabled = path.with_name(name + "-disabled.svg")
-    if disabled.is_file():
-        icon.addFile(str(disabled), mode=QIcon.Mode.Disabled)
-    return icon
+    return themed_icon(str(path), str(disabled) if disabled.is_file() else None)
 
 
 def configure_text_rendering(app: QApplication) -> None:

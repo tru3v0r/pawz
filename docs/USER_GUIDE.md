@@ -47,14 +47,18 @@ The Windows on-screen keyboard does not open automatically: use `Win` + `Ctrl` +
 - **Manage profiles** opens the profiles tab of **Settings**.
 
 ## Settings
-Changes apply with **Save**; **Close** discards them.
+Settings have four tabs: **GENERAL**, **DISPLAY**, **PROFILES** and **CONTROLLERS** (see [Controllers](CONTROLLERS.md)). Changes apply with **Save**; **Close** discards them.
 
 ### General
 - **Launch at startup** registers pawz at logon; **Minimized to the taskbar** starts it minimized.
-- **Interface language**: **Automatic (Windows language)** uses the Windows display language when pawz has a translation for it, and English otherwise. A new choice applies the next time pawz starts.
 - **Default assigned profile** is used by controllers without a specific assignment.
 - **Game mode**: see below.
 - **Debug**: the debug window lists input events from five independent sources (SetWindowsHookEx, SetWinEventHook, UI Automation, Raw Input, ETW). Sources are off by default and show event types only, never keystroke contents. ETW asks for UAC elevation; its temporary traces are deleted when the source stops.
+
+### Display
+- **Interface language**: **Automatic (Windows language)** uses the Windows display language when pawz has a translation for it (English and French for now), and English otherwise.
+- **Color scheme**: **Comfy Turquoise** (default) or **Midnight Blue**, the original dark blue look.
+- Both apply when pawz restarts: after saving a change, pawz offers to restart right away.
 
 ### Profiles
 - Shortcuts are grouped by priority: **General**, then per application, then per website; the most specific wins.

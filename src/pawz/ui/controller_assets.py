@@ -13,6 +13,7 @@ from PySide6.QtWidgets import QWidget
 
 from pawz.core.controller_catalog import ControllerDefinition
 from pawz.infra.storage import DATA_DIR
+from pawz.ui.themes import themed
 
 ASSET_DIR = Path(__file__).resolve().parent / "assets" / "controllers"
 
@@ -142,7 +143,7 @@ class SvgView(QWidget):
                 f'fill="#20527b" stroke="#65baff"/><text x="{width/2}" y="23" '
                 f'text-anchor="middle" font-family="Inter 18pt" font-size="12" '
                 f'fill="white">{text}</text></svg>')
-        self.renderer.load(QByteArray(data.encode("utf-8")))
+        self.renderer.load(QByteArray(themed(data).encode("utf-8")))
         self.update()
 
     def set_controller_prompt(self, trigger: str, model: ControllerDefinition | None):

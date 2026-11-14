@@ -331,7 +331,7 @@ def test_profile_sections_navigation_order_and_visual_controls():
     app.processEvents()
     general_headings = settings_dialog.tabs.widget(0).findChildren(ProfileSectionHeading)
     assert [heading.label.text() for heading in general_headings] == [
-        "STARTUP", "LANGUAGE", "PROFILES", "GAME MODE", "DEBUG"]
+        "STARTUP", "PROFILES", "GAME MODE", "DEBUG"]
     assert not settings_dialog.findChildren(QFrame, "generalSection")
     assert not settings_dialog.findChildren(QGroupBox)
     for heading in general_headings:
@@ -590,7 +590,7 @@ def test_settings_dialog_separates_general_and_profile_options():
     minimized = dialog.findChild(QCheckBox, "startMinimized")
     default_profile = dialog.findChild(QComboBox, "defaultAssignedProfile")
 
-    assert [dialog.tabs.tabText(i) for i in range(dialog.tabs.count())] == ["GENERAL", "PROFILES", "CONTROLLERS"]
+    assert [dialog.tabs.tabText(i) for i in range(dialog.tabs.count())] == ["GENERAL", "DISPLAY", "PROFILES", "CONTROLLERS"]
     assert dialog.width() == 708
     assert dialog.height() == 720
     assert startup is not None
@@ -959,12 +959,10 @@ def test_main_window_lists_known_controllers_and_scrolls_overflow(monkeypatch):
     assert window.size().width() == 770
     assert window.height() == 440
     assert "font: 9.1pt" in CSS
-    assert "font: 26.4pt 'Matcha Style'" in CSS
-    brand = window.findChild(QLabel, "brand")
+    assert window.findChild(QLabel, "brand") is None  # the logo alone, without the name
     brand_icon = window.findChild(QLabel, "brandIcon")
-    assert brand is not None
-    assert brand.font().pointSizeF() == 21.1
-    assert brand_icon.width() == 32 and not brand_icon.icon.isNull()
+    assert brand_icon.size().toTuple() == (96, 96) and not brand_icon.icon.isNull()
+    assert abs(brand_icon.geometry().center().x() - window.width() / 2) <= 1
     assert brand_icon.font().pointSizeF() == 13
     assert window.slots[0].artwork.size().toTuple() == (126, 97)
     assert window.slots[0].width() == 140

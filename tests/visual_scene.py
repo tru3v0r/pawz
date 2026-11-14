@@ -51,9 +51,9 @@ def capture(destination: Path):
         dialog.resize(820, 760)
         dialog.show()
         for name, index, profile in (("general", 0, "Default"),
-                                      ("profiles-default", 1, "Default"),
-                                      ("profiles-custom", 1, "Invité"),
-                                      ("controllers", 2, "Invité")):
+                                      ("profiles-default", 2, "Default"),
+                                      ("profiles-custom", 2, "Invité"),
+                                      ("controllers", 3, "Invité")):
             dialog.tabs.setCurrentIndex(index)
             dialog.profile_picker.setCurrentText(profile)
             QTest.qWait(100)

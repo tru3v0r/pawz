@@ -530,8 +530,24 @@ Choisissez manuellement le modèle en cas d’ambiguïté.</translation>
         <translation>Réduit dans la barre des tâches</translation>
     </message>
     <message>
+        <source>DISPLAY</source>
+        <translation>AFFICHAGE</translation>
+    </message>
+    <message>
         <source>Language</source>
         <translation>Langue</translation>
+    </message>
+    <message>
+        <source>Color scheme</source>
+        <translation>Jeu de couleurs</translation>
+    </message>
+    <message>
+        <source>Restart {app}</source>
+        <translation>Redémarrer {app}</translation>
+    </message>
+    <message>
+        <source>Restart {app} now to apply the new language and theme?</source>
+        <translation>Redémarrer {app} maintenant pour appliquer la nouvelle langue et le nouveau thème ?</translation>
     </message>
     <message>
         <source>Automatic (Windows language)</source>
@@ -540,10 +556,6 @@ Choisissez manuellement le modèle en cas d’ambiguïté.</translation>
     <message>
         <source>Interface language</source>
         <translation>Langue de l&apos;interface</translation>
-    </message>
-    <message>
-        <source>The new language applies the next time pawz starts.</source>
-        <translation>La nouvelle langue s&apos;appliquera au prochain démarrage de pawz.</translation>
     </message>
     <message>
         <source>Profiles</source>
@@ -626,6 +638,14 @@ Choisissez manuellement le modèle en cas d’ambiguïté.</translation>
         <translation>Fermer</translation>
     </message>
     <message>
+        <source>Theme</source>
+        <translation>Thème</translation>
+    </message>
+    <message>
+        <source>Language and theme changes apply when pawz restarts.</source>
+        <translation>Les changements de langue et de thème s&apos;appliquent au redémarrage de pawz.</translation>
+    </message>
+    <message>
         <source>Profile exists</source>
         <translation>Profil existant</translation>
     </message>
@@ -688,6 +708,14 @@ Choisissez manuellement le modèle en cas d’ambiguïté.</translation>
     <message>
         <source>{app} — Startup</source>
         <translation>{app} — Démarrage</translation>
+    </message>
+    <message>
+        <source>Comfy Turquoise</source>
+        <translation>Comfy Turquoise</translation>
+    </message>
+    <message>
+        <source>Midnight Blue</source>
+        <translation>Midnight Blue</translation>
     </message>
 </context>
 <context>

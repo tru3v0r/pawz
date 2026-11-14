@@ -88,11 +88,12 @@ def test_settings_dialog_offers_languages_and_explains_the_restart(qtbot):
     from pawz.ui.windows import SettingsDialog
     dialog = SettingsDialog(Settings.defaults())
     qtbot.addWidget(dialog)
+    assert dialog.tabs.tabText(1) == "DISPLAY"
     picker = dialog.language_picker
     assert [picker.itemData(i) for i in range(picker.count())] == ["auto", "en", "fr"]
     assert picker.itemText(2) == "Français"
-    assert dialog.language_note.isHidden()
+    assert dialog.display_note.isHidden() and not dialog.display_changed()
     picker.setCurrentIndex(2)
-    assert not dialog.language_note.isHidden()
+    assert not dialog.display_note.isHidden() and dialog.display_changed()
     picker.setCurrentIndex(0)
-    assert dialog.language_note.isHidden()
+    assert dialog.display_note.isHidden()

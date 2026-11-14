@@ -1,6 +1,6 @@
 # Controllers, mappings and profiles
 
-Settings have three tabs: **GENERAL**, **PROFILES** and **CONTROLLERS**. Profile and device changes apply with **Save** and are discarded with **Close**. Explicit operations on the custom catalogue (duplicate, edit, delete a model) are saved immediately, in their own file.
+Settings have four tabs: **GENERAL**, **DISPLAY**, **PROFILES** and **CONTROLLERS**. Profile and device changes apply with **Save** and are discarded with **Close**. Explicit operations on the custom catalogue (duplicate, edit, delete a model) are saved immediately, in their own file.
 
 ## Profiles
 
