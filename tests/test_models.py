@@ -16,7 +16,12 @@ def test_defaults():
     assert p.resolve('b', 'brave.exe', 'youtube.com').action == 'left_click'
     assert p.resolve('x', 'firefox.exe', 'www.youtube.com').action == 'play_pause'
     assert p.resolve('y', 'brave.exe', 'm.youtube.com').action == 'fullscreen'
-    assert p.resolve('a', 'vlc.exe').action == 'play_pause'
+    # VLC uses the same video buttons as YouTube, subtitles on the left stick click.
+    assert p.resolve('x', 'vlc.exe').action == 'play_pause'
+    assert p.resolve('y', 'vlc.exe').action == 'fullscreen'
+    assert p.resolve('left_stick', 'vlc.exe').action == 'key_combo'
+    assert p.resolve('left_stick', 'vlc.exe').keys == 'v'
+    assert p.resolve('left_stick', 'firefox.exe', 'youtube.com').action == 'subtitles'
     assert p.resolve('a+l', 'brave.exe').action == 'none'
     assert {
         button: (p.resolve(button).action, p.resolve(button).keys)

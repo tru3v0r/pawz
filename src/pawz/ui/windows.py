@@ -9,7 +9,19 @@ from datetime import datetime
 from pathlib import Path
 from uuid import uuid4
 
-from PySide6.QtCore import QLocale, QPoint, QProcess, QPropertyAnimation, QRectF, QSize, Qt, QTimer, Signal
+from PySide6.QtCore import (
+    QByteArray,
+    QLocale,
+    QPoint,
+    QPointF,
+    QProcess,
+    QPropertyAnimation,
+    QRectF,
+    QSize,
+    Qt,
+    QTimer,
+    Signal,
+)
 from PySide6.QtGui import (
     QColor,
     QFontDatabase,
@@ -20,6 +32,7 @@ from PySide6.QtGui import (
     QPen,
     QPixmap,
 )
+from PySide6.QtSvg import QSvgRenderer
 from PySide6.QtWidgets import (
     QApplication,
     QCheckBox,
@@ -50,7 +63,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from pawz import APP_NAME
+from pawz import APP_NAME, APP_VERSION
 from pawz.core.controller_catalog import ControllerCatalog
 from pawz.core.controller_services import resolve_model
 from pawz.core.controllers import battery_percentage
@@ -61,14 +74,15 @@ from pawz.core.models import (
     Binding,
     Profile,
     normalize_trigger,
+    vlc_bindings,
 )
 from pawz.engine import actions as action_catalogue
 from pawz.i18n import AUTO, LANGUAGES, tr
 from pawz.infra.debug_events import RawInputListener, WindowsEventSources
 from pawz.infra.startup import configure_startup
 from pawz.infra.storage import DATA_DIR, save
-from pawz.ui import artwork_styles
-from pawz.ui.controller_assets import SvgView, renderer_for, resolve_artwork
+from pawz.ui import artwork_styles, themes
+from pawz.ui.controller_assets import SvgView, controller_prompt_svg, renderer_for, resolve_artwork
 from pawz.ui.controllers_page import ControllersPage, model_name
 from pawz.ui.rendering import ScalableIconLabel, configure_text_rendering, vector_icon
 from pawz.ui.themes import THEMES, themed
@@ -79,7 +93,7 @@ RESTART_FLAG = "--after-exit-of"  # followed by the PID the new instance waits f
 SECTION_CONTENT_GAP = 18
 CONTROL_ROW_GAP = 12
 SHORTCUT_ROW_GAP = 6
-SHORTCUT_PROMPT_WIDTH = 72
+SHORTCUT_PROMPT_WIDTH = 96
 SHORTCUT_PROMPT_HEIGHT = 24
 _LOADED_FONT_PATHS: set[Path] = set()
 
@@ -114,7 +128,8 @@ def profile_action_button(title: str, action: str, parent=None) -> QPushButton:
     button.setToolTip(title)
     button.setFixedSize(34, 34)
     button.setIconSize(QSize(18, 18))
-    button.setIcon(vector_icon({"duplicate": "duplicate", "edit": "pencil", "delete": "cross"}[action]))
+    button.setIcon(vector_icon(
+        {"duplicate": "duplicate", "edit": "pencil", "delete": "cross", "add": "plus"}[action]))
     _style_profile_button(button, padding="0", radius=7)
     button.setStyleSheet(button.styleSheet() + themed(
         "QPushButton:disabled { background:#20385c; border-color:#405b7d; }"))
@@ -177,7 +192,7 @@ QLabel#profileSectionTitle { color:#ffffff; background:#1b355b; padding:0 5px; }
 QLabel#profileSectionIcon { background:#1b355b; }
 QWidget#profileSectionContent { background:transparent; }
 QFrame#settingsSectionSeparator { color:#4b83bd; background:#4b83bd; border:0; }
-QFrame#addProfileSeparator { color:#4b83bd; background:#4b83bd; border:0; }
+QFrame#profileActionsSeparator { color:#4b83bd; background:#4b83bd; border:0; }
 QScrollArea#profileScroll QFrame#settingsSectionSeparator { color:#4b83bd; background:#4b83bd; border:0; }
 QWidget#profileSectionHeading QFrame#settingsSectionSeparator { color:#4b83bd; background:#4b83bd; border:0; }
 QWidget#profileSectionHeading { background:transparent; }
@@ -227,6 +242,10 @@ QComboBox QAbstractItemView { color:#f5f7fb; background:#1b355b; border:1px soli
 QComboBox QAbstractItemView::item { min-height:28px; padding:4px 10px; }
 QComboBox QAbstractItemView::item:hover { background:#28618e; }
 QComboBox QAbstractItemView::item:selected { color:#ffffff; background:#2765cc; }
+QListWidget { color:#f5f7fb; background:#1b355b; border:1px solid #4b6c97; border-radius:7px; padding:4px; outline:0; }
+QListWidget::item { min-height:26px; padding:2px 8px; border-radius:4px; }
+QListWidget::item:hover { background:#28618e; }
+QListWidget::item:selected { color:#ffffff; background:#20527b; border:1px solid #3187c7; }
 QCheckBox { spacing:8px; }
 QCheckBox::indicator { width:15px; height:15px; border:1px solid #4b83bd; border-radius:3px; background:#1b355b; }
 QCheckBox::indicator:hover { border-color:#65baff; }
@@ -234,6 +253,12 @@ QCheckBox::indicator:checked { image:url("__CHECKBOX_CHECK__"); background:#2765
 QScrollArea { border:0; }
 QScrollArea#controllersScroll, QWidget#controllersContent { background:#1b355b; }
 QTableWidget#controllerCorrespondences, QTableWidget#controllerIdentification { background:#1b355b; color:#ffffff; gridline-color:#4b83bd; border:1px solid #4b83bd; }
+QLabel#credits { color:#b9d5ff; }
+QLabel#credits a { color:#ffffff; }
+QLabel#extensionNote { color:#b9d5ff; background:transparent; padding:0 22px; }
+QPushButton#copyGuid { background:transparent; border:0; padding:0; }
+QPushButton#copyGuid:hover { background:#28618e; border-radius:4px; }
+QWidget#scrollHeaderSpacer { background:transparent; }
 QHeaderView::section { background:#17345e; color:#ffffff; border:1px solid #4b83bd; padding:6px; }
 QScrollArea#controllerScroll { background:transparent; }
 QScrollArea#controllerScroll QWidget { background:transparent; }
@@ -340,7 +365,9 @@ class SettingsTabWidget(QTabWidget):
 
 class ProfileSectionFrame(QFrame):
     HEADER_OVERLAP = 15
-    REMOVE_BUTTON_OVERLAP = 11
+    # The remove button is centred on the border's top-right corner: the top border
+    # meets the middle of its left side, the right border the middle of its bottom.
+    REMOVE_BUTTON_OVERLAP = 10
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -368,6 +395,8 @@ class ProfileSectionFrame(QFrame):
         if self._header is not None and isinstance(self._header, ProfileSectionHeader):
             if self._header.remove_button is not None:
                 border_width = max(0, border_width - self.REMOVE_BUTTON_OVERLAP)
+                # A square corner, hidden by the button, so both borders reach it straight.
+                self._border.setStyleSheet("QFrame#profileSectionBorder { border-top-right-radius:0; }")
         self._border.setGeometry(
             0, self.HEADER_OVERLAP, border_width,
             max(0, self.height() - self.HEADER_OVERLAP))
@@ -423,7 +452,7 @@ class ProfileSectionHeader(QWidget):
         super().resizeEvent(event)
         rule_width = self.width()
         if self.remove_button is not None:
-            rule_width -= (self.remove_button.width() + 1) // 2
+            rule_width -= (self.remove_button.width() - 1) // 2  # to the right border
             self.remove_button.move(
                 self.width() - self.remove_button.width(),
                 self.height() // 2 - (self.remove_button.height() - 1) // 2)
@@ -579,6 +608,13 @@ class ProfileEditor(QWidget):
                           self._application_icon(name))
         if self.profile.sites:
             self._heading(tr("Websites"))
+        extension_note = QLabel(tr(
+            "Website shortcuts need the pawz browser extension, installed in your browser "
+            "and connected with its token (see the user guide)."))
+        extension_note.setObjectName("extensionNote")
+        extension_note.setWordWrap(True)
+        extension_note.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.sections.addWidget(extension_note)
         add_site = QPushButton(tr("Add a website..."), self)
         add_site.setObjectName("settingsAction")
         _style_profile_button(add_site, padding="6px 12px", radius=6)
@@ -741,7 +777,9 @@ class ProfileEditor(QWidget):
             hotkey.set_render_scale(0.9)
             hotkey.set_controller_prompt(trigger, self.display_model)
             hotkey.setToolTip(trigger)
-            row.addWidget(hotkey, 0, 1, Qt.AlignmentFlag.AlignCenter)
+            # Spans the whole row so every prompt is centred on the section, whatever the
+            # widths of the action label and of the edit/remove buttons.
+            row.addWidget(hotkey, 0, 0, 1, 5, Qt.AlignmentFlag.AlignCenter)
             edit = QPushButton()
             edit.setIcon(pencil_icon())
             edit.setIconSize(QSize(14, 14))
@@ -983,7 +1021,7 @@ class ProfileEditor(QWidget):
         if filename:
             self.profile.apps.setdefault(
                 Path(filename).name.lower(),
-                {"SOUTH": Binding("play_pause")} if Path(filename).name.lower() == "vlc.exe" else {})
+                vlc_bindings() if Path(filename).name.lower() == "vlc.exe" else {})
             self.draw()
 
     def add_site(self):
@@ -1322,6 +1360,23 @@ class SettingsDialog(QDialog):
         self.debug_button.clicked.connect(self.open_debug_window)
         general_layout.addSpacing(CONTROL_ROW_GAP)
         general_layout.addWidget(self.debug_button)
+        general_layout.addSpacing(20)
+        general_layout.addWidget(ProfileSectionHeading(tr("About")))
+        general_layout.addSpacing(SECTION_CONTENT_GAP)
+        credits = QLabel(tr(
+            "{app} {version}, free software under the GPL 3.0 or later licence.<br>"
+            "Controller drawings and button icons: "
+            "<a href=\"https://github.com/AL2009man/Gamepad-Asset-Pack\">Gamepad Asset Pack</a> and "
+            "<a href=\"https://github.com/AL2009man/Gamepad-Prompt-Asset-Pack\">Gamepad Prompt Asset Pack</a> "
+            "by Al. Lopez (AL2009man), MIT licence.<br>"
+            "Fonts: Inter (SIL Open Font License) and Matcha Style by Khurasan Studio."
+        ).format(app=APP_NAME, version=APP_VERSION))
+        credits.setObjectName("credits")
+        credits.setWordWrap(True)
+        credits.setTextFormat(Qt.TextFormat.RichText)
+        credits.setOpenExternalLinks(True)
+        credits.setContentsMargins(8, 0, 0, 0)
+        general_layout.addWidget(credits)
         general_layout.addStretch()
         self.tabs.addTab(general_tab, tr("GENERAL"))
         self.tabs.addTab(self._display_tab(settings), tr("DISPLAY"))
@@ -1329,29 +1384,15 @@ class SettingsDialog(QDialog):
         profiles_tab = QWidget()
         profiles_tab.setObjectName("settingsPage")
         profiles_layout = QVBoxLayout(profiles_tab)
-        profiles_layout.setContentsMargins(14, 14, 14, 12)
+        profiles_layout.setContentsMargins(14, 22, 14, 12)
         profiles_layout.setSpacing(8)
-        profile_actions = QWidget()
-        profile_actions_layout = QVBoxLayout(profile_actions)
-        profile_actions_layout.setContentsMargins(14, 16, 14, 14)
-        profile_actions_layout.setSpacing(18)
-        self.add_profile_button = QPushButton(tr("Add a profile..."))
-        self.add_profile_button.setObjectName("settingsAction")
-        self.add_profile_button.clicked.connect(self.add_profile)
-        profile_actions_layout.addWidget(
-            self.add_profile_button, 0, Qt.AlignmentFlag.AlignCenter)
-        profile_separator = QFrame()
-        profile_separator.setObjectName("addProfileSeparator")
-        profile_separator.setFixedHeight(1)
-        profile_actions_layout.addWidget(profile_separator)
-        profiles_layout.addWidget(profile_actions)
         self.profile_picker = QComboBox()
         self.profile_picker.setObjectName("settingsProfilePicker")
         self.profile_picker.addItems(self.profiles)
         profile_selectors = QGridLayout()
         profile_selectors.setContentsMargins(14, 0, 0, 0)
         profile_selectors.setHorizontalSpacing(8)
-        profile_selectors.setVerticalSpacing(8)
+        profile_selectors.setVerticalSpacing(18)
         profile_selectors.setColumnStretch(1, 1)
         profile_label = QLabel(tr("Profile"))
         profile_label.setObjectName("profilePickerLabel")
@@ -1372,6 +1413,16 @@ class SettingsDialog(QDialog):
             action_column += 1
             if name == "deleteProfile":
                 self.delete_profile_button = button
+        # Adding is set apart from the actions on the selected profile: a vertical
+        # rule in its own column doubles the gap.
+        actions_separator = QFrame()
+        actions_separator.setObjectName("profileActionsSeparator")
+        actions_separator.setFixedSize(1, 24)
+        profile_selectors.addWidget(actions_separator, 0, action_column, Qt.AlignmentFlag.AlignCenter)
+        self.add_profile_button = profile_action_button(tr("Add a profile"), "add")
+        self.add_profile_button.setObjectName("addProfile")
+        self.add_profile_button.clicked.connect(self.add_profile)
+        profile_selectors.addWidget(self.add_profile_button, 0, action_column + 1)
         self.display_model_picker = QComboBox()
         self.display_model_picker.setObjectName("displayControllerModel")
         for model in self.catalog.definitions:
@@ -1385,9 +1436,10 @@ class SettingsDialog(QDialog):
         profile_selectors.addWidget(self.display_model_picker, 1, 1)
         self.display_model_preview = SvgView()
         self.display_model_preview.setObjectName("displayModelPreview")
-        # Beside its picker, under the profile action buttons, centred on the row.
-        self.display_model_preview.setFixedSize(3 * 34 + 2 * profile_selectors.horizontalSpacing(), 64)
-        profile_selectors.addWidget(self.display_model_preview, 1, 2, 1, 3, Qt.AlignmentFlag.AlignCenter)
+        # Beside its picker, under the profile buttons, centred on the row; the picker
+        # shares the profile picker's column, so both have the same width.
+        self.display_model_preview.setFixedSize(150, 48)
+        profile_selectors.addWidget(self.display_model_preview, 1, 2, 1, 5, Qt.AlignmentFlag.AlignCenter)
         self._update_display_model_preview()
         profiles_layout.addLayout(profile_selectors)
         self.profile_editor_host = QWidget()
@@ -1650,6 +1702,9 @@ class ControllerArtwork(QWidget):
     # Crown outline around (0, 0) = middle of its base, in pixels.
     CROWN = ((-9, -9), (-5, -5), (0, -13), (5, -5), (9, -9), (7, 0), (-7, 0))
 
+    STICK_THRESHOLD = 0.2  # a stick counts as moved beyond this deflection
+    LIVE_ICON = 16  # px, pressed-button icons between the grips
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.connected = False
@@ -1657,6 +1712,10 @@ class ControllerArtwork(QWidget):
         self.svg_renderer = None
         self._top_edge: tuple[tuple, tuple[float, QColor]] | None = None
         self.crown_rect = QRectF()
+        self.model = None
+        self.live: tuple[frozenset[str], tuple[float, ...]] = (frozenset(), (0.0, 0.0, 0.0, 0.0))
+        self.named_elements: dict[str, str] = {}
+        self._prompt_renderers: dict[tuple[str, str], QSvgRenderer] = {}
         self.setMouseTracking(True)
 
     def set_illustration(self, path):
@@ -1664,7 +1723,114 @@ class ControllerArtwork(QWidget):
             self.svg_renderer.deleteLater()
         self.svg_renderer = renderer_for(path, self) if path else None
         self._top_edge = None
+        self.named_elements = self._find_named_elements()
         self.update()
+
+    def _find_named_elements(self) -> dict[str, str]:
+        """Logical input -> SVG element id, when the drawing names its buttons.
+
+        An element (or Inkscape layer) whose id is the logical name, such as ``SOUTH``,
+        ``LEFT_TRIGGER`` or ``LEFT_STICK`` (any case), marks where that input is drawn.
+        """
+        if not (self.svg_renderer and self.svg_renderer.isValid()):
+            return {}
+        found = {}
+        for logical in (*BUTTONS, "LEFT_STICK", "RIGHT_STICK"):
+            for candidate in (logical, logical.lower(), "pawz-" + logical.lower()):
+                if self.svg_renderer.elementExists(candidate):
+                    found[logical] = candidate
+                    break
+        return found
+
+    def set_live(self, pressed: frozenset[str], sticks: tuple[float, ...]):
+        """Show held buttons and moved sticks; repaints only when that changes."""
+        moved = tuple(round(value, 2) if abs(value) > self.STICK_THRESHOLD else 0.0 for value in sticks)
+        if (pressed, moved) != (self.live[0], tuple(round(v, 2) if abs(v) > self.STICK_THRESHOLD else 0.0
+                                                    for v in self.live[1])):
+            self.live = (pressed, sticks)
+            self.update()
+
+    def _element_rect(self, element: str, rect: QRectF) -> QRectF:
+        """Where an SVG element is drawn inside ``rect`` (the rendered drawing)."""
+        renderer = self.svg_renderer
+        bounds = renderer.transformForElement(element).mapRect(renderer.boundsOnElement(element))
+        view = renderer.viewBoxF()
+        scale_x, scale_y = rect.width() / view.width(), rect.height() / view.height()
+        return QRectF(rect.x() + (bounds.x() - view.x()) * scale_x,
+                      rect.y() + (bounds.y() - view.y()) * scale_y,
+                      bounds.width() * scale_x, bounds.height() * scale_y)
+
+    def _prompt(self, logical: str) -> QSvgRenderer:
+        key = (logical, self.model.id if self.model else "")
+        if key not in self._prompt_renderers:
+            data, _ = controller_prompt_svg(logical, self.model)
+            self._prompt_renderers[key] = QSvgRenderer(QByteArray(data), self)
+        return self._prompt_renderers[key]
+
+    def paint_live(self, painter: QPainter, rect: QRectF):
+        pressed, axes = self.live
+        sticks = [(name, axes[index], axes[index + 1]) for name, index in (("LEFT_STICK", 0), ("RIGHT_STICK", 2))
+                  if max(abs(axes[index]), abs(axes[index + 1])) > self.STICK_THRESHOLD]
+        if not pressed and not sticks:
+            return
+        accent = QColor(themed(themes.BUTTON_OUTLINE))
+        painter.save()
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        loose_buttons = []
+        for logical in sorted(pressed, key=lambda name: BUTTONS.index(name) if name in BUTTONS else 99):
+            if logical in self.named_elements:  # light up the button where it is drawn
+                area = self._element_rect(self.named_elements[logical], rect)
+                glow = QColor(accent)
+                glow.setAlpha(150)
+                painter.setPen(QPen(accent, 1.5))
+                painter.setBrush(glow)
+                painter.drawEllipse(area.adjusted(-1, -1, 1, 1))
+            else:
+                loose_buttons.append(logical)
+        loose_sticks = []
+        for name, x, y in sticks:
+            if name in self.named_elements:  # a dot travels within the stick
+                area = self._element_rect(self.named_elements[name], rect)
+                radius = max(2.0, min(area.width(), area.height()) / 5)
+                centre = area.center()
+                dot = QPointF(centre.x() + x * (area.width() / 2 - radius),
+                              centre.y() + y * (area.height() / 2 - radius))
+                painter.setPen(QPen(QColor("#ffffff"), 1))
+                painter.setBrush(accent)
+                painter.drawEllipse(dot, radius, radius)
+            else:
+                loose_sticks.append((x, y))
+        if loose_buttons or loose_sticks:
+            self._paint_between_grips(painter, rect, loose_buttons, loose_sticks, accent)
+        painter.restore()
+
+    def _paint_between_grips(self, painter, rect, buttons, sticks, accent):
+        """Unplaceable inputs, translucent, centred low on the drawing between the grips."""
+        size = self.LIVE_ICON
+        gap = 3
+        count = len(buttons) + len(sticks)
+        width = count * size + (count - 1) * gap
+        x = rect.center().x() - width / 2
+        y = rect.y() + rect.height() * 0.78 - size / 2
+        backdrop = QColor(themed("#10233f"))
+        backdrop.setAlpha(150)
+        painter.setPen(Qt.PenStyle.NoPen)
+        painter.setBrush(backdrop)
+        painter.drawRoundedRect(QRectF(x - 4, y - 3, width + 8, size + 6), (size + 6) / 2, (size + 6) / 2)
+        painter.setOpacity(painter.opacity() * 0.9)
+        for logical in buttons:
+            self._prompt(logical).render(painter, QRectF(x, y, size, size))
+            x += size + gap
+        for stick_x, stick_y in sticks:
+            centre = QPointF(x + size / 2, y + size / 2)
+            painter.setPen(QPen(accent, 1.2))
+            painter.setBrush(Qt.BrushStyle.NoBrush)
+            painter.drawEllipse(centre, size / 2 - 1, size / 2 - 1)
+            painter.setPen(Qt.PenStyle.NoPen)
+            painter.setBrush(QColor("#ffffff"))
+            painter.drawEllipse(QPointF(centre.x() + stick_x * (size / 2 - 4),
+                                        centre.y() + stick_y * (size / 2 - 4)), 2.5, 2.5)
+            x += size + gap
 
     def artwork_rect(self) -> QRectF:
         size = self.svg_renderer.defaultSize()
@@ -1741,6 +1907,9 @@ class ControllerArtwork(QWidget):
             rect = self.artwork_rect()
             painter.setOpacity(1.0 if self.connected else 0.2)
             self.svg_renderer.render(painter, rect)
+            if self.connected:
+                painter.setOpacity(1.0)
+                self.paint_live(painter, rect)
             if self.connected and self.primary:
                 self.paint_crown(painter, rect)
             return
@@ -1853,13 +2022,13 @@ class ControllerSlot(QWidget):
 
         self.battery_bar = QProgressBar()
         self.battery_bar.setTextVisible(False)
-        self.battery_bar.setFixedSize(78, 5)
+        self.battery_bar.setFixedSize(78, 6)
         self.battery_bar.valueChanged.connect(self._update_battery_color)
         self._connected = False
         self._battery_known = False
         self._battery_target: int | None = None
         self.battery_animation = QPropertyAnimation(self.battery_bar, b"value", self)
-        self.battery_animation.setDuration(1400)
+        self.battery_animation.setDuration(700)
         layout.addWidget(self.battery_bar, 0, Qt.AlignmentFlag.AlignHCenter)
         layout.addSpacing(6)
 
@@ -1943,6 +2112,7 @@ class ControllerSlot(QWidget):
         else:
             color = "#00c96b" if value >= 80 else "#ffc21c" if value >= 50 else "#f26945"
         self.battery_bar.setStyleSheet(themed(
+            # Radius half the height, on the track and the fill alike.
             f"QProgressBar {{ background:#17345e; border:0; border-radius:3px; }}"
             f"QProgressBar::chunk {{ background:{color}; border-radius:3px; }}"))
 
@@ -2080,6 +2250,11 @@ class MainWindow(QMainWindow):
         self._battery_timer.setInterval(1000)
         self._battery_timer.timeout.connect(self.refresh_battery)
         self._battery_timer.start()
+        # Held buttons and moved sticks, drawn on each connected controller while the
+        # window is visible (about 30 times a second).
+        self._live_timer = QTimer(self)
+        self._live_timer.setInterval(33)
+        self._live_timer.timeout.connect(self.refresh_live)
         self.refresh()
 
         app = QApplication.instance()
@@ -2141,7 +2316,8 @@ class MainWindow(QMainWindow):
             preferences = self.settings.device_preferences.get(key, {})
             model_id = resolve_model(catalog.definitions, preferences.get("guid", ""), name,
                                      preferences.get("model_id"))
-            slot.artwork.set_illustration(resolve_artwork(catalog.get(model_id), preferences.get("svg")))
+            slot.artwork.model = catalog.get(model_id)
+            slot.artwork.set_illustration(resolve_artwork(slot.artwork.model, preferences.get("svg")))
             name = preferences.get("name") or name
             power = self.manager.power_levels.get(key, "unknown") if key else "unknown"
             assigned = self.settings.assignments.get(key, self.settings.default_profile) if key else None
@@ -2182,6 +2358,20 @@ class MainWindow(QMainWindow):
         has_overflow = scrollbar.maximum() > 0
         self.previous_controllers[1].setVisible(has_overflow and scrollbar.value() > 0)
         self.next_controllers[1].setVisible(has_overflow and scrollbar.value() < scrollbar.maximum())
+
+    def refresh_live(self):
+        live_state = getattr(self.manager, "live_state", {})
+        for slot in self.slots:
+            if slot.device_key and slot.device_key in live_state:
+                slot.artwork.set_live(*live_state[slot.device_key])
+
+    def showEvent(self, event):
+        super().showEvent(event)
+        self._live_timer.start()
+
+    def hideEvent(self, event):
+        self._live_timer.stop()
+        super().hideEvent(event)
 
     def refresh_battery(self):
         for slot in self.slots:

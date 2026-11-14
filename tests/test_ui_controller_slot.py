@@ -274,7 +274,7 @@ def test_profile_sections_navigation_order_and_visual_controls():
     hotkey = application.findChild(SvgView, "bindingPrompt")
     remove = application.findChild(QPushButton, "removeBinding")
     assert content is not None and hotkey is not None and remove is not None
-    assert hotkey.width() == 72
+    assert hotkey.width() == 96
     assert hotkey.testAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
     for button in application.findChildren(SvgView, "bindingPrompt"):
         assert button.width() >= button.height()
@@ -331,7 +331,7 @@ def test_profile_sections_navigation_order_and_visual_controls():
     app.processEvents()
     general_headings = settings_dialog.tabs.widget(0).findChildren(ProfileSectionHeading)
     assert [heading.label.text() for heading in general_headings] == [
-        "STARTUP", "PROFILES", "GAME MODE", "DEBUG"]
+        "STARTUP", "PROFILES", "GAME MODE", "DEBUG", "ABOUT"]
     assert not settings_dialog.findChildren(QFrame, "generalSection")
     assert not settings_dialog.findChildren(QGroupBox)
     for heading in general_headings:
@@ -492,7 +492,7 @@ def test_settings_active_tab_overlaps_panel_border():
     dialog.close()
 
 
-def test_add_profile_separator_is_below_button():
+def test_add_profile_button_follows_the_profile_actions_after_a_rule():
     app = QApplication.instance() or QApplication([])
     app.setStyleSheet(CSS)
     dialog = SettingsDialog(Settings.defaults(), initial_tab="profiles")
@@ -500,26 +500,21 @@ def test_add_profile_separator_is_below_button():
     dialog.show()
     app.processEvents()
 
-    separator = dialog.findChild(QFrame, "addProfileSeparator")
-    assert separator is not None
-    button = dialog.add_profile_button
-    button_top = button.mapTo(dialog, QPoint(0, 0)).y()
-    button_bottom = button.mapTo(dialog, QPoint(0, button.height())).y()
-    separator_top = separator.mapTo(dialog, QPoint(0, 0)).y()
-    profile_actions = dialog.findChild(QWidget, "addProfileSeparator").parentWidget()
-    profile_margins = profile_actions.layout().contentsMargins()
-    button_bottom = button.mapTo(dialog, QPoint(0, button.height())).y()
-    assert button_top - profile_actions.mapTo(dialog, QPoint(0, 0)).y() >= 16
-    assert separator_top - button_bottom >= 18
-    assert profile_margins.bottom() >= 14
-    assert separator.width() >= 600
-    image = dialog.grab().toImage()
-    assert image.pixelColor(button.mapTo(
-        dialog, QPoint(3, button.height() // 2))) == QColor("#20527b")
-    profile_picker_top = dialog.profile_picker.mapTo(dialog, QPoint(0, 0)).y()
-    assert profile_picker_top - separator.mapTo(dialog, QPoint(0, separator.height())).y() >= 12
-    dialog.close()
-
+    assert dialog.findChild(QFrame, "addProfileSeparator") is None
+    delete, add = dialog.delete_profile_button, dialog.add_profile_button
+    rule = dialog.findChild(QFrame, "profileActionsSeparator")
+    assert add.text() == "" and add.toolTip() == "Add a profile" and not add.icon().isNull()
+    def left(widget): return widget.mapTo(dialog, QPoint(0, 0)).x()
+    gap = left(add) - (left(delete) + delete.width())
+    duplicate = dialog.findChild(QPushButton, "duplicateProfile")
+    rename = dialog.findChild(QPushButton, "renameProfile")
+    normal_gap = left(rename) - (left(duplicate) + duplicate.width())
+    assert gap >= 2 * normal_gap
+    assert left(delete) + delete.width() < left(rule) < left(add)
+    assert rule.mapTo(dialog, QPoint(0, 0)).y() > delete.mapTo(dialog, QPoint(0, 0)).y()
+    # The two pickers share a column; the controller preview sits beside the second.
+    assert dialog.display_model_picker.width() == dialog.profile_picker.width()
+    assert dialog.display_model_preview.height() == 48
 
 def test_controller_name_wraps_onto_multiple_lines_when_needed():
     app = QApplication.instance() or QApplication([])
@@ -1124,3 +1119,75 @@ def test_primary_crown_stands_on_the_drawings_top_line(qtbot):
     assert color.name() == "#3187c7"  # Eye Candy outline (Midnight Blue)
     crown_centre = widget.crown_rect.center().toPoint()
     assert image.pixelColor(crown_centre.x(), crown_centre.y() + 2).name() == "#f9c74f"
+
+
+def test_remove_button_sits_on_the_corner_and_prompts_are_centred(qtbot):
+    from pawz.ui.windows import ProfileEditor
+    editor = ProfileEditor(Settings.defaults().profiles["Default"])
+    qtbot.addWidget(editor)
+    editor.resize(640, 900)
+    editor.show()
+    qtbot.wait(20)
+    frame = next(frame for frame in editor.findChildren(QFrame, "profileSectionFrame")
+                 if frame.findChild(QPushButton, "removeSection"))
+    remove = frame.findChild(QPushButton, "removeSection")
+    border = frame.findChild(QFrame, "profileSectionBorder")
+    centre = remove.mapTo(frame, QPoint(remove.width() // 2, remove.height() // 2))
+    border_top_left = border.mapTo(frame, QPoint(0, 0))
+    # The top border meets the middle of the button's left side, the right border the
+    # middle of its bottom side.
+    assert centre.y() == border_top_left.y()
+    assert centre.x() == border_top_left.x() + border.width() - 1
+    content = frame.findChild(QWidget, "profileSectionContent")
+    for prompt in content.findChildren(QWidget, "bindingPrompt"):
+        middle = prompt.mapTo(content, QPoint(prompt.width() // 2, 0)).x()
+        assert abs(middle - content.width() // 2) <= 1
+
+
+def test_websites_section_explains_the_extension_is_needed(qtbot):
+    from pawz.ui.windows import ProfileEditor
+    editor = ProfileEditor(Settings.defaults().profiles["Default"])
+    qtbot.addWidget(editor)
+    note = editor.findChild(QLabel, "extensionNote")
+    assert note is not None and "browser extension" in note.text()
+
+
+def _live_artwork(qtbot, svg_path, pressed, sticks):
+    from pawz.core.controller_catalog import load_builtin_catalog
+    from pawz.ui.windows import ControllerArtwork
+    widget = ControllerArtwork()
+    qtbot.addWidget(widget)
+    widget.resize(126, 97)
+    widget.model = next(m for m in load_builtin_catalog() if m.id == "microsoft.xbox-360")
+    widget.set_illustration(svg_path)
+    widget.set_state(True, False)
+    widget.set_live(frozenset(pressed), sticks)
+    return widget
+
+
+def test_named_buttons_light_up_where_they_are_drawn(qtbot, tmp_path):
+    svg = tmp_path / "named.svg"
+    svg.write_text('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 60">'
+                   '<rect width="100" height="60" fill="#000000"/>'
+                   '<circle id="SOUTH" cx="80" cy="40" r="6" fill="#ffffff"/>'
+                   '<circle id="left_stick" cx="25" cy="25" r="10" fill="#ffffff"/></svg>')
+    widget = _live_artwork(qtbot, svg, {"SOUTH"}, (0.0, 0.0, 0.0, 0.0))
+    assert set(widget.named_elements) == {"SOUTH", "LEFT_STICK"}
+    rect = widget.artwork_rect()
+    button = widget._element_rect("SOUTH", rect)
+    assert abs(button.center().x() - (rect.x() + rect.width() * 0.8)) < 1.5
+    image = widget.grab().toImage()
+    assert image.pixelColor(button.center().toPoint()).name() != "#ffffff"  # lit with the accent
+
+
+def test_unnamed_drawings_show_inputs_between_the_grips_only_while_active(qtbot):
+    from pawz.ui.controller_assets import ASSET_DIR
+    path = ASSET_DIR / "library" / "xbox-360.svg"
+    idle = _live_artwork(qtbot, path, set(), (0.05, 0.0, 0.0, 0.0)).grab().toImage()
+    active_widget = _live_artwork(qtbot, path, {"SOUTH"}, (0.0, 0.0, 0.0, 0.9))
+    assert not active_widget.named_elements
+    active = active_widget.grab().toImage()
+    rect = active_widget.artwork_rect()
+    y = round(rect.y() + rect.height() * 0.78)
+    row = range(round(rect.left()), round(rect.right()))
+    assert any(idle.pixelColor(x, y) != active.pixelColor(x, y) for x in row)

@@ -108,8 +108,36 @@
         <translation>Statut</translation>
     </message>
     <message>
+        <source>Copy</source>
+        <translation>Copier</translation>
+    </message>
+    <message>
+        <source>Copy the SDL GUID</source>
+        <translation>Copier le GUID SDL</translation>
+    </message>
+    <message>
+        <source>Copied</source>
+        <translation>Copié</translation>
+    </message>
+    <message>
         <source>Generic SDL controller</source>
         <translation>Manette SDL générique</translation>
+    </message>
+    <message>
+        <source>Change illustration</source>
+        <translation>Changer l’illustration</translation>
+    </message>
+    <message>
+        <source>Default for this model</source>
+        <translation>Par défaut pour ce modèle</translation>
+    </message>
+    <message>
+        <source>Imported illustration {number}</source>
+        <translation>Illustration importée {number}</translation>
+    </message>
+    <message>
+        <source>Import custom…</source>
+        <translation>Importer…</translation>
     </message>
     <message>
         <source>Hardware input calibration</source>
@@ -142,6 +170,14 @@ Relâchez les contrôles avant chaque capture.</translation>
         <translation>Identifier ma manette…</translation>
     </message>
     <message>
+        <source>A controller pawz has seen: the rest of the page applies to it.</source>
+        <translation>Une manette déjà vue par pawz : le reste de la page s’applique à elle.</translation>
+    </message>
+    <message>
+        <source>The catalog model describing it: identification, mappings, drawing.</source>
+        <translation>Le modèle du catalogue qui la décrit : identification, correspondances, dessin.</translation>
+    </message>
+    <message>
         <source>Edit</source>
         <translation>Modifier</translation>
     </message>
@@ -156,6 +192,14 @@ Relâchez les contrôles avant chaque capture.</translation>
     <message>
         <source>Identification</source>
         <translation>Identification</translation>
+    </message>
+    <message>
+        <source>Change illustration…</source>
+        <translation>Changer l’illustration…</translation>
+    </message>
+    <message>
+        <source>Restore default</source>
+        <translation>Rétablir par défaut</translation>
     </message>
     <message>
         <source>Custom name</source>
@@ -182,24 +226,28 @@ Relâchez les contrôles avant chaque capture.</translation>
         <translation>Entrée matérielle</translation>
     </message>
     <message>
-        <source>Customization</source>
-        <translation>Personnalisation</translation>
-    </message>
-    <message>
         <source>Calibrate…</source>
         <translation>Calibrer…</translation>
     </message>
     <message>
-        <source>Choose an illustration…</source>
-        <translation>Choisir une illustration…</translation>
+        <source>Known controller</source>
+        <translation>Manette connue</translation>
     </message>
     <message>
-        <source>Import a custom SVG…</source>
-        <translation>Importer un SVG personnalisé…</translation>
+        <source>Model used</source>
+        <translation>Modèle utilisé</translation>
     </message>
     <message>
-        <source>Restore the illustration</source>
-        <translation>Restaurer l’illustration</translation>
+        <source>Rename this controller</source>
+        <translation>Renommer cette manette</translation>
+    </message>
+    <message>
+        <source>Name inputs…</source>
+        <translation>Nommer les entrées…</translation>
+    </message>
+    <message>
+        <source>Name the buttons and sticks of this drawing, so the main window can light them up where they are drawn.</source>
+        <translation>Nommer les boutons et sticks de ce dessin, pour que la fenêtre principale les allume à leur emplacement.</translation>
     </message>
     <message>
         <source>Verified</source>
@@ -208,6 +256,10 @@ Relâchez les contrôles avant chaque capture.</translation>
     <message>
         <source>Not verified on hardware</source>
         <translation>Non vérifié sur matériel</translation>
+    </message>
+    <message>
+        <source>✓ This model is already used for this controller</source>
+        <translation>✓ Ce modèle est déjà utilisé pour cette manette</translation>
     </message>
     <message>
         <source>Detection uses the SDL GUID and name.
@@ -256,14 +308,6 @@ Choisissez manuellement le modèle en cas d’ambiguïté.</translation>
     <message>
         <source>Connect the controller to calibrate.</source>
         <translation>Connectez la manette à calibrer.</translation>
-    </message>
-    <message>
-        <source>Illustration</source>
-        <translation>Illustration</translation>
-    </message>
-    <message>
-        <source>Available SVG</source>
-        <translation>SVG disponible</translation>
     </message>
     <message>
         <source>Import an illustration</source>
@@ -364,6 +408,10 @@ Choisissez manuellement le modèle en cas d’ambiguïté.</translation>
     <message>
         <source>Websites</source>
         <translation>Sites web</translation>
+    </message>
+    <message>
+        <source>Website shortcuts need the pawz browser extension, installed in your browser and connected with its token (see the user guide).</source>
+        <translation>Les raccourcis des sites web nécessitent l’extension navigateur de pawz, installée dans votre navigateur et connectée avec son jeton (voir le guide utilisateur).</translation>
     </message>
     <message>
         <source>Add a website...</source>
@@ -530,6 +578,14 @@ Choisissez manuellement le modèle en cas d’ambiguïté.</translation>
         <translation>Réduit dans la barre des tâches</translation>
     </message>
     <message>
+        <source>About</source>
+        <translation>À propos</translation>
+    </message>
+    <message>
+        <source>{app} {version}, free software under the GPL 3.0 or later licence.&lt;br&gt;Controller drawings and button icons: &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Asset-Pack&quot;&gt;Gamepad Asset Pack&lt;/a&gt; and &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Prompt-Asset-Pack&quot;&gt;Gamepad Prompt Asset Pack&lt;/a&gt; by Al. Lopez (AL2009man), MIT licence.&lt;br&gt;Fonts: Inter (SIL Open Font License) and Matcha Style by Khurasan Studio.</source>
+        <translation>{app} {version}, logiciel libre sous licence GPL 3.0 ou ultérieure.&lt;br&gt;Dessins de manettes et icônes de boutons : &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Asset-Pack&quot;&gt;Gamepad Asset Pack&lt;/a&gt; et &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Prompt-Asset-Pack&quot;&gt;Gamepad Prompt Asset Pack&lt;/a&gt; par Al. Lopez (AL2009man), licence MIT.&lt;br&gt;Polices : Inter (SIL Open Font License) et Matcha Style par Khurasan Studio.</translation>
+    </message>
+    <message>
         <source>DISPLAY</source>
         <translation>AFFICHAGE</translation>
     </message>
@@ -612,10 +668,6 @@ Choisissez manuellement le modèle en cas d’ambiguïté.</translation>
     <message>
         <source>GENERAL</source>
         <translation>GÉNÉRAL</translation>
-    </message>
-    <message>
-        <source>Add a profile...</source>
-        <translation>Ajouter un profil...</translation>
     </message>
     <message>
         <source>Profile</source>
@@ -740,6 +792,42 @@ Choisissez manuellement le modèle en cas d’ambiguïté.</translation>
     <message>
         <source>Original</source>
         <translation>Original</translation>
+    </message>
+    <message>
+        <source>Name inputs</source>
+        <translation>Nommer les entrées</translation>
+    </message>
+    <message>
+        <source>Click a button, stick or trigger in the drawing, then choose the input it is. The element gets that name as its id and Inkscape layer name.</source>
+        <translation>Cliquez sur un bouton, un stick ou une gâchette du dessin, puis choisissez l’entrée correspondante. L’élément reçoit ce nom comme identifiant et comme nom de calque Inkscape.</translation>
+    </message>
+    <message>
+        <source>Element</source>
+        <translation>Élément</translation>
+    </message>
+    <message>
+        <source>— none —</source>
+        <translation>— aucune —</translation>
+    </message>
+    <message>
+        <source>Input</source>
+        <translation>Entrée</translation>
+    </message>
+    <message>
+        <source>Open the asset-pack folder</source>
+        <translation>Ouvrir le dossier du pack d’assets</translation>
+    </message>
+    <message>
+        <source>Saved in this imported illustration.</source>
+        <translation>Enregistré dans cette illustration importée.</translation>
+    </message>
+    <message>
+        <source>Bundled drawings stay untouched: pawz saves a renamed copy and uses it instead.</source>
+        <translation>Les dessins fournis restent intacts : pawz enregistre une copie renommée et l’utilise à leur place.</translation>
+    </message>
+    <message>
+        <source>A copy at its Gamepad Asset Pack path is also saved in {folder}, ready for a pull request.</source>
+        <translation>Une copie à son chemin dans le Gamepad Asset Pack est aussi enregistrée dans {folder}, prête pour une pull request.</translation>
     </message>
 </context>
 <context>

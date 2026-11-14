@@ -133,6 +133,9 @@ class ControllerManager(QObject):
         self.scroll_acc: dict[str, float] = {}
         # (device, stick) pairs seen at rest since the device connected; see _stick().
         self._sticks_at_rest: set[tuple[str, str]] = set()
+        # Read by the main window: held buttons and raw stick axes (LX, LY, RX, RY) per
+        # device. Whole values are replaced, never mutated, as the Qt thread reads them.
+        self.live_state: dict[str, tuple[frozenset[str], tuple[float, float, float, float]]] = {}
         # perf_counter: time.monotonic() only advances in ~15.6 ms steps on Windows,
         # which gave 3 ticks out of 4 a zero dt (zero movement) at 250 Hz.
         self.last_poll = time.perf_counter()
@@ -231,6 +234,7 @@ class ControllerManager(QObject):
         for device in set(self.gestures.devices) - set(discovered):
             self._apply(self.gestures.remove_device(device))
         self.scroll_acc = {key: value for key, value in self.scroll_acc.items() if key in discovered}
+        self.live_state = {key: value for key, value in self.live_state.items() if key in discovered}
         kept = set(discovered) & previous  # a newly connected device starts unarmed
         self._sticks_at_rest = {pair for pair in self._sticks_at_rest if pair[0] in kept}
         self._device_info = info
@@ -425,13 +429,16 @@ class ControllerManager(QObject):
                     elif value <= .5 and held:
                         self._release_button(key, logical)
                 self._apply(self.gestures.tick(key, now))
-                if self.game_active:
-                    continue  # no pointer or wheel: the game reads the sticks
-                p = self._profile(key)
                 def axis(n, mapping=mapping, joystick=self.joysticks[key], joy=joy):
                     source = mapping.get(("LEFT_X", "LEFT_Y", "RIGHT_X", "RIGHT_Y")[n])
                     return (read_raw(joystick, source) if source else
                             joy.get_axis(n) / 32767.0 if joy is not None else 0.0)
+                state = self.gestures.devices.get(key)
+                self.live_state[key] = (frozenset(state.pressed) if state else frozenset(),
+                                        (axis(0), axis(1), axis(2), axis(3)))
+                if self.game_active:
+                    continue  # no pointer or wheel: the game reads the sticks
+                p = self._profile(key)
                 if self.gestures.capture_active:
                     continue
                 # Speed normalized to ~60 Hz; right stick vertical scroll with accumulation.

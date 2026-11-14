@@ -233,3 +233,17 @@ def test_reconnected_device_must_center_its_sticks_again(qapp, fake_sdl, monkeyp
 def test_face_buttons_are_read_by_position_not_by_nintendo_label():
     import os
     assert os.environ["SDL_GAMECONTROLLER_USE_BUTTON_LABELS"] == "0"
+
+
+def test_live_state_publishes_held_buttons_and_raw_sticks(qapp, fake_sdl, monkeypatch):
+    pad = joystick(1)
+    pad.get_button = lambda index: 1 if index == 0 else 0  # SDL button 0: SOUTH
+    pad.get_axis = lambda index: {0: 0.5, 3: -1.0}.get(index, 0) * 32767
+    fake_sdl.append(pad)
+    monkeypatch.setattr(controllers.windows, "move", lambda *_args: None)
+    manager = ControllerManager(Settings.defaults(), bridge(), threaded=False)
+    manager.poll()
+    pressed, sticks = manager.live_state[next(iter(manager.controllers))]
+    assert "SOUTH" in pressed
+    assert sticks[0] == pytest.approx(0.5, abs=0.01) and sticks[3] == pytest.approx(-1.0, abs=0.01)
+    manager.stop()

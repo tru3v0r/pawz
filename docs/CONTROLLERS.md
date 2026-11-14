@@ -10,7 +10,7 @@ A profile maps logical button positions (`SOUTH`, `EAST`, `WEST`, `NORTH`, …) 
 
 ## Devices
 
-In **CONTROLLERS**, pick a registered device, then a model; **Use this model for this controller** remembers the choice. A custom name is independent of the detected one: a Battletron detected as a Nintendo Switch Pro can keep that model and a Battletron name.
+In **CONTROLLERS**, **Controller** picks a registered device (one pawz has already seen; the rest of the page applies to it) and **Model** the catalog model that describes it (identification, mappings, drawing); **Use this model for this controller** remembers the choice. A custom name is independent of the detected one: a Battletron detected as a Nintendo Switch Pro can keep that model and a Battletron name.
 
 Detection tries, in order: a model chosen by hand, a GUID listed in a definition, the USB vendor and product ids that SDL encodes in the GUID (for example `057e:2009` for a Switch Pro), the exact model name, then fragments of the SDL name (`Xbox 360`, `PS4`, `Pro Controller`, `Joy-Con`…). Controllers seen only through XInput carry no USB ids and are named `XInput Controller`: they stay generic until a model is chosen. Bundled definitions are presentation models: they claim no hardware GUID and no verified status. The installed SDL provides the hardware mapping of recognized controllers. Name-based detection is only a hint; choose the model by hand when needed.
 
@@ -22,7 +22,7 @@ Detection tries, in order: a model chosen by hand, a GUID listed in a definition
 
 Each named model has an illustration, from the Gamepad Asset Pack when it has the controller (see [Assets](ASSETS.md)), shown in **CONTROLLERS**, in **PROFILES** and on the main window. The identification table shows manufacturer, model, family, SDL GUID and status. Mappings show button icons in the physical label column; X/Y axes have their own symbols. Full labels stay available as tooltips and for accessibility.
 
-Shortcut buttons use the bundled Gamepad Prompt Asset Pack SVGs, matching the chosen model. You can pick a bundled SVG, import your own valid SVG (4 MB maximum) or restore the default. Imports are copied to the settings folder; preferences store relative `asset:` / `user:` references.
+Shortcut buttons use the bundled Gamepad Prompt Asset Pack SVGs, matching the chosen model. Under the drawing, **Calibrate…** opens the calibration; **Change illustration…** lists every bundled drawing and your imported ones with a preview, and can import one too; **Import custom…** imports your own valid SVG (4 MB maximum); **Restore default** goes back to the model's drawing. **Name inputs…** shows the drawing in its own colours: click a button, stick or trigger, then pick its logical input; the element gets that name as its `id` and Inkscape layer name, which the main window uses to light it up live. Imported drawings are renamed in place. Bundled ones stay untouched: a renamed copy goes to `%APPDATA%\pawz\artwork\` and is used instead, and for Gamepad Asset Pack files a second copy goes to `%APPDATA%\pawz\asset-pack-names\` at its path in that repository, ready for a pull request. Only the names change in the file. Imports are copied to the settings folder; preferences store relative `asset:` / `user:` references.
 
 Artwork is resolved in this order: device, model, family, generic. A disconnected device keeps a dimmed drawing. **Forget** removes its settings, mapping and profile assignment.
 

@@ -1,10 +1,18 @@
 from PySide6.QtCore import Qt
 from PySide6.QtSvg import QSvgRenderer
-from PySide6.QtWidgets import QApplication, QScrollArea
+from PySide6.QtWidgets import QApplication, QScrollArea, QWidget
 
 from pawz.core.controller_catalog import load_builtin_catalog
 from pawz.core.models import Settings
-from pawz.ui.controller_assets import ASSET_DIR, SvgView, prompt_path, resolve_artwork
+from pawz.ui.controller_assets import (
+    ASSET_DIR,
+    PROMPT_ROLE,
+    PromptDelegate,
+    SvgView,
+    prompt_path,
+    resolve_artwork,
+)
+from pawz.ui.controllers_page import SOURCES_ROLE
 from pawz.ui.windows import CSS, SettingsDialog, load_fonts
 
 
@@ -27,11 +35,18 @@ def make_dialog(qtbot):
 def test_identification_has_real_fields_centered_in_a_centered_table(qtbot):
     dialog = make_dialog(qtbot)
     table = dialog.controllers_page.metadata
-    assert table.rowCount() == 5 and table.columnCount() == 2
-    assert [table.item(row, 0).text() for row in range(5)] == ["Manufacturer", "Model", "Family", "SDL GUID", "Status"]
-    assert [table.item(row, 1).text() for row in range(5)] == ["Microsoft", "Xbox 360", "xbox", "a"*32, "Not verified on hardware"]
-    assert all(table.item(row, col).textAlignment() == Qt.AlignmentFlag.AlignCenter
-               for row in range(5) for col in range(2))
+    # Drawing (both columns), five fields, custom name.
+    assert table.rowCount() == 7 and table.columnCount() == 2
+    assert table.columnSpan(0, 0) == 2
+    assert [table.field(i, 0).text() for i in range(5)] == ["Manufacturer", "Model", "Family", "SDL GUID", "Status"]
+    assert [table.field(i).text() for i in range(5)] == ["Microsoft", "Xbox 360", "xbox", "a"*32, "Not verified on hardware"]
+    assert all(table.field(i, col).textAlignment() == Qt.AlignmentFlag.AlignCenter
+               for i in range(5) for col in range(2))
+    artwork = dialog.controllers_page.artwork
+    assert artwork.height() == 75 and artwork.renderer.isValid()
+    assert table.rowHeight(0) > artwork.height()  # vertical margin around the drawing
+    assert table.item(6, 0).text() == "Custom name"
+    assert table.cellWidget(6, 1).isAncestorOf(dialog.controllers_page.name)
     for width in (708, 900):
         dialog.resize(width, 760)
         qtbot.wait(30)
@@ -50,15 +65,16 @@ def test_correspondence_cells_and_icons_are_centered_and_update_on_model_change(
     assert all(table.item(row, column).textAlignment() == Qt.AlignmentFlag.AlignCenter
                for row in range(table.rowCount()) for column in range(3))
     assert table.item(0, 1).text() == ""
-    icon = table.cellWidget(0, 1)
-    assert isinstance(icon, SvgView) and icon.renderer.isValid()
-    assert icon.testAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
-    assert "shared-A-Color.svg" in icon.property("svgSources")[0]
+    # Icons are painted by a delegate, not cell widgets that Qt misplaces off-screen.
+    assert table.cellWidget(0, 1) is None
+    assert isinstance(table.itemDelegateForColumn(1), PromptDelegate)
+    assert QSvgRenderer(table.item(0, 1).data(PROMPT_ROLE)).isValid()
+    assert "shared-A-Color.svg" in table.item(0, 1).data(SOURCES_ROLE)[0]
     page.model.setCurrentIndex(page.model.findData("sony.dualsense"))
     qtbot.wait(20)
-    assert "ps-Cross-Color.svg" in table.cellWidget(0, 1).property("svgSources")[0]
-    assert page.metadata.item(1, 1).text() == "DualSense"
-    assert page.metadata.item(3, 1).text() == "a"*32
+    assert "ps-Cross-Color.svg" in table.item(0, 1).data(SOURCES_ROLE)[0]
+    assert page.metadata.field(1).text() == "DualSense"
+    assert page.metadata.field(3).text() == "a"*32
     assert page.settings.controller_mappings["device"] == {"SOUTH": "b4"}
 
 
@@ -93,8 +109,10 @@ def test_axes_have_distinct_vector_icons_and_correspondence_controls_survive_scr
     page.table.verticalScrollBar().setValue(page.table.verticalScrollBar().maximum())
     qtbot.wait(20)
     row = next(row for row in range(page.table.rowCount()) if page.table.item(row, 0).text() == "LEFT_X")
-    assert page.table.cellWidget(row, 1).renderer.isValid()
-    assert "input-icons" in page.table.cellWidget(row, 1).property("svgSources")[0]
+    assert QSvgRenderer(page.table.item(row, 1).data(PROMPT_ROLE)).isValid()
+    assert "input-icons" in page.table.item(row, 1).data(SOURCES_ROLE)[0]
+    # Nothing is drawn outside the table: no stray cell widgets.
+    assert not page.table.findChildren(SvgView)
 
 
 def test_custom_models_fall_back_to_their_family_silhouette(qapp):
@@ -132,3 +150,131 @@ def test_models_are_recognized_from_sdl_guid_usb_ids_then_name_fragments():
     assert resolve_model(catalog, "", "XInput Controller") == GENERIC_MODEL
     # The user's choice still wins.
     assert resolve_model(catalog, switch_pro, "", "sony.dualsense") == "sony.dualsense"
+
+
+def test_pickers_are_titled_and_calibrate_sits_above_the_illustration_buttons(qtbot):
+    from PySide6.QtWidgets import QLabel, QPushButton
+    dialog = make_dialog(qtbot)
+    page = dialog.controllers_page
+    buddies = {label.buddy(): label.text() for label in page.findChildren(QLabel) if label.buddy()}
+    assert buddies[page.device] == "Known controller" and buddies[page.model] == "Model used"
+    calibrate = page.findChild(QPushButton, "calibrateController")
+    buttons = [page.findChild(QPushButton, name)
+               for name in ("changeIllustration", "importIllustration", "restoreIllustration")]
+    assert [button.text() for button in buttons] == ["Change illustration…", "Import custom…", "Restore default"]
+    cell = page.metadata.cellWidget(0, 0)
+    assert all(cell.isAncestorOf(widget) for widget in (calibrate, *buttons, page.artwork))
+    def top(widget): return widget.mapTo(cell, widget.rect().topLeft()).y()
+    assert top(page.artwork) < top(calibrate) < top(buttons[0])
+    assert len({top(button) for button in buttons}) == 1  # one row
+
+
+def test_illustration_dialog_lists_bundled_artwork_and_previews_the_selection(qtbot):
+    from pawz.ui.controllers_page import IllustrationDialog
+    catalog = load_builtin_catalog()
+    from pawz.core.controller_catalog import ControllerCatalog
+    full = ControllerCatalog(ASSET_DIR / "missing-custom.json")
+    model = next(model for model in catalog if model.id == "nintendo.switch-pro")
+    dialog = IllustrationDialog(full, model, "asset:library/dualsense.svg")
+    qtbot.addWidget(dialog)
+    references = [dialog.choices.item(row).data(Qt.ItemDataRole.UserRole)
+                  for row in range(dialog.choices.count())]
+    assert references[0] is None  # the model's default
+    assert "asset:library/switch-pro.svg" in references and "asset:models/logitech.f310.svg" in references
+    assert dialog.selection == "asset:library/dualsense.svg"
+    assert dialog.choices.currentItem().text() == "DualSense"
+    assert dialog.preview.renderer.isValid()
+    dialog.choices.setCurrentRow(0)
+    assert dialog.selection is None and dialog.preview.renderer.isValid()
+
+
+def test_asset_references_stay_inside_the_artwork_folders():
+    from pawz.ui.controller_assets import bundled_artwork
+    assert bundled_artwork("library/switch-pro.svg") == ASSET_DIR / "library" / "switch-pro.svg"
+    assert bundled_artwork("xbox.svg") == ASSET_DIR / "xbox.svg"
+    assert bundled_artwork("../../../secret.svg") == ASSET_DIR / "secret.svg"
+    assert bundled_artwork("prompts/Shared/x.svg") == ASSET_DIR / "x.svg"
+
+
+def test_guid_can_be_copied(qtbot):
+    from PySide6.QtWidgets import QApplication
+    dialog = make_dialog(qtbot)
+    page = dialog.controllers_page
+    assert page.metadata.field(3).text() == "a" * 32
+    assert not page.metadata.copy_guid.icon().isNull()
+    page.metadata.copy_guid.click()
+    assert QApplication.clipboard().text() == "a" * 32
+
+
+def test_use_model_button_reflects_the_model_in_use(qtbot):
+    dialog = make_dialog(qtbot)
+    page = dialog.controllers_page
+    button = page.apply_model
+    assert page.model.currentData() == page.used_model() == "microsoft.xbox-360"
+    assert not button.isEnabled() and button.text().startswith("✓")
+    assert abs(button.width() - page.metadata.width()) <= 1  # as wide as the table
+    page.model.setCurrentIndex(page.model.findData("sony.dualsense"))
+    assert button.isEnabled() and button.text() == "Use this model for this controller"
+    button.click()
+    assert page.used_model() == "sony.dualsense" and not button.isEnabled()
+
+
+def test_rename_shortcut_fills_and_selects_the_custom_name(qtbot):
+    from PySide6.QtWidgets import QPushButton
+    dialog = make_dialog(qtbot)
+    page = dialog.controllers_page
+    assert page.name.text() == "" and page.name.placeholderText() == "Xbox 360"
+    page.findChild(QPushButton, "renameController").click()
+    assert page.name.text() == "Xbox 360" and page.name.selectedText() == "Xbox 360"
+    page.name.setText("Xbox 360")
+    page.rename()  # the default name is not stored as a custom one
+    assert "name" not in page.preferences()
+    page.name.setText("Living room pad")
+    page.rename()
+    assert page.preferences()["name"] == "Living room pad"
+
+
+def test_tables_stand_alone_and_the_scroll_bar_skips_the_header(qtbot):
+    from PySide6.QtWidgets import QFrame
+    dialog = make_dialog(qtbot)
+    page = dialog.controllers_page
+    assert not page.findChildren(QFrame, "tableFrame")
+    spacer = page.table.findChild(QWidget, "scrollHeaderSpacer")
+    assert spacer is not None
+    assert spacer.height() == page.table.horizontalHeader().height()
+
+
+def test_copy_icon_turns_into_a_tick_for_a_moment(qtbot):
+    from pawz.ui import controller_tables
+    dialog = make_dialog(qtbot)
+    table = dialog.controllers_page.metadata
+    copy_icon = table.copy_guid.icon().cacheKey()
+    table.copy_guid.click()
+    assert table.copy_guid.toolTip() == "Copied" and table.copy_guid.icon().cacheKey() != copy_icon
+    assert 2000 <= controller_tables.COPIED_FEEDBACK_MS <= 3000
+    table._copied_timer.setInterval(10)
+    table._copied_timer.start()
+    qtbot.waitUntil(lambda: table.copy_guid.toolTip() == "Copy", timeout=1000)
+
+
+def test_illustration_dialog_import_button_matches_the_list(qtbot):
+    from PySide6.QtWidgets import QPushButton
+
+    from pawz.core.controller_catalog import ControllerCatalog
+    from pawz.ui.controllers_page import IllustrationDialog
+    model = next(model for model in load_builtin_catalog() if model.id == "nintendo.switch-pro")
+    dialog = IllustrationDialog(ControllerCatalog(ASSET_DIR / "missing-custom.json"), model, None)
+    qtbot.addWidget(dialog)
+    dialog.show()
+    qtbot.wait(20)
+    button = dialog.findChild(QPushButton, "importIllustration")
+    assert abs(button.width() - dialog.choices.width()) <= 1
+    assert dialog.preview.render_scale == 0.75
+
+
+def test_credits_name_the_asset_pack_author(qtbot):
+    from PySide6.QtWidgets import QLabel
+    dialog = make_dialog(qtbot)
+    credits = dialog.findChild(QLabel, "credits")
+    assert "AL2009man" in credits.text() and "Gamepad Asset Pack" in credits.text()
+    assert credits.openExternalLinks()

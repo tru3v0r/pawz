@@ -9,16 +9,18 @@ from uuid import uuid4
 from PySide6.QtCore import Qt, QTimer, Signal
 from PySide6.QtSvg import QSvgRenderer
 from PySide6.QtWidgets import (
+    QApplication,
     QComboBox,
     QDialog,
     QDialogButtonBox,
     QFileDialog,
-    QFormLayout,
+    QGridLayout,
     QHBoxLayout,
     QHeaderView,
     QInputDialog,
     QLabel,
-    QLineEdit,
+    QListWidget,
+    QListWidgetItem,
     QMessageBox,
     QPushButton,
     QScrollArea,
@@ -34,16 +36,121 @@ from pawz.core.controller_services import Calibration, resolve_model, validate_m
 from pawz.core.models import BUTTONS
 from pawz.i18n import QT_TR_NOOP, tr
 from pawz.infra.storage import DATA_DIR
-from pawz.ui.controller_assets import ASSET_DIR, SvgView, resolve_artwork
+from pawz.ui.artwork_editor import InputNamesDialog
+from pawz.ui.controller_assets import (
+    PROMPT_ROLE,
+    PromptDelegate,
+    SvgView,
+    available_artwork,
+    controller_prompt_svg,
+    resolve_artwork,
+)
 from pawz.ui.controller_tables import IdentificationTable
 
 # Built-in model names that are words rather than product names (see catalog.json).
+SOURCES_ROLE = PROMPT_ROLE + 1  # mapping items: asset files a prompt is drawn from
 TRANSLATED_MODEL_NAMES = (QT_TR_NOOP("Generic SDL controller"),)
 
 
 def model_name(definition: ControllerDefinition) -> str:
     """The model name to display: built-in generic names are translated."""
     return tr(definition.model) if definition.model in TRANSLATED_MODEL_NAMES else definition.model
+
+
+def import_illustration(parent) -> str | None:
+    """Ask for an SVG, copy it to the settings folder; its ``user:`` reference."""
+    filename, _ = QFileDialog.getOpenFileName(
+        parent, tr("Import an illustration"), "", tr("SVG (*.svg)"))
+    if not filename:
+        return None
+    path = Path(filename)
+    if path.stat().st_size > 4_000_000 or not QSvgRenderer(filename).isValid():
+        QMessageBox.warning(parent, tr("Invalid SVG"),
+                            tr("The file must be a valid SVG under 4 MB."))
+        return None
+    target = DATA_DIR / "illustrations" / (uuid4().hex + ".svg")
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_bytes(path.read_bytes())
+    return "user:" + target.name
+
+
+class IllustrationDialog(QDialog):
+    """Pick a controller illustration, previewed in the current style."""
+
+    def __init__(self, catalog: ControllerCatalog, model: ControllerDefinition,
+                 current: str | None, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle(tr("Change illustration"))
+        self.setObjectName("illustrationDialog")
+        self.resize(620, 360)
+        self.model = model
+        names: dict[str, str] = {}  # a shared silhouette is named after its first model
+        for definition in catalog.definitions:
+            if definition.svg:
+                names.setdefault(definition.svg, model_name(definition))
+        root = QVBoxLayout(self)
+        body = QHBoxLayout()
+        column = QVBoxLayout()
+        self.choices = QListWidget()
+        self.choices.setObjectName("illustrationChoices")
+        column.addWidget(self.choices, 1)
+        import_button = QPushButton(tr("Import custom…"))
+        import_button.setObjectName("importIllustration")
+        import_button.clicked.connect(self._import)
+        column.addWidget(import_button)  # as wide as the list
+        body.addLayout(column, 2)
+        self.preview = SvgView()
+        self.preview.setObjectName("illustrationPreview")
+        self.preview.setMinimumSize(260, 180)
+        self.preview.set_render_scale(0.75)
+        body.addWidget(self.preview, 3)
+        root.addLayout(body, 1)
+        self._add(tr("Default for this model"), None)
+        for relative in available_artwork():
+            label = names.get(relative) or Path(relative).stem.replace("-", " ").replace(".", " ").title()
+            self._add(label, "asset:" + relative)
+        folder = DATA_DIR / "illustrations"
+        imported = sorted(folder.glob("*.svg"), key=lambda path: path.stat().st_mtime)
+        for number, path in enumerate(imported, 1):
+            self._add(tr("Imported illustration {number}").format(number=number), "user:" + path.name)
+        buttons = QHBoxLayout()
+        buttons.addStretch(1)
+        box = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
+        box.accepted.connect(self.accept)
+        box.rejected.connect(self.reject)
+        buttons.addWidget(box)
+        root.addLayout(buttons)
+        self.choices.currentRowChanged.connect(self._show)
+        self._select(current)
+        self._show()
+
+    def _add(self, label: str, reference: str | None) -> None:
+        item = QListWidgetItem(label)
+        item.setData(Qt.ItemDataRole.UserRole, reference)
+        self.choices.addItem(item)
+
+    def _select(self, reference: str | None) -> None:
+        for row in range(self.choices.count()):
+            if self.choices.item(row).data(Qt.ItemDataRole.UserRole) == reference:
+                self.choices.setCurrentRow(row)
+                return
+        self.choices.setCurrentRow(0)
+
+    def _show(self, *_):
+        self.preview.set_path(resolve_artwork(self.model, self.selection))
+
+    @property
+    def selection(self) -> str | None:
+        item = self.choices.currentItem()
+        return item.data(Qt.ItemDataRole.UserRole) if item else None
+
+    def _import(self):
+        reference = import_illustration(self)
+        if reference:
+            count = sum(1 for row in range(self.choices.count())
+                        if str(self.choices.item(row).data(Qt.ItemDataRole.UserRole)).startswith("user:"))
+            self._add(tr("Imported illustration {number}").format(number=count + 1), reference)
+            self._select(reference)
 
 
 class CalibrationDialog(QDialog):
@@ -106,9 +213,24 @@ class ControllersPage(QWidget):
         host.setAutoFillBackground(False)
         scroll.setWidget(host)
         layout = QVBoxLayout(host)
-        from pawz.ui.windows import ProfileSectionHeading, profile_action_button
-        layout.addWidget(ProfileSectionHeading(tr("Models and mappings")))
+        from pawz.ui.windows import (
+            CONTROL_ROW_GAP,
+            SECTION_CONTENT_GAP,
+            ProfileSectionHeading,
+            profile_action_button,
+        )
+        # Same rhythm as the Profiles tab: space before each heading, then a fixed gap.
+        layout.setContentsMargins(14, 0, 14, 18)
+        layout.setSpacing(CONTROL_ROW_GAP)
+
+        def heading(title: str):
+            layout.addSpacing(16)
+            layout.addWidget(ProfileSectionHeading(title))
+            layout.addSpacing(SECTION_CONTENT_GAP - layout.spacing())
+
+        heading(tr("Models and mappings"))
         actions = QHBoxLayout()
+        actions.setSpacing(CONTROL_ROW_GAP)
         for title, name, callback in (
                 (tr("Add a mapping…"), "addMapping", self.add_mapping),
                 (tr("Identify my controller…"), "identifyController", self.identify)):
@@ -119,13 +241,27 @@ class ControllersPage(QWidget):
         layout.addLayout(actions)
         self.device = QComboBox()
         self.device.setObjectName("controllerDevicePicker")
+        self.device.setToolTip(tr("A controller pawz has seen: the rest of the page applies to it."))
         for key, name in settings.known_devices.items():
             self.device.addItem(settings.device_preferences.get(key, {}).get("name", name), key)
-        layout.addWidget(self.device)
         self.model = QComboBox()
         self.model.setObjectName("controllerModelPicker")
-        row = QHBoxLayout()
-        row.addWidget(self.model, 1)
+        self.model.setToolTip(tr("The catalog model describing it: identification, mappings, drawing."))
+        pickers = QGridLayout()
+        pickers.setHorizontalSpacing(8)
+        pickers.setVerticalSpacing(CONTROL_ROW_GAP)
+        pickers.setColumnStretch(1, 1)
+        for row_index, (label_text, picker) in enumerate(
+                ((tr("Known controller"), self.device), (tr("Model used"), self.model))):
+            label = QLabel(label_text)
+            label.setBuddy(picker)
+            label.setMinimumWidth(80)
+            pickers.addWidget(label, row_index, 0)
+            pickers.addWidget(picker, row_index, 1)
+        rename_button = profile_action_button(tr("Rename this controller"), "edit")
+        rename_button.setObjectName("renameController")
+        rename_button.clicked.connect(self.edit_custom_name)
+        pickers.addWidget(rename_button, 0, 2)
         self.edit_model = profile_action_button(tr("Edit"), "edit")
         self.edit_model.setObjectName("editControllerModel")
         self.delete_model = profile_action_button(tr("Delete"), "delete")
@@ -135,31 +271,53 @@ class ControllersPage(QWidget):
         duplicate.clicked.connect(self.duplicate)
         self.edit_model.clicked.connect(self.edit)
         self.delete_model.clicked.connect(self.delete)
-        for button in (duplicate, self.edit_model, self.delete_model):
-            row.addWidget(button)
-        layout.addLayout(row)
-        self.artwork = SvgView()
-        layout.addWidget(ProfileSectionHeading(tr("Identification")))
-        self.artwork.setObjectName("controllerPreview")
-        self.artwork.setFixedHeight(150)
-        layout.addWidget(self.artwork)
+        for column, button in enumerate((duplicate, self.edit_model, self.delete_model), 2):
+            pickers.addWidget(button, 1, column)
+        layout.addLayout(pickers)
+
+        heading(tr("Identification"))
         self.metadata = IdentificationTable()
+        self.artwork = self.metadata.artwork
+        calibrate = QPushButton(tr("Calibrate…"))
+        calibrate.setObjectName("calibrateController")
+        calibrate.clicked.connect(self.calibrate)
+        name_inputs = QPushButton(tr("Name inputs…"))
+        name_inputs.setObjectName("nameInputs")
+        name_inputs.setToolTip(tr("Name the buttons and sticks of this drawing, so the main window "
+                                  "can light them up where they are drawn."))
+        name_inputs.clicked.connect(self.name_inputs)
+        tools = QHBoxLayout()
+        tools.setSpacing(8)
+        tools.addWidget(calibrate, 1)
+        tools.addWidget(name_inputs, 1)
+        self.metadata.artwork_layout.insertLayout(1, tools)
+        for title, name, callback in ((tr("Change illustration…"), "changeIllustration", self.choose_svg),
+                                      (tr("Import custom…"), "importIllustration", self.import_svg),
+                                      (tr("Restore default"), "restoreIllustration", self.restore_svg)):
+            button = QPushButton(title)
+            button.setObjectName(name)
+            button.clicked.connect(callback)
+            self.metadata.artwork_actions.addWidget(button, 1)
+        self.metadata.refit()
+        self.name = self.metadata.name
+        self.name.editingFinished.connect(self.rename)
+        self.metadata.copy_guid.clicked.connect(self.copy_guid)
+        identification = QVBoxLayout()
+        identification.setSpacing(CONTROL_ROW_GAP)
+        identification.addWidget(self.metadata)
+        self.apply_model = QPushButton()
+        self.apply_model.setObjectName("useModel")
+        self.apply_model.setMaximumWidth(self.metadata.maximumWidth())  # as wide as the table
+        self.apply_model.clicked.connect(self.assign_model)
+        identification.addWidget(self.apply_model)
         metadata_row = QHBoxLayout()
         metadata_row.addStretch(1)
-        metadata_row.addWidget(self.metadata, 12)
+        metadata_row.addLayout(identification, 12)
         metadata_row.addStretch(1)
         layout.addLayout(metadata_row)
-        form = QFormLayout()
-        self.name = QLineEdit()
-        self.name.setObjectName("controllerCustomName")
-        self.name.editingFinished.connect(self.rename)
-        form.addRow(tr("Custom name"), self.name)
-        layout.addLayout(form)
-        apply_model = QPushButton(tr("Use this model for this controller"))
-        apply_model.clicked.connect(self.assign_model)
-        layout.addWidget(apply_model)
+
+        heading(tr("Mappings"))
         self.table = QTableWidget(0, 3)
-        layout.addWidget(ProfileSectionHeading(tr("Mappings")))
         self.table.setObjectName("controllerCorrespondences")
         self.table.setHorizontalHeaderLabels(
             [tr("SDL logical input"), tr("Physical label"), tr("Hardware input")])
@@ -171,15 +329,15 @@ class ControllersPage(QWidget):
         self.table.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.table.verticalHeader().setDefaultSectionSize(38)
         self.table.setMinimumHeight(260)
+        self.table.setItemDelegateForColumn(1, PromptDelegate(0.72, self.table))
+        # The scroll bar runs beside the rows only: a spacer as tall as the header sits
+        # above it.
+        header_spacer = QWidget()
+        header_spacer.setObjectName("scrollHeaderSpacer")
+        header_spacer.setFixedHeight(self.table.horizontalHeader().sizeHint().height())
+        self.table.addScrollBarWidget(header_spacer, Qt.AlignmentFlag.AlignTop)
         layout.addWidget(self.table)
-        layout.addWidget(ProfileSectionHeading(tr("Customization")))
-        for title, callback in ((tr("Calibrate…"), self.calibrate),
-                                (tr("Choose an illustration…"), self.choose_svg),
-                                (tr("Import a custom SVG…"), self.import_svg),
-                                (tr("Restore the illustration"), self.restore_svg)):
-            button = QPushButton(title)
-            button.clicked.connect(callback)
-            layout.addWidget(button)
+
         self.device.currentIndexChanged.connect(self.select_device)
         self.model.currentIndexChanged.connect(self.refresh)
         self.reload_models()
@@ -224,6 +382,7 @@ class ControllersPage(QWidget):
         preferences = self.preferences()
         key = self.device.currentData()
         self.name.setText(preferences.get("name", ""))
+        self.name.setPlaceholderText(self.default_name())
         model_id = resolve_model(self.catalog.definitions, preferences.get("guid", ""),
                                  self.settings.known_devices.get(key, ""), preferences.get("model_id"))
         self.model.setCurrentIndex(max(0, self.model.findData(model_id)))
@@ -241,6 +400,7 @@ class ControllersPage(QWidget):
                                   preferences.get("guid") or "—",
                                   tr("Verified") if definition.verified else tr("Not verified on hardware")))
         self.metadata.setToolTip(definition.provenance)
+        self.update_apply_model()
         self.artwork.set_path(resolve_artwork(definition, preferences.get("svg")))
         inputs = list(dict.fromkeys(list(BUTTONS) + [axis.value for axis in LogicalAxis]))
         mapping = self.settings.controller_mappings.get(self.device.currentData(), {})
@@ -252,22 +412,62 @@ class ControllersPage(QWidget):
                 item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
                 item.setToolTip(value)
                 item.setData(Qt.ItemDataRole.AccessibleTextRole, value)
+                if col == 1:  # drawn by PromptDelegate
+                    data, sources = controller_prompt_svg(logical, definition)
+                    item.setData(PROMPT_ROLE, data)
+                    item.setData(SOURCES_ROLE, sources)
                 self.table.setItem(row, col, item)
-            prompt = SvgView()
-            prompt.setObjectName("physicalInputIcon")
-            prompt.setAccessibleName(definition.physical_labels.get(logical, logical))
-            prompt.setToolTip(definition.physical_labels.get(logical, logical))
-            prompt.set_controller_prompt(logical, definition)
-            prompt.set_render_scale(0.72)
-            self.table.setCellWidget(row, 1, prompt)
+
+    def default_name(self) -> str:
+        """The name SDL reported for the selected controller."""
+        key = self.device.currentData()
+        preferences = self.settings.device_preferences.get(key, {}) if key else {}
+        return preferences.get("detected_name") or self.settings.known_devices.get(key, "")
 
     def rename(self):
         if self.device.currentData():
-            self.preferences()["name"] = self.name.text().strip()
+            name = self.name.text().strip()
+            if name and name != self.default_name():
+                self.preferences()["name"] = name
+            else:
+                self.preferences().pop("name", None)
+                self.name.clear()
+
+    def edit_custom_name(self):
+        """Jump to the custom name, filled with the current name and selected."""
+        if not self.name.text():
+            self.name.setText(self.default_name())
+        scroll = self.findChild(QScrollArea, "controllersScroll")
+        if scroll is not None:
+            scroll.ensureWidgetVisible(self.name, 0, 60)
+        self.name.setFocus(Qt.FocusReason.OtherFocusReason)
+        self.name.selectAll()
+
+    def used_model(self) -> str | None:
+        """The model the selected controller is shown and identified with."""
+        key = self.device.currentData()
+        if not key:
+            return None
+        preferences = self.settings.device_preferences.get(key, {})
+        return resolve_model(self.catalog.definitions, preferences.get("guid", ""),
+                             self.settings.known_devices.get(key, ""), preferences.get("model_id"))
+
+    def update_apply_model(self):
+        used = self.model.currentData() == self.used_model()
+        self.apply_model.setEnabled(bool(self.device.currentData()) and not used)
+        self.apply_model.setText(tr("✓ This model is already used for this controller") if used
+                                 else tr("Use this model for this controller"))
 
     def assign_model(self):
         if self.device.currentData():
             self.preferences()["model_id"] = self.model.currentData()
+            self.update_apply_model()
+
+    def copy_guid(self):
+        guid = self.preferences().get("guid")
+        if guid:
+            QApplication.clipboard().setText(guid)
+            self.metadata.show_copied()
 
     def identify(self):
         self.select_device()
@@ -333,27 +533,30 @@ class ControllersPage(QWidget):
         finally:
             self.manager.end_input_capture()
 
+    def name_inputs(self):
+        definition = self.catalog.get(self.model.currentData())
+        path = resolve_artwork(definition, self.preferences().get("svg"))
+        if path is not None and InputNamesDialog(path, self).exec() == QDialog.DialogCode.Accepted:
+            self.refresh()
+
     def choose_svg(self):
-        names = sorted(path.name for path in ASSET_DIR.glob("*.svg"))
-        selected, ok = QInputDialog.getItem(
-            self, tr("Illustration"), tr("Available SVG"), names, 0, False)
-        if ok and self.device.currentData():
-            self.preferences()["svg"] = "asset:" + selected
+        if not self.device.currentData():
+            return
+        dialog = IllustrationDialog(self.catalog, self.catalog.get(self.model.currentData()),
+                                    self.preferences().get("svg"), self)
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            if dialog.selection:
+                self.preferences()["svg"] = dialog.selection
+            else:
+                self.preferences().pop("svg", None)
             self.refresh()
 
     def import_svg(self):
-        filename, _ = QFileDialog.getOpenFileName(
-            self, tr("Import an illustration"), "", tr("SVG (*.svg)"))
-        if filename and self.device.currentData():
-            path = Path(filename)
-            if path.stat().st_size > 4_000_000 or not QSvgRenderer(filename).isValid():
-                QMessageBox.warning(self, tr("Invalid SVG"),
-                                    tr("The file must be a valid SVG under 4 MB."))
-                return
-            target = DATA_DIR / "illustrations" / (uuid4().hex + ".svg")
-            target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_bytes(path.read_bytes())
-            self.preferences()["svg"] = "user:" + target.name
+        if not self.device.currentData():
+            return
+        reference = import_illustration(self)
+        if reference:
+            self.preferences()["svg"] = reference
             self.refresh()
 
     def restore_svg(self):

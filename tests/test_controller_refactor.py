@@ -168,7 +168,7 @@ def test_three_tabs_default_protection_and_display_change(qtbot, qapp, tmp_path,
         dialog.resize(width, 720)
         qtbot.wait(20)
         rows = dialog.profile_editor.findChildren(SvgView, "bindingPrompt")
-        assert all(row.width() == 72 and row.renderer.isValid() for row in rows)
+        assert all(row.width() == 96 and row.renderer.isValid() for row in rows)
 
 
 def test_svg_fallback_invalid_custom_and_physical_labels(qapp, tmp_path):

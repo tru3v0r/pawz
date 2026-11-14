@@ -112,12 +112,14 @@ def test_new_instance_waits_for_the_previous_one_and_drops_the_flag(monkeypatch)
     assert waited == [(42, 15)]
 
 
-def test_danger_red_fills_buttons_red_with_one_hue_and_the_same_ratios():
+def test_danger_red_is_dark_with_bright_red_outlines_one_hue_and_the_same_ratios():
     theme = themes.THEMES[themes.DANGER_RED]
-    assert themes.map_color(themes.BUTTON_FILL, theme.id) == "#c62828"
-    assert themes.map_color(themes.BRAND, theme.id) == "#c62828"
-    accent_hue = themes._oklch("#c62828")[2]
-    for color in source_colors() - {themes.BRAND, themes.BUTTON_FILL}:
+    assert themes.map_color(themes.BUTTON_FILL, theme.id) == "#9b1c1c"
+    assert themes.map_color(themes.BRAND, theme.id) == "#ff2d2d"
+    assert themes.map_color(themes.BUTTON_OUTLINE, theme.id) == "#ff2d2d"
+    assert theme.luminance_factor == pytest.approx(1.0, abs=0.05)  # as dark as Midnight Blue
+    accent_hue = themes._oklch("#9b1c1c")[2]
+    for color in source_colors() - {themes.BRAND, themes.BUTTON_FILL, themes.BUTTON_OUTLINE}:
         if not themes._is_blue(color):
             continue
         mapped = themes.map_color(color, theme.id)

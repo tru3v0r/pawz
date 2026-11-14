@@ -127,7 +127,7 @@ def test_shortcuts_have_centered_small_colored_prompts_separators_and_bare_actio
             assert len(separators) == max(0, len(prompts)-1)
             centers = []
             for prompt in prompts:
-                assert prompt.size().toTuple() == (72, 24)
+                assert prompt.size().toTuple() == (96, 24)
                 assert prompt.render_scale == 0.9
                 centers.append(prompt.geometry().center().x())
                 assert abs(prompt.geometry().center().x() - content.rect().center().x()) <= 40
@@ -145,3 +145,16 @@ def test_shortcuts_have_centered_small_colored_prompts_separators_and_bare_actio
                     assert corner.alpha() == 0 or corner == QColor("#1b355b")
     model = next(model for model in load_builtin_catalog() if model.id == "microsoft.xbox-one")
     assert prompt_path("SOUTH", model).name == "shared-A-Color.svg"
+
+
+def test_combinations_leave_a_space_around_the_plus():
+    import xml.etree.ElementTree as ET
+
+    from pawz.ui.controller_assets import PROMPT_GAP, controller_prompt_svg
+    data, sources = controller_prompt_svg("SOUTH+EAST", None)
+    root = ET.fromstring(data)
+    assert root.get("viewBox") == f"0 0 {72 + PROMPT_GAP} 36"
+    plus = next(node for node in root.iter() if node.tag.endswith("text") and node.text == "+")
+    # Centred in the gap, which leaves room on both sides of the 16 px glyph.
+    assert float(plus.get("x")) == 36 + PROMPT_GAP / 2 and PROMPT_GAP >= 24
+    assert len(sources) == 2

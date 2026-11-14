@@ -9,7 +9,7 @@ from pathlib import Path
 from PySide6.QtCore import QByteArray, QRectF, Qt
 from PySide6.QtGui import QPainter
 from PySide6.QtSvg import QSvgRenderer
-from PySide6.QtWidgets import QWidget
+from PySide6.QtWidgets import QStyledItemDelegate, QWidget
 
 from pawz.core.controller_catalog import ControllerDefinition
 from pawz.infra.storage import DATA_DIR
@@ -104,9 +104,13 @@ def artwork_bytes(path: Path) -> bytes:
     """An illustration's SVG: bundled controller artwork in the current style and
     theme, other files (the user's own illustrations) as they are."""
     modified = path.stat().st_mtime_ns
-    try:
-        relative = path.resolve().relative_to(ASSET_DIR.resolve())
-    except ValueError:
+    for root in (ASSET_DIR, OVERRIDES_DIR):
+        try:
+            relative = path.resolve().relative_to(root.resolve())
+            break
+        except ValueError:
+            continue
+    else:
         return svg_bytes(str(path), modified)
     if relative.parts[0] in ("prompts", "input-icons"):
         return svg_bytes(str(path), modified)
@@ -117,11 +121,43 @@ def renderer_for(path: Path, parent=None) -> QSvgRenderer:
     return QSvgRenderer(QByteArray(artwork_bytes(path)), parent)
 
 
+ARTWORK_FOLDERS = ("library", "models")  # controller drawings; prompts are not artwork
+# Bundled drawings whose inputs were named in pawz: same relative paths, used instead.
+OVERRIDES_DIR = DATA_DIR / "artwork"
+
+
+def with_override(path: Path) -> Path:
+    """The renamed copy of a bundled drawing when there is one, else ``path``."""
+    try:
+        relative = path.resolve().relative_to(ASSET_DIR.resolve())
+    except ValueError:
+        return path
+    override = OVERRIDES_DIR / relative
+    return override if override.is_file() else path
+
+
+def bundled_artwork(relative: str) -> Path:
+    """A bundled illustration from its ``asset:`` path (``"library/switch-pro.svg"``);
+    anything leaving the artwork folders falls back to the bare file name."""
+    path = Path(relative.replace("\\", "/"))
+    if len(path.parts) == 2 and path.parts[0] in ARTWORK_FOLDERS and path.suffix == ".svg":
+        return ASSET_DIR / path.parts[0] / path.name
+    return ASSET_DIR / path.name
+
+
+def available_artwork() -> list[str]:
+    """``asset:`` paths of every bundled controller illustration."""
+    paths = [path.name for path in ASSET_DIR.glob("*.svg")]
+    for folder in ARTWORK_FOLDERS:
+        paths += [f"{folder}/{path.name}" for path in (ASSET_DIR / folder).glob("*.svg")]
+    return sorted(paths)
+
+
 def resolve_artwork(model: ControllerDefinition, custom: str | None = None) -> Path | None:
     candidates = []
     if custom:
         if custom.startswith("asset:"):
-            candidates.append(ASSET_DIR / Path(custom[6:]).name)
+            candidates.append(bundled_artwork(custom[6:]))
         elif custom.startswith("user:"):
             candidates.append(DATA_DIR / "illustrations" / Path(custom[5:]).name)
         else:
@@ -133,13 +169,65 @@ def resolve_artwork(model: ControllerDefinition, custom: str | None = None) -> P
     candidates.append(ASSET_DIR / (model.family + ".svg"))
     candidates.append(ASSET_DIR / "library-generic.svg")
     candidates.append(ASSET_DIR / "generic.svg")
-    for path in candidates:
+    for path in map(with_override, candidates):
         try:
             if path.is_file() and renderer_for(path).isValid():
                 return path
         except OSError:
             continue
     return None
+
+
+PROMPT_GAP = 24  # between the buttons of a combination, around the "+"
+PROMPT_STRIDE = 36 + PROMPT_GAP
+
+
+def controller_prompt_svg(trigger: str, model: ControllerDefinition | None) -> tuple[bytes, list[str]]:
+    """SVG of a button or combination (``"SOUTH+LEFT_SHOULDER"``) as drawn on ``model``,
+    and the asset files it was composed from."""
+    buttons = trigger.split("+")
+    width = 36 * len(buttons) + PROMPT_GAP * (len(buttons) - 1)
+    root = ET.Element("{http://www.w3.org/2000/svg}svg", viewBox=f"0 0 {width} 36")
+    sources = []
+    for index, logical in enumerate(buttons):
+        path = prompt_path(logical, model)
+        if path:
+            child = ET.fromstring(prompt_svg(str(path)))
+            sources.append(str(path.relative_to(ASSET_DIR)))
+            # Each prompt has its own IDs. Prefix IDs/references when composing chords.
+            ids = {node.get("id"): f"prompt{index}_{node.get('id')}" for node in child.iter() if node.get("id")}
+            for node in child.iter():
+                for key, value in list(node.attrib.items()):
+                    if key == "id":
+                        node.set(key, ids[value])
+                    else:
+                        for old, new in ids.items():
+                            value = value.replace(f"url(#{old})", f"url(#{new})")
+                            if value == "#" + old:
+                                value = "#" + new
+                        node.set(key, value)
+            x, y, w, h = map(float, child.get("viewBox", "0 0 36 36").replace(",", " ").split())
+            scale = min(36 / w, 36 / h)
+            child.tag = "{http://www.w3.org/2000/svg}g"
+            for key in ("width", "height", "viewBox", "version"):
+                child.attrib.pop(key, None)
+            child.set("transform", f"translate({index * PROMPT_STRIDE + (36-w*scale)/2} {(36-h*scale)/2}) "
+                      f"scale({scale}) translate({-x} {-y})")
+            root.append(child)
+        else:
+            label = model.physical_labels.get(logical, logical) if model else logical
+            if logical == "GUIDE":
+                label = "Guide"  # No platform Guide logos are redistributed.
+            text = ET.SubElement(root, "{http://www.w3.org/2000/svg}text", {
+                "x": str(index * PROMPT_STRIDE + 18), "y": "22", "text-anchor": "middle",
+                "font-family": "Inter 18pt", "font-size": str(min(9, 48 / max(len(label), 1))), "fill": "white"})
+            text.text = label
+        if index:
+            plus = ET.SubElement(root, "{http://www.w3.org/2000/svg}text", {
+                "x": str(index * PROMPT_STRIDE - PROMPT_GAP / 2), "y": "23", "text-anchor": "middle",
+                "font-family": "Inter 18pt", "font-size": "16", "fill": "white"})
+            plus.text = "+"
+    return ET.tostring(root), sources
 
 
 class SvgView(QWidget):
@@ -172,50 +260,9 @@ class SvgView(QWidget):
         self.update()
 
     def set_controller_prompt(self, trigger: str, model: ControllerDefinition | None):
-        buttons = trigger.split("+")
-        width = 36 * len(buttons) + 12 * (len(buttons) - 1)
-        root = ET.Element("{http://www.w3.org/2000/svg}svg", viewBox=f"0 0 {width} 36")
-        sources = []
-        for index, logical in enumerate(buttons):
-            path = prompt_path(logical, model)
-            if path:
-                child = ET.fromstring(prompt_svg(str(path)))
-                sources.append(str(path.relative_to(ASSET_DIR)))
-                # Each prompt has its own IDs. Prefix IDs/references when composing chords.
-                ids = {node.get("id"): f"prompt{index}_{node.get('id')}" for node in child.iter() if node.get("id")}
-                for node in child.iter():
-                    for key, value in list(node.attrib.items()):
-                        if key == "id":
-                            node.set(key, ids[value])
-                        else:
-                            for old, new in ids.items():
-                                value = value.replace(f"url(#{old})", f"url(#{new})")
-                                if value == "#" + old:
-                                    value = "#" + new
-                            node.set(key, value)
-                x, y, w, h = map(float, child.get("viewBox", "0 0 36 36").replace(",", " ").split())
-                scale = min(36 / w, 36 / h)
-                child.tag = "{http://www.w3.org/2000/svg}g"
-                for key in ("width", "height", "viewBox", "version"):
-                    child.attrib.pop(key, None)
-                child.set("transform", f"translate({index * 48 + (36-w*scale)/2} {(36-h*scale)/2}) "
-                          f"scale({scale}) translate({-x} {-y})")
-                root.append(child)
-            else:
-                label = model.physical_labels.get(logical, logical) if model else logical
-                if logical == "GUIDE":
-                    label = "Guide"  # No platform Guide logos are redistributed.
-                text = ET.SubElement(root, "{http://www.w3.org/2000/svg}text", {
-                    "x": str(index * 48 + 18), "y": "22", "text-anchor": "middle",
-                    "font-family": "Inter 18pt", "font-size": str(min(9, 48 / max(len(label), 1))), "fill": "white"})
-                text.text = label
-            if index:
-                plus = ET.SubElement(root, "{http://www.w3.org/2000/svg}text", {
-                    "x": str(index * 48 - 6), "y": "23", "text-anchor": "middle",
-                    "font-family": "Inter 18pt", "font-size": "16", "fill": "white"})
-                plus.text = "+"
+        data, sources = controller_prompt_svg(trigger, model)
         self.setProperty("svgSources", sources)
-        self.renderer.load(QByteArray(ET.tostring(root)))
+        self.renderer.load(QByteArray(data))
         self.update()
 
     def paintEvent(self, event):
@@ -227,3 +274,40 @@ class SvgView(QWidget):
         rect = QRectF((self.width()-width)/2, (self.height()-height)/2, width, height)
         painter = QPainter(self)
         self.renderer.render(painter, rect)
+
+
+PROMPT_ROLE = Qt.ItemDataRole.UserRole + 1  # item data: SVG bytes drawn by PromptDelegate
+
+
+class PromptDelegate(QStyledItemDelegate):
+    """Draws an item's SVG (``PROMPT_ROLE``) centred in its cell.
+
+    Unlike cell widgets, which Qt only places for visible rows, painting follows the
+    table when it scrolls.
+    """
+
+    def __init__(self, scale: float = 0.72, parent=None):
+        super().__init__(parent)
+        self.scale = scale
+        self._renderers: dict[bytes, QSvgRenderer] = {}
+
+    def paint(self, painter, option, index):
+        super().paint(painter, option, index)
+        data = index.data(PROMPT_ROLE)
+        if not data:
+            return
+        data = bytes(data)
+        renderer = self._renderers.get(data)
+        if renderer is None:
+            renderer = self._renderers[data] = QSvgRenderer(QByteArray(data))
+        if not renderer.isValid():
+            return
+        size = renderer.defaultSize()
+        size.scale(option.rect.size(), Qt.AspectRatioMode.KeepAspectRatio)
+        width, height = size.width() * self.scale, size.height() * self.scale
+        rect = QRectF(option.rect.x() + (option.rect.width() - width) / 2,
+                      option.rect.y() + (option.rect.height() - height) / 2, width, height)
+        painter.save()
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        renderer.render(painter, rect)
+        painter.restore()

@@ -5,8 +5,8 @@ Another theme maps each of those colours to its own. Comfy Turquoise makes the
 button fill its accent #00a8b0 and keeps the luminance ratios between colours:
 every blue's luminance is multiplied by the same factor (accent / button fill,
 about 4, capped at white) and its hue turned towards the accent's. The app name
-also takes the accent. Danger Red does the same with a red accent, every colour
-taking exactly the accent's hue. Neutral and status colours (battery, controller artwork,
+also takes the accent. Danger Red does the same with a dark red fill, every colour
+taking exactly the accent's hue, and bright red button outlines and title. Neutral and status colours (battery, controller artwork,
 YouTube red) are not blue and stay as they are.
 
 The theme is chosen in Settings and applied at startup, like the language.
@@ -54,8 +54,11 @@ class Theme:
 THEMES = {theme.id: theme for theme in (
     Theme(COMFY_TURQUOISE, QT_TR_NOOP("Comfy Turquoise"), "#00a8b0", BUTTON_FILL,
           {BRAND: "#00a8b0", BUTTON_FILL: "#00a8b0"}),
-    Theme(DANGER_RED, QT_TR_NOOP("Danger Red"), "#c62828", BUTTON_FILL,
-          {BRAND: "#c62828", BUTTON_FILL: "#c62828"}, keep_hue_offsets=False),
+    # Dark like Midnight Blue (the fill has about its luminance), with bright red
+    # button outlines and title.
+    Theme(DANGER_RED, QT_TR_NOOP("Danger Red"), "#9b1c1c", BUTTON_FILL,
+          {BRAND: "#ff2d2d", BUTTON_FILL: "#9b1c1c", BUTTON_OUTLINE: "#ff2d2d"},
+          keep_hue_offsets=False),
     Theme(MIDNIGHT_BLUE, QT_TR_NOOP("Midnight Blue")),
 )}
 _current = THEMES[MIDNIGHT_BLUE]

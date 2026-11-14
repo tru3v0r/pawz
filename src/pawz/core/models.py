@@ -38,8 +38,16 @@ EDIT_LAYER = {"LEFT_TRIGGER+SOUTH": "ctrl+z", "LEFT_TRIGGER+EAST": "ctrl+y",
 GAME_MODE_TRIGGER = "BACK+START"
 BROWSER_PROCESSES = ("firefox.exe", "brave.exe", "chrome.exe", "msedge.exe")
 BROWSER_BINDINGS = {"l": "tab_previous", "r": "tab_next"}
-YOUTUBE_BINDINGS = {"x": "play_pause", "y": "fullscreen"}
-VLC_BINDINGS = {"a": "play_pause"}
+# Video shortcuts, (action, keys): the same buttons on YouTube and in VLC. Subtitles
+# use the left stick click, the one button left free; VLC toggles them with "v".
+YOUTUBE_BINDINGS = {"x": ("play_pause", ""), "y": ("fullscreen", ""),
+                    "left_stick": ("subtitles", "")}
+VLC_BINDINGS = {"x": ("play_pause", ""), "y": ("fullscreen", ""),
+                "left_stick": ("key_combo", "v")}
+
+
+def vlc_bindings() -> dict[str, Binding]:
+    return {normalize_trigger(k): Binding(*v) for k, v in VLC_BINDINGS.items()}
 
 
 def normalize_trigger(trigger: str) -> str:
@@ -185,9 +193,9 @@ class Settings:
         bindings[GAME_MODE_TRIGGER] = Binding("game_mode")
         apps = {browser: {k: Binding(v) for k, v in BROWSER_BINDINGS.items()}
                 for browser in BROWSER_PROCESSES}
-        apps["vlc.exe"] = {k: Binding(v) for k, v in VLC_BINDINGS.items()}
+        apps["vlc.exe"] = {k: Binding(*v) for k, v in VLC_BINDINGS.items()}
         p = Profile("Default", bindings, apps,
-                    {"youtube.com": {k: Binding(v) for k, v in YOUTUBE_BINDINGS.items()}})
+                    {"youtube.com": {k: Binding(*v) for k, v in YOUTUBE_BINDINGS.items()}})
         return cls({"Default": p})
 
     @classmethod
