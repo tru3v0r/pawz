@@ -1,7 +1,7 @@
 """Catalogue of bindable actions, and the output they drive.
 
 Every action is declared once here: its identifier (stored in profiles), its label
-(shown in the settings), and what it does. Settings validation, the profile editor,
+(shown in the settings, translated with ``pawz.i18n.tr``), and what it does. Settings validation, the profile editor,
 the gesture engine and execution all read this table, so adding an action is a
 single entry.
 
@@ -12,6 +12,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Protocol
+
+
+def QT_TR_NOOP(text: str) -> str:  # marks labels for pyside6-lupdate
+    return text
 
 
 @dataclass(frozen=True)
@@ -25,24 +29,24 @@ class Action:
 
 
 CATALOGUE: tuple[Action, ...] = (
-    Action("none", "Aucune action"),
-    Action("left_click", "Clic gauche", mouse="left"),
-    Action("right_click", "Clic droit", mouse="right"),
-    Action("middle_click", "Clic de molette", mouse="middle"),
-    Action("win", "Menu Démarrer", keys="win"),
-    Action("volume_up", "Augmenter le volume", keys="volume_up"),
-    Action("volume_down", "Baisser le volume", keys="volume_down"),
-    Action("previous", "Page précédente", keys="browser_back"),
-    Action("next", "Page suivante", keys="browser_forward"),
-    Action("tab_previous", "Onglet précédent", keys="ctrl+shift+tab"),
-    Action("tab_next", "Onglet suivant", keys="ctrl+tab"),
+    Action("none", QT_TR_NOOP("No action")),
+    Action("left_click", QT_TR_NOOP("Left click"), mouse="left"),
+    Action("right_click", QT_TR_NOOP("Right click"), mouse="right"),
+    Action("middle_click", QT_TR_NOOP("Middle click"), mouse="middle"),
+    Action("win", QT_TR_NOOP("Start menu"), keys="win"),
+    Action("volume_up", QT_TR_NOOP("Volume up"), keys="volume_up"),
+    Action("volume_down", QT_TR_NOOP("Volume down"), keys="volume_down"),
+    Action("previous", QT_TR_NOOP("Previous page"), keys="browser_back"),
+    Action("next", QT_TR_NOOP("Next page"), keys="browser_forward"),
+    Action("tab_previous", QT_TR_NOOP("Previous tab"), keys="ctrl+shift+tab"),
+    Action("tab_next", QT_TR_NOOP("Next tab"), keys="ctrl+tab"),
     # Site/app-specific hotkeys (YouTube, VLC), not system media keys.
-    Action("play_pause", "Lecture / pause", keys="space"),
-    Action("fullscreen", "Plein écran", keys="f"),
-    Action("subtitles", "Sous-titres", keys="c"),
-    Action("key_combo", "Raccourci clavier", custom_keys=True),
-    Action("open_settings", "Ouvrir les paramètres", internal=True),
-    Action("game_mode", "Basculer le mode jeu", internal=True),
+    Action("play_pause", QT_TR_NOOP("Play / pause"), keys="space"),
+    Action("fullscreen", QT_TR_NOOP("Full screen"), keys="f"),
+    Action("subtitles", QT_TR_NOOP("Subtitles"), keys="c"),
+    Action("key_combo", QT_TR_NOOP("Keyboard shortcut"), custom_keys=True),
+    Action("open_settings", QT_TR_NOOP("Open settings"), internal=True),
+    Action("game_mode", QT_TR_NOOP("Toggle game mode"), internal=True),
 )
 BY_ID = {action.id: action for action in CATALOGUE}
 ACTION_IDS = tuple(BY_ID)

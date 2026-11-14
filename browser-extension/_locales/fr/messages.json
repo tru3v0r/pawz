@@ -1,0 +1,13 @@
+{
+  "extName": {"message": "pawz Browser Bridge"},
+  "extDescription": {"message": "Partage le domaine de l'onglet actif avec l'application pawz locale."},
+  "optionsTitle": {"message": "pawz · Extension"},
+  "optionsHeading": {"message": "pawz · Connexion navigateur"},
+  "tokenHelpBefore": {"message": "Copiez la valeur"},
+  "tokenHelpAfter": {"message": "depuis"},
+  "tokenPlaceholder": {"message": "Jeton de connexion local"},
+  "portHelpBefore": {"message": "Port (valeur"},
+  "portHelpAfter": {"message": "du même fichier, 8765 par défaut)"},
+  "save": {"message": "Enregistrer"},
+  "saved": {"message": "Réglages enregistrés."}
+}

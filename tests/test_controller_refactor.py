@@ -149,7 +149,7 @@ def test_three_tabs_default_protection_and_display_change(qtbot, qapp, tmp_path,
     original = settings.profiles["Default"].dump()
     dialog = SettingsDialog(settings)
     qtbot.addWidget(dialog)
-    assert [dialog.tabs.tabText(i) for i in range(3)] == ["GÉNÉRAL", "PROFILS", "MANETTES"]
+    assert [dialog.tabs.tabText(i) for i in range(3)] == ["GENERAL", "PROFILES", "CONTROLLERS"]
     assert not dialog.findChild(QPushButton, "deleteProfile").isEnabled()
     assert all(dialog.findChild(QPushButton, name) for name in ("duplicateProfile", "renameProfile", "deleteProfile"))
     dialog.tabs.setCurrentIndex(1)
@@ -196,7 +196,7 @@ def test_pencil_edits_action_chord_and_moves_context_without_losing_other_bindin
         lines[2].setText("example.org")
         edit_dialog.findChildren(QComboBox)[1].setCurrentIndex(2)
         next(button for button in edit_dialog.findChildren(QPushButton)
-             if button.text() == "Enregistrer").click()
+             if button.text() == "Save").click()
         return edit_dialog.result()
     monkeypatch.setattr(QDialog, "exec", edit)
     editor.edit_binding(editor.profile.global_bindings, "WEST")

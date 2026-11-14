@@ -7,7 +7,7 @@ from pathlib import Path
 from PySide6.QtCore import QTimer
 from PySide6.QtWidgets import QApplication, QMessageBox
 
-from pawz import APP_NAME, env
+from pawz import APP_NAME, env, i18n
 from pawz.core.controllers import ControllerManager
 from pawz.infra.browser import BrowserBridge
 from pawz.infra.debug_events import ETW_HELPER_FLAG
@@ -29,11 +29,12 @@ def main():
     smoke_report = env("SMOKE_REPORT")
     try:
         settings = load()
+        i18n.install(app, settings.language)
         try:
             if not smoke_report:
                 configure_startup(settings)
         except OSError as exc:
-            QMessageBox.warning(None, f"{APP_NAME} — Démarrage", str(exc))
+            QMessageBox.warning(None, i18n.tr("{app} — Startup").format(app=APP_NAME), str(exc))
         bridge = BrowserBridge(settings.browser_token, settings.port)
         bridge.start()
         manager = ControllerManager(settings, bridge)

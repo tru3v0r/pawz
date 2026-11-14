@@ -10,6 +10,11 @@ from pawz.core.controller_inputs import migrate_legacy_trigger
 from pawz.core.controller_services import validate_mapping
 from pawz.engine.actions import ACTION_IDS
 
+
+def QT_TR_NOOP(text: str) -> str:  # user-facing errors, translated by the UI
+    return text
+
+
 BUTTONS = (
     "SOUTH", "EAST", "WEST", "NORTH", "LEFT_SHOULDER", "RIGHT_SHOULDER",
     "LEFT_STICK", "RIGHT_STICK", "DPAD_UP", "DPAD_DOWN", "DPAD_LEFT",
@@ -168,6 +173,7 @@ class Settings:
     game_mode_auto: bool = True  # full-screen applications are games
     games: list[str] = field(default_factory=list)  # always games
     non_games: list[str] = field(default_factory=list)  # never games
+    language: str = "auto"  # "auto" (follow Windows) or a code from pawz.i18n.LANGUAGES
 
     @classmethod
     def defaults(cls) -> Settings:
@@ -233,7 +239,8 @@ class Settings:
                    mappings,
                    deepcopy(preferences),
                    str(raw.get("display_controller_model", "generic.sdl-gamecontroller")),
-                   game_mode_auto, games, non_games)
+                   game_mode_auto, games, non_games,
+                   language if isinstance(language := raw.get("language", "auto"), str) else "auto")
 
     def dump(self) -> dict:
         return {"schema_version": self.SCHEMA_VERSION, "profiles": {k: v.dump() for k, v in self.profiles.items()},
@@ -248,7 +255,8 @@ class Settings:
                 "device_preferences": deepcopy(self.device_preferences),
                 "display_controller_model": self.display_controller_model,
                 "game_mode_auto": self.game_mode_auto,
-                "games": list(self.games), "non_games": list(self.non_games)}
+                "games": list(self.games), "non_games": list(self.non_games),
+                "language": self.language}
 
     def duplicate_profile(self, name: str, new_name: str) -> Profile:
         self._validate_profile_name(new_name)
@@ -259,7 +267,7 @@ class Settings:
 
     def _validate_profile_name(self, name: str) -> None:
         if not name.strip() or name in self.profiles:
-            raise ValueError("Profile name is empty or already exists")
+            raise ValueError(QT_TR_NOOP("The profile name is empty or already exists."))
 
     def rename_profile(self, name: str, new_name: str) -> None:
         self._validate_profile_name(new_name)
@@ -273,9 +281,9 @@ class Settings:
 
     def remove_profile(self, name: str) -> None:
         if self.profiles[name].profile_id == SYSTEM_DEFAULT_PROFILE_ID:
-            raise ValueError("The system Default profile cannot be removed")
+            raise ValueError(QT_TR_NOOP("The default system profile cannot be removed."))
         if len(self.profiles) == 1:
-            raise ValueError("At least one profile required")
+            raise ValueError(QT_TR_NOOP("At least one profile is required."))
         del self.profiles[name]
         self.assignments = {key: value for key, value in self.assignments.items() if value != name}
         if self.default_profile == name:

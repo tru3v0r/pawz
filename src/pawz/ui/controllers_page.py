@@ -32,26 +32,35 @@ from pawz.core.controller_catalog import ControllerCatalog, ControllerDefinition
 from pawz.core.controller_inputs import LogicalAxis
 from pawz.core.controller_services import Calibration, resolve_model, validate_mapping
 from pawz.core.models import BUTTONS
+from pawz.i18n import QT_TR_NOOP, tr
 from pawz.infra.storage import DATA_DIR
 from pawz.ui.controller_assets import ASSET_DIR, SvgView, resolve_artwork
 from pawz.ui.controller_tables import IdentificationTable
+
+# Built-in model names that are words rather than product names (see catalog.json).
+TRANSLATED_MODEL_NAMES = (QT_TR_NOOP("Generic SDL controller"),)
+
+
+def model_name(definition: ControllerDefinition) -> str:
+    """The model name to display: built-in generic names are translated."""
+    return tr(definition.model) if definition.model in TRANSLATED_MODEL_NAMES else definition.model
 
 
 class CalibrationDialog(QDialog):
     def __init__(self, joystick, parent=None):
         super().__init__(parent)
-        self.setWindowTitle("Calibration des entrées matérielles")
+        self.setWindowTitle(tr("Hardware input calibration"))
         self.calibration = Calibration(joystick)
         layout = QVBoxLayout(self)
-        layout.addWidget(QLabel("Choisissez une entrée logique, puis actionnez-la sur la manette.\n"
-                                "Relâchez les contrôles avant chaque capture."))
+        layout.addWidget(QLabel(tr("Choose a logical input, then use it on the controller.\n"
+                                   "Release all controls before each capture.")))
         self.logical = QComboBox()
         self.logical.addItems(list(BUTTONS) + [axis.value for axis in LogicalAxis
                                              if axis.value not in BUTTONS])
         layout.addWidget(self.logical)
         self.status = QLabel()
         layout.addWidget(self.status)
-        capture = QPushButton("Capturer cette entrée")
+        capture = QPushButton(tr("Capture this input"))
         capture.clicked.connect(self.start_capture)
         layout.addWidget(capture)
         self.timer = QTimer(self)
@@ -65,7 +74,7 @@ class CalibrationDialog(QDialog):
 
     def start_capture(self):
         self.calibration.baseline = self.calibration.snapshot()
-        self.status.setText("En attente d’une entrée…")
+        self.status.setText(tr("Waiting for an input…"))
         self.timer.start()
 
     def capture(self):
@@ -98,11 +107,11 @@ class ControllersPage(QWidget):
         scroll.setWidget(host)
         layout = QVBoxLayout(host)
         from pawz.ui.windows import ProfileSectionHeading, profile_action_button
-        layout.addWidget(ProfileSectionHeading("Modèles et mappings"))
+        layout.addWidget(ProfileSectionHeading(tr("Models and mappings")))
         actions = QHBoxLayout()
         for title, name, callback in (
-                ("Ajouter un mapping…", "addMapping", self.add_mapping),
-                ("Identifier ma manette…", "identifyController", self.identify)):
+                (tr("Add a mapping…"), "addMapping", self.add_mapping),
+                (tr("Identify my controller…"), "identifyController", self.identify)):
             button = QPushButton(title)
             button.setObjectName(name)
             button.clicked.connect(callback)
@@ -117,11 +126,11 @@ class ControllersPage(QWidget):
         self.model.setObjectName("controllerModelPicker")
         row = QHBoxLayout()
         row.addWidget(self.model, 1)
-        self.edit_model = profile_action_button("Modifier", "edit")
+        self.edit_model = profile_action_button(tr("Edit"), "edit")
         self.edit_model.setObjectName("editControllerModel")
-        self.delete_model = profile_action_button("Supprimer", "delete")
+        self.delete_model = profile_action_button(tr("Delete"), "delete")
         self.delete_model.setObjectName("deleteControllerModel")
-        duplicate = profile_action_button("Dupliquer", "duplicate")
+        duplicate = profile_action_button(tr("Duplicate"), "duplicate")
         duplicate.setObjectName("duplicateControllerModel")
         duplicate.clicked.connect(self.duplicate)
         self.edit_model.clicked.connect(self.edit)
@@ -130,7 +139,7 @@ class ControllersPage(QWidget):
             row.addWidget(button)
         layout.addLayout(row)
         self.artwork = SvgView()
-        layout.addWidget(ProfileSectionHeading("Identification"))
+        layout.addWidget(ProfileSectionHeading(tr("Identification")))
         self.artwork.setObjectName("controllerPreview")
         self.artwork.setFixedHeight(150)
         layout.addWidget(self.artwork)
@@ -144,15 +153,16 @@ class ControllersPage(QWidget):
         self.name = QLineEdit()
         self.name.setObjectName("controllerCustomName")
         self.name.editingFinished.connect(self.rename)
-        form.addRow("Nom personnalisé", self.name)
+        form.addRow(tr("Custom name"), self.name)
         layout.addLayout(form)
-        apply_model = QPushButton("Utiliser ce modèle pour cette manette")
+        apply_model = QPushButton(tr("Use this model for this controller"))
         apply_model.clicked.connect(self.assign_model)
         layout.addWidget(apply_model)
         self.table = QTableWidget(0, 3)
-        layout.addWidget(ProfileSectionHeading("Correspondances"))
+        layout.addWidget(ProfileSectionHeading(tr("Mappings")))
         self.table.setObjectName("controllerCorrespondences")
-        self.table.setHorizontalHeaderLabels(["Entrée logique SDL", "Libellé physique", "Entrée matérielle"])
+        self.table.setHorizontalHeaderLabels(
+            [tr("SDL logical input"), tr("Physical label"), tr("Hardware input")])
         self.table.verticalHeader().setVisible(False)
         self.table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         self.table.horizontalHeader().setDefaultAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -162,11 +172,11 @@ class ControllersPage(QWidget):
         self.table.verticalHeader().setDefaultSectionSize(38)
         self.table.setMinimumHeight(260)
         layout.addWidget(self.table)
-        layout.addWidget(ProfileSectionHeading("Personnalisation"))
-        for title, callback in (("Calibrer…", self.calibrate),
-                                ("Choisir une illustration…", self.choose_svg),
-                                ("Importer un SVG personnalisé…", self.import_svg),
-                                ("Restaurer l’illustration", self.restore_svg)):
+        layout.addWidget(ProfileSectionHeading(tr("Customization")))
+        for title, callback in ((tr("Calibrate…"), self.calibrate),
+                                (tr("Choose an illustration…"), self.choose_svg),
+                                (tr("Import a custom SVG…"), self.import_svg),
+                                (tr("Restore the illustration"), self.restore_svg)):
             button = QPushButton(title)
             button.clicked.connect(callback)
             layout.addWidget(button)
@@ -200,7 +210,7 @@ class ControllersPage(QWidget):
         self.model.blockSignals(True)
         self.model.clear()
         for definition in self.catalog.definitions:
-            self.model.addItem(definition.model, definition.id)
+            self.model.addItem(model_name(definition), definition.id)
         self.model.setCurrentIndex(max(0, self.model.findData(selected)))
         self.model.blockSignals(False)
         self.refresh()
@@ -227,9 +237,9 @@ class ControllersPage(QWidget):
         self.edit_model.setEnabled(not builtin)
         self.delete_model.setEnabled(not builtin)
         preferences = self.preferences()
-        self.metadata.set_values((definition.manufacturer or "—", definition.model, definition.family,
+        self.metadata.set_values((definition.manufacturer or "—", model_name(definition), definition.family,
                                   preferences.get("guid") or "—",
-                                  "Vérifié" if definition.verified else "Non vérifié sur matériel"))
+                                  tr("Verified") if definition.verified else tr("Not verified on hardware")))
         self.metadata.setToolTip(definition.provenance)
         self.artwork.set_path(resolve_artwork(definition, preferences.get("svg")))
         inputs = list(dict.fromkeys(list(BUTTONS) + [axis.value for axis in LogicalAxis]))
@@ -261,33 +271,34 @@ class ControllersPage(QWidget):
 
     def identify(self):
         self.select_device()
-        QMessageBox.information(self, "Identification", "La détection utilise le GUID et le nom SDL.\n"
-                                "Un nom seul ne constitue pas une vérification matérielle.\n"
-                                "Choisissez manuellement le modèle en cas d’ambiguïté.")
+        QMessageBox.information(self, tr("Identification"), tr(
+            "Detection uses the SDL GUID and name.\n"
+            "A name alone is not a hardware verification.\n"
+            "Choose the model by hand if in doubt."))
 
     def duplicate(self):
         definition = self.catalog.get(self.model.currentData())
-        name, ok = QInputDialog.getText(self, "Dupliquer", "Nom du modèle")
+        name, ok = QInputDialog.getText(self, tr("Duplicate"), tr("Model name"))
         if ok and name.strip():
             definition = replace(definition, id="custom." + uuid4().hex, model=name.strip(),
-                                 verified=False, known_guids=(), provenance="Copie utilisateur de " + definition.id)
+                                 verified=False, known_guids=(), provenance="User copy of " + definition.id)
             self.catalog.add_custom(definition)
             self.reload_models(definition.id)
 
     def edit(self):
         definition = self.catalog.get(self.model.currentData())
-        text, ok = QInputDialog.getMultiLineText(self, "Modifier le modèle", "Définition JSON",
+        text, ok = QInputDialog.getMultiLineText(self, tr("Edit model"), tr("JSON definition"),
                                                 json.dumps(definition.dump(), ensure_ascii=False, indent=2))
         if ok:
             try:
                 edited = ControllerDefinition.parse(json.loads(text))
                 if edited.id != definition.id:
-                    raise ValueError("L’identifiant du modèle doit rester stable")
+                    raise ValueError(tr("The model identifier must not change"))
                 validate_mapping(edited.hardware_mapping)
                 self.catalog.replace_custom(definition.id, replace(edited, verified=False))
                 self.reload_models(definition.id)
             except (ValueError, KeyError, TypeError) as exc:
-                QMessageBox.warning(self, "Définition invalide", str(exc))
+                QMessageBox.warning(self, tr("Invalid definition"), str(exc))
 
     def delete(self):
         model_id = self.model.currentData()
@@ -298,19 +309,20 @@ class ControllersPage(QWidget):
         self.reload_models()
 
     def add_mapping(self):
-        text, ok = QInputDialog.getMultiLineText(self, "Mapping personnalisé", "JSON : entrée logique → bN, aN, +/-aN, hN.M",
+        text, ok = QInputDialog.getMultiLineText(
+            self, tr("Custom mapping"), tr("JSON: logical input → bN, aN, +/-aN, hN.M"),
                                                 json.dumps(self.settings.controller_mappings.get(self.device.currentData(), {}), indent=2))
         if ok and self.device.currentData():
             try:
                 self.settings.controller_mappings[self.device.currentData()] = validate_mapping(json.loads(text))
                 self.refresh()
             except (ValueError, TypeError, AttributeError) as exc:
-                QMessageBox.warning(self, "Mapping invalide", str(exc))
+                QMessageBox.warning(self, tr("Invalid mapping"), str(exc))
 
     def calibrate(self):
         key = self.device.currentData()
         if self.manager is None or key not in self.manager.joysticks:
-            QMessageBox.warning(self, "Calibration", "Connectez la manette à calibrer.")
+            QMessageBox.warning(self, tr("Calibration"), tr("Connect the controller to calibrate."))
             return
         self.manager.begin_input_capture()
         try:
@@ -323,17 +335,20 @@ class ControllersPage(QWidget):
 
     def choose_svg(self):
         names = sorted(path.name for path in ASSET_DIR.glob("*.svg"))
-        selected, ok = QInputDialog.getItem(self, "Illustration", "SVG disponible", names, 0, False)
+        selected, ok = QInputDialog.getItem(
+            self, tr("Illustration"), tr("Available SVG"), names, 0, False)
         if ok and self.device.currentData():
             self.preferences()["svg"] = "asset:" + selected
             self.refresh()
 
     def import_svg(self):
-        filename, _ = QFileDialog.getOpenFileName(self, "Importer une illustration", "", "SVG (*.svg)")
+        filename, _ = QFileDialog.getOpenFileName(
+            self, tr("Import an illustration"), "", tr("SVG (*.svg)"))
         if filename and self.device.currentData():
             path = Path(filename)
             if path.stat().st_size > 4_000_000 or not QSvgRenderer(filename).isValid():
-                QMessageBox.warning(self, "SVG invalide", "Le fichier doit être un SVG valide de moins de 4 Mo.")
+                QMessageBox.warning(self, tr("Invalid SVG"),
+                                    tr("The file must be a valid SVG under 4 MB."))
                 return
             target = DATA_DIR / "illustrations" / (uuid4().hex + ".svg")
             target.parent.mkdir(parents=True, exist_ok=True)

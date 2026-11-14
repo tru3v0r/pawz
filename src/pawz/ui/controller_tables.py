@@ -2,9 +2,12 @@
 from PySide6.QtCore import QSize, Qt
 from PySide6.QtWidgets import QHeaderView, QSizePolicy, QTableWidget, QTableWidgetItem
 
+from pawz.i18n import QT_TR_NOOP, tr
+
 
 class IdentificationTable(QTableWidget):
-    FIELDS = ("Fabricant", "Modèle", "Famille", "GUID SDL", "Statut")
+    FIELDS = (QT_TR_NOOP("Manufacturer"), QT_TR_NOOP("Model"), QT_TR_NOOP("Family"),
+              QT_TR_NOOP("SDL GUID"), QT_TR_NOOP("Status"))
 
     def __init__(self, parent=None):
         super().__init__(len(self.FIELDS), 2, parent)
@@ -27,7 +30,7 @@ class IdentificationTable(QTableWidget):
         if len(values) != len(self.FIELDS):
             raise ValueError("Identification requires five values")
         for row, (label, value) in enumerate(zip(self.FIELDS, values)):
-            for column, text in enumerate((label, value)):
+            for column, text in enumerate((tr(label), value)):
                 item = QTableWidgetItem(text)
                 item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
                 item.setToolTip(text)

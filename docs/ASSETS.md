@@ -2,7 +2,7 @@
 
 ## Original artwork (project licence, GPL-3.0-or-later)
 
-- **Logo**: a controller with four coloured buttons spelling P A W Z as the toes of a paw, drawn for pawz: `ui/assets/logo.png` (512 px) for the interface and `logo.ico` (16 to 256 px) for the executable. Working files (PSD, SVG, drafts) live in the git-ignored `design/` folder.
+- **Logo**: a controller with four coloured buttons spelling P A W Z as the toes of a paw, drawn for pawz: `ui/assets/logo.svg` for the interface and `logo.ico` (16 to 256 px) for the executable. Both are made from `design/logo/logo.svg`, framed square and without PowerPoint's invisible text layer. Working files (PSD, SVG, drafts) live in the git-ignored `design/` folder.
 - **Controller models**: each of the 18 named models has its own stylized SVG under `controllers/models/` (Xbox 360/One/One S/Series/Elite/Adaptive, DualShock/DualSense, Switch Pro/Joy-Con, Logitech F310/F510/F710, Steam Controller/Deck), with no manufacturer image or logo. They are not a hardware certification or calibration plans. The four X/Y axis icons are under `controllers/input-icons/`. `scripts/generate-controller-illustrations.py` regenerates them and the catalogue's SVG references.
 - **Action icons** (pencil, cross, duplicate, settings, profiles, website) under `ui/assets/icons/`, with vector disabled variants.
 

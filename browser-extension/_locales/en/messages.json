@@ -1,0 +1,13 @@
+{
+  "extName": {"message": "pawz Browser Bridge"},
+  "extDescription": {"message": "Shares the active tab's domain with the local pawz desktop app."},
+  "optionsTitle": {"message": "pawz · Extension"},
+  "optionsHeading": {"message": "pawz · Browser connection"},
+  "tokenHelpBefore": {"message": "Copy the"},
+  "tokenHelpAfter": {"message": "value from"},
+  "tokenPlaceholder": {"message": "Local connection token"},
+  "portHelpBefore": {"message": "Port (the"},
+  "portHelpAfter": {"message": "value in the same file, 8765 by default)"},
+  "save": {"message": "Save"},
+  "saved": {"message": "Settings saved."}
+}

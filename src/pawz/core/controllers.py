@@ -40,6 +40,7 @@ from pawz.engine.gestures import (
     MouseDown,
     MouseUp,
 )
+from pawz.i18n import tr
 from pawz.infra import windows
 from pawz.infra.storage import DATA_DIR
 
@@ -80,7 +81,7 @@ class InputThread(QThread):
             with manager._lock:
                 manager.refresh()
         except Exception as exc:
-            manager.error.emit(f"Initialisation des manettes impossible : {exc}")
+            manager.error.emit(tr("Could not initialize controllers: {error}").format(error=exc))
             return
         deadline = time.perf_counter()
         window_start, ticks = deadline, 0

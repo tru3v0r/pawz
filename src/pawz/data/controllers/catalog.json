@@ -4,14 +4,14 @@
     {
       "id": "generic.sdl-gamecontroller",
       "manufacturer": "",
-      "model": "Manette SDL générique",
+      "model": "Generic SDL controller",
       "family": "generic",
       "known_guids": [],
       "physical_labels": {},
       "hardware_mapping": {},
       "svg": "library-generic.svg",
       "verified": false,
-      "provenance": "Entrée générique Pawz; aucun modèle matériel ni GUID revendiqué."
+      "provenance": "Generic pawz entry; no hardware model or GUID claimed."
     },
     {
       "id": "microsoft.xbox-360",

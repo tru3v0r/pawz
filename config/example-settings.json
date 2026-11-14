@@ -189,5 +189,6 @@
   "display_controller_model": "generic.sdl-gamecontroller",
   "game_mode_auto": true,
   "games": [],
-  "non_games": []
+  "non_games": [],
+  "language": "auto"
 }

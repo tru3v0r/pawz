@@ -182,7 +182,7 @@ def test_application_section_header_overlays_frame_border_with_remove_button():
     assert title.x() == icon.geometry().right() + 1
     assert rule.width() == border.width()
     assert remove.geometry().center().y() == rule.y()
-    assert remove.accessibleName() == "Supprimer"
+    assert remove.accessibleName() == "Remove"
     assert remove.size().toTuple() == (21, 21)
     assert remove.iconSize().toTuple() == (16, 16)
     assert abs(remove.geometry().center().x() - border.width()) <= 1
@@ -223,7 +223,7 @@ def test_application_section_header_overlays_frame_border_with_remove_button():
             dialog, QPoint(3, button.height() // 2))) == QColor("#20527b")
     heading = next(
         heading for heading in editor.findChildren(ProfileSectionHeading)
-        if heading.label.text() == "SENSIBILITÉ")
+        if heading.label.text() == "SENSITIVITY")
     assert heading.rule.width() > 0
     assert heading.rule.x() >= heading.label.geometry().right() + 8
     editor.findChild(QScrollArea, "profileScroll").verticalScrollBar().setValue(0)
@@ -253,7 +253,7 @@ def test_profile_sections_navigation_order_and_visual_controls():
     editor = dialog.editor
 
     headings = [heading.label.text() for heading in editor.findChildren(ProfileSectionHeading)]
-    assert headings[:4] == ["SENSIBILITÉ", "NAVIGATION", "APPLICATIONS", "SITES WEB"]
+    assert headings[:4] == ["SENSITIVITY", "NAVIGATION", "APPLICATIONS", "WEBSITES"]
     for heading in editor.findChildren(ProfileSectionHeading):
         layout_index = editor.sections.indexOf(heading)
         assert layout_index > 0
@@ -295,8 +295,8 @@ def test_profile_sections_navigation_order_and_visual_controls():
     scroll_slider = editor.findChild(QSlider, "scroll_speed")
     deadzone_slider = editor.findChild(QSlider, "deadzone")
     assert mouse_label is not None and mouse_control is not None
-    assert magnet_label is not None and magnet_label.text() == "Magnétisme"
-    assert magnet_control is not None and auto is not None and auto.text() == "Automatique"
+    assert magnet_label is not None and magnet_label.text() == "Magnetism"
+    assert magnet_control is not None and auto is not None and auto.text() == "Automatic"
     assert mouse_slider is not None and magnet_slider is not None
     assert scroll_slider is not None and deadzone_slider is not None
     assert editor.findChild(QCheckBox, "magnetEnabled") is None
@@ -319,7 +319,7 @@ def test_profile_sections_navigation_order_and_visual_controls():
     assert slider_image.pixelColor(10, 0) == QColor("#1b355b")
     navigation = next(
         section for section in editor.findChildren(ProfileSectionFrame, "profileSectionFrame")
-        if section.findChild(QLabel, "profileSectionTitle").text() == "Général")
+        if section.findChild(QLabel, "profileSectionTitle").text() == "General")
     assert navigation.findChild(QFrame, "profileSectionBorder") is not None
     assert navigation.findChild(QFrame, "profileSectionActionsSeparator") is not None
     assert all(section.findChild(QFrame, "profileSectionActionsSeparator") is not None
@@ -331,7 +331,7 @@ def test_profile_sections_navigation_order_and_visual_controls():
     app.processEvents()
     general_headings = settings_dialog.tabs.widget(0).findChildren(ProfileSectionHeading)
     assert [heading.label.text() for heading in general_headings] == [
-        "DÉMARRAGE", "PROFILS", "MODE JEU", "DEBUG"]
+        "STARTUP", "LANGUAGE", "PROFILES", "GAME MODE", "DEBUG"]
     assert not settings_dialog.findChildren(QFrame, "generalSection")
     assert not settings_dialog.findChildren(QGroupBox)
     for heading in general_headings:
@@ -341,7 +341,7 @@ def test_profile_sections_navigation_order_and_visual_controls():
         assert line_color == QColor("#4b83bd")
     debug_startup = settings_dialog.findChild(QCheckBox, "debugWindowOnStartup")
     assert debug_startup is settings_dialog.debug_startup_checkbox
-    assert debug_startup.text() == "Lancer la fenêtre de debug au démarrage"
+    assert debug_startup.text() == "Open the debug window at startup"
     assert not debug_startup.isChecked()
     debug_button = settings_dialog.findChild(QPushButton, "openDebugWindow")
     assert debug_button is settings_dialog.debug_button
@@ -353,7 +353,7 @@ def test_profile_sections_navigation_order_and_visual_controls():
     assert "font-weight:bold" in CSS
     profile_label = next(
         label for label in settings_dialog.tabs.widget(0).findChildren(QLabel)
-        if label.text() == "Profil assigné par défaut")
+        if label.text() == "Default assigned profile")
     assert settings_dialog.default_profile_picker.mapTo(
         settings_dialog, QPoint(0, 0)).x() - profile_label.mapTo(
             settings_dialog, QPoint(profile_label.width(), 0)).x() >= 8
@@ -384,7 +384,7 @@ def test_section_and_control_spacing_matches_across_settings_tabs():
         assert image.pixelColor(heading.rule.x(), heading.rule.y()) == QColor("#4b83bd")
 
     sensitivity_heading = next(
-        heading for heading in headings if heading.label.text() == "SENSIBILITÉ")
+        heading for heading in headings if heading.label.text() == "SENSITIVITY")
     sensitivity_index = editor.sections.indexOf(sensitivity_heading)
     sensitivity = next(
         editor.sections.itemAt(index).widget()
@@ -495,7 +495,7 @@ def test_settings_active_tab_overlaps_panel_border():
 def test_add_profile_separator_is_below_button():
     app = QApplication.instance() or QApplication([])
     app.setStyleSheet(CSS)
-    dialog = SettingsDialog(Settings.defaults(), initial_tab="Profils")
+    dialog = SettingsDialog(Settings.defaults(), initial_tab="profiles")
     dialog.resize(780, 700)
     dialog.show()
     app.processEvents()
@@ -578,7 +578,7 @@ def test_primary_controller_crown_shows_tooltip_on_hover(monkeypatch):
         Qt.MouseButton.NoButton, Qt.MouseButton.NoButton, Qt.KeyboardModifier.NoModifier)
     artwork.mouseMoveEvent(event)
 
-    assert show_tooltip.call_args.args[1] == "Primary Controller"
+    assert show_tooltip.call_args.args[1] == "Primary controller"
     artwork.close()
 
 
@@ -590,7 +590,7 @@ def test_settings_dialog_separates_general_and_profile_options():
     minimized = dialog.findChild(QCheckBox, "startMinimized")
     default_profile = dialog.findChild(QComboBox, "defaultAssignedProfile")
 
-    assert [dialog.tabs.tabText(i) for i in range(dialog.tabs.count())] == ["GÉNÉRAL", "PROFILS", "MANETTES"]
+    assert [dialog.tabs.tabText(i) for i in range(dialog.tabs.count())] == ["GENERAL", "PROFILES", "CONTROLLERS"]
     assert dialog.width() == 708
     assert dialog.height() == 720
     assert startup is not None
@@ -812,7 +812,7 @@ def test_settings_profile_selectors_share_themed_dropdown_and_popup():
     app.setStyleSheet(CSS)
     settings = Settings.defaults()
     settings.profiles["Other"] = Profile("Other")
-    dialog = SettingsDialog(settings, initial_tab="Profils")
+    dialog = SettingsDialog(settings, initial_tab="profiles")
     dialog.resize(708, 720)
     dialog.show()
     app.processEvents()
@@ -852,8 +852,8 @@ def test_profile_creation_dialog_has_name_and_model_and_confirms_cancel(monkeypa
     app.processEvents()
     assert dialog.name_input.objectName() == "newProfileName"
     assert dialog.model_picker.objectName() == "profileModel"
-    assert dialog.create_button.text() == "Créer le profil"
-    assert dialog.cancel_button.text() == "Annuler"
+    assert dialog.create_button.text() == "Create profile"
+    assert dialog.cancel_button.text() == "Cancel"
     assert not dialog.create_button.isEnabled()
     dialog.name_input.setText("Nouveau")
     assert dialog.create_button.isEnabled()
@@ -870,7 +870,7 @@ def test_profile_creation_dialog_has_name_and_model_and_confirms_cancel(monkeypa
     monkeypatch.setattr("pawz.ui.windows.QMessageBox.question", decline_cancel)
     dialog.cancel_button.click()
     assert dialog.isVisible()
-    assert prompts == ["Êtes-vous sûre de vouloir annuler la création du profil en cours ?"]
+    assert prompts == ["Are you sure you want to cancel creating this profile?"]
 
     monkeypatch.setattr(
         "pawz.ui.windows.QMessageBox.question",
@@ -959,12 +959,12 @@ def test_main_window_lists_known_controllers_and_scrolls_overflow(monkeypatch):
     assert window.size().width() == 770
     assert window.height() == 440
     assert "font: 9.1pt" in CSS
-    assert "font: 31pt 'Matcha Style'" in CSS
+    assert "font: 26.4pt 'Matcha Style'" in CSS
     brand = window.findChild(QLabel, "brand")
     brand_icon = window.findChild(QLabel, "brandIcon")
     assert brand is not None
-    assert brand.font().pointSizeF() == 24.8
-    assert brand_icon.width() == 27 and not brand_icon.icon.isNull()
+    assert brand.font().pointSizeF() == 21.1
+    assert brand_icon.width() == 32 and not brand_icon.icon.isNull()
     assert brand_icon.font().pointSizeF() == 13
     assert window.slots[0].artwork.size().toTuple() == (126, 97)
     assert window.slots[0].width() == 140
@@ -1014,12 +1014,12 @@ def test_main_window_lists_known_controllers_and_scrolls_overflow(monkeypatch):
         button for button in window.findChildren(QPushButton)
         if button.text() == "Manage profiles")
     manage_button.click()
-    assert opened_tabs == ["PROFILS"]
+    assert opened_tabs == ["PROFILES"]
     settings_button = next(
         button for button in window.findChildren(QPushButton)
         if button.text() == "Settings")
     settings_button.click()
-    assert opened_tabs == ["PROFILS", "GÉNÉRAL"]
+    assert opened_tabs == ["PROFILES", "GENERAL"]
 
     settings.profiles["Alternate"] = Profile("Alternate")
 

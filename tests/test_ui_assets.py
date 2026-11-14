@@ -32,8 +32,8 @@ def test_all_fonts_registered_from_bundle_without_system_font_lookup(qapp, monke
 def test_icon_buttons_have_no_text_and_keep_labels_and_disabled_state(qtbot):
     dialog = windows.SettingsDialog(Settings.defaults())
     qtbot.addWidget(dialog)
-    for name, title in (("duplicateProfile", "Dupliquer"), ("renameProfile", "Modifier"), ("deleteProfile", "Supprimer"),
-                        ("duplicateControllerModel", "Dupliquer"), ("editControllerModel", "Modifier"), ("deleteControllerModel", "Supprimer")):
+    for name, title in (("duplicateProfile", "Duplicate"), ("renameProfile", "Rename"), ("deleteProfile", "Delete"),
+                        ("duplicateControllerModel", "Duplicate"), ("editControllerModel", "Edit"), ("deleteControllerModel", "Delete")):
         button = dialog.findChild(QPushButton, name)
         assert button.text() == ""
         assert not button.icon().isNull()
@@ -98,15 +98,15 @@ def test_profile_selectors_share_left_edge_and_label(qtbot, qapp):
     dialog.tabs.setCurrentIndex(1)
     dialog.show()
     qtbot.wait(20)
-    assert dialog.findChild(QLabel, "profilePickerLabel").text() == "Profil"
+    assert dialog.findChild(QLabel, "profilePickerLabel").text() == "Profile"
     assert dialog.profile_picker.x() == dialog.display_model_picker.x()
     assert dialog.profile_picker.width() == dialog.display_model_picker.width()
     assert dialog.findChild(QLabel, "profilePickerLabel").x() == dialog.findChild(QLabel, "displayControllerLabel").x()
     heading = next(heading for heading in dialog.profile_editor.findChildren(windows.ProfileSectionHeading)
-                   if heading.label.text() == "SENSIBILITÉ")
+                   if heading.label.text() == "SENSITIVITY")
     assert dialog.findChild(QLabel, "profilePickerLabel").mapTo(dialog, QPoint()).x() == heading.label.mapTo(dialog, QPoint()).x()
     for button in dialog.profile_editor.findChildren(QPushButton, "settingsAction"):
-        if button.text() in ("Ajouter une application...", "Ajouter un site web..."):
+        if button.text() in ("Add an application...", "Add a website..."):
             assert button.width() == 2 * button.sizeHint().width()
 
 

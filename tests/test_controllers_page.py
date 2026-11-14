@@ -28,8 +28,8 @@ def test_identification_has_real_fields_centered_in_a_centered_table(qtbot):
     dialog = make_dialog(qtbot)
     table = dialog.controllers_page.metadata
     assert table.rowCount() == 5 and table.columnCount() == 2
-    assert [table.item(row, 0).text() for row in range(5)] == ["Fabricant", "Modèle", "Famille", "GUID SDL", "Statut"]
-    assert [table.item(row, 1).text() for row in range(5)] == ["Microsoft", "Xbox 360", "xbox", "a"*32, "Non vérifié sur matériel"]
+    assert [table.item(row, 0).text() for row in range(5)] == ["Manufacturer", "Model", "Family", "SDL GUID", "Status"]
+    assert [table.item(row, 1).text() for row in range(5)] == ["Microsoft", "Xbox 360", "xbox", "a"*32, "Not verified on hardware"]
     assert all(table.item(row, col).textAlignment() == Qt.AlignmentFlag.AlignCenter
                for row in range(5) for col in range(2))
     for width in (708, 900):

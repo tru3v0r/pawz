@@ -8,7 +8,7 @@ from datetime import datetime
 from pathlib import Path
 from uuid import uuid4
 
-from PySide6.QtCore import QPoint, QPropertyAnimation, QRectF, QSize, Qt, QTimer, Signal
+from PySide6.QtCore import QLocale, QPoint, QPropertyAnimation, QRectF, QSize, Qt, QTimer, Signal
 from PySide6.QtGui import (
     QColor,
     QFontDatabase,
@@ -62,15 +62,16 @@ from pawz.core.models import (
     normalize_trigger,
 )
 from pawz.engine import actions as action_catalogue
+from pawz.i18n import AUTO, LANGUAGES, tr
 from pawz.infra.debug_events import RawInputListener, WindowsEventSources
 from pawz.infra.startup import configure_startup
 from pawz.infra.storage import DATA_DIR, save
 from pawz.ui.controller_assets import SvgView, renderer_for, resolve_artwork
-from pawz.ui.controllers_page import ControllersPage
+from pawz.ui.controllers_page import ControllersPage, model_name
 from pawz.ui.rendering import ScalableIconLabel, configure_text_rendering, vector_icon
 
 ASSETS_DIR = Path(__file__).resolve().parent / "assets"
-APP_ICON = ASSETS_DIR / "logo.png"
+APP_ICON = ASSETS_DIR / "logo.svg"
 SECTION_CONTENT_GAP = 18
 CONTROL_ROW_GAP = 12
 SHORTCUT_ROW_GAP = 6
@@ -134,7 +135,7 @@ QMainWindow, QDialog { background:#223d68; }
 QToolTip { color:#f5f7fb; background:#1b355b; border:1px solid #4b6c97; padding:4px 7px; }
 QWidget#mainSurface { background:#223d68; border:1px solid #627895; }
 QWidget#mainSurface QWidget { font:13pt 'Inter 18pt'; }
-QWidget#mainSurface QLabel#brand { font:24.8pt 'Matcha Style'; }
+QWidget#mainSurface QLabel#brand { font:21.1pt 'Matcha Style'; }
 QWidget#mainSurface QWidget#controllerSlot QLabel#controllerName { font:10pt 'Inter 18pt'; }
 QWidget#mainSurface QWidget#controllerSlot QLabel#batteryLabel { font:9.1pt 'Inter 18pt'; }
 QWidget#mainSurface QWidget#controllerSlot QComboBox#profilePicker { font:9.1pt 'Inter 18pt'; }
@@ -142,8 +143,8 @@ QWidget#mainSurface QWidget#controllerSlot QPushButton#forgetController,
 QWidget#mainSurface QWidget#controllerSlot QPushButton#setPrimary { font:9.1pt 'Inter 18pt'; }
 QWidget#mainSurface QPushButton#primaryAction { font:11.8pt 'Inter 18pt'; }
 QWidget#mainSurface QPushButton#windowControl { font:22pt 'Inter 18pt'; }
-QLabel#brand { color:#3989cf; font: 31pt 'Matcha Style'; }
-QLabel#settingsBrand { color:#3989cf; font: 22pt 'Matcha Style'; }
+QLabel#brand { color:#3989cf; font: 26.4pt 'Matcha Style'; }
+QLabel#settingsBrand { color:#3989cf; font: 18.7pt 'Matcha Style'; }
 QWidget#settingsPage { background:transparent; border:0; }
 QWidget#settingsHeader { background:#223d68; }
 QTabWidget#settingsTabs { background:transparent; }
@@ -271,16 +272,16 @@ def _style_profile_button(button: QPushButton, *, padding: str = "0",
 class ProfileDialog(QDialog):
     def __init__(self, profile: Profile, parent=None):
         super().__init__(parent)
-        self.setWindowTitle("Modifier le profil — " + profile.name)
+        self.setWindowTitle(tr("Edit profile — {name}").format(name=profile.name))
         self.resize(790, 680)
         self.setObjectName("profileDialog")
         root = QVBoxLayout(self)
-        title = QLabel("Raccourcis · " + profile.name)
+        title = QLabel(tr("Shortcuts · {name}").format(name=profile.name))
         title.setObjectName("heading")
         root.addWidget(title)
         self.editor = ProfileEditor(profile, self)
         root.addWidget(self.editor, 1)
-        save_btn = QPushButton("Enregistrer le profil")
+        save_btn = QPushButton(tr("Save profile"))
         save_btn.clicked.connect(self.accept)
         root.addWidget(save_btn)
 
@@ -472,14 +473,14 @@ class ProfileEditor(QWidget):
         magnet.setStyleSheet("background:#1b355b; border:0;")
         magnet.setRange(10, 100)
         magnet.setValue(round(self.profile.magnet_strength))
-        magnet.setToolTip("Force d'attraction et effort nécessaire pour se dégager d'une cible")
-        magnet_value = QLabel(f"{magnet.value()} %")
+        magnet.setToolTip(tr("Pull strength, and the effort needed to break free of a target"))
+        magnet_value = QLabel(tr("{value}%").format(value=magnet.value()))
         magnet_value.setMinimumWidth(48)
         magnet_value.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
 
         def update_strength(value):
             self.profile.magnet_strength = float(value)
-            magnet_value.setText(f"{value} %")
+            magnet_value.setText(tr("{value}%").format(value=value))
 
         magnet.valueChanged.connect(update_strength)
         row = QWidget()
@@ -490,15 +491,15 @@ class ProfileEditor(QWidget):
         row_layout.addWidget(magnet_value)
         column.addWidget(row)
         for name, text, tip, attr in (
-                ("magnetAuto", "Automatique",
-                 "Toujours actif. Décoché, le magnétisme n'agit que tant que la "
-                 "gâchette droite (ZR) est enfoncée.", "magnet_auto"),
-                ("magnetBackground", "Inclure les fenêtres en arrière-plan",
-                 "Les bords et boutons des fenêtres visibles derrière la fenêtre "
-                 "active attirent aussi le pointeur.", "magnet_background"),
-                ("magnetHaptics", "Vibrer à la capture et à la libération",
-                 "Une brève vibration de la manette quand le pointeur est attrapé "
-                 "par une cible et quand il s'en extrait.", "magnet_haptics")):
+                ("magnetAuto", tr("Automatic"),
+                 tr("Always on. When unchecked, magnetism only works while the "
+                    "right trigger (ZR) is held."), "magnet_auto"),
+                ("magnetBackground", tr("Include background windows"),
+                 tr("The edges and buttons of visible windows behind the active "
+                    "window also attract the pointer."), "magnet_background"),
+                ("magnetHaptics", tr("Vibrate on capture and release"),
+                 tr("A short controller vibration when the pointer is caught "
+                    "by a target and when it breaks free."), "magnet_haptics")):
             box = QCheckBox(text)
             box.setObjectName(name)
             box.setToolTip(tip)
@@ -514,7 +515,7 @@ class ProfileEditor(QWidget):
                 widget = item.widget()
                 if widget is not None:
                     widget.deleteLater()
-        self._heading("Sensibilité")
+        self._heading(tr("Sensitivity"))
         group = QWidget()
         layout = QFormLayout(group)
         layout.setContentsMargins(22, 0, 22, 8)
@@ -530,18 +531,18 @@ class ProfileEditor(QWidget):
         slider.valueChanged.connect(lambda value: self._set_profile_value(
             "mouse_speed", value / 100, value_label))
         mouse_control.setObjectName("mouseSensitivityControl")
-        mouse_label = QLabel("Souris")
+        mouse_label = QLabel(tr("Mouse"))
         mouse_label.setMinimumWidth(108)
         mouse_label.setObjectName("mouseSpeedLabel")
         layout.addRow(mouse_label, mouse_control)
-        magnet_label = QLabel("Magnétisme")
+        magnet_label = QLabel(tr("Magnetism"))
         magnet_label.setMinimumWidth(108)
         magnet_label.setObjectName("magnetLabel")
         layout.addRow(magnet_label, self._magnet_control())
 
         for label, attr, low, high, scale in (
-                ("Molette", "scroll_speed", .1, 15, 10),
-                ("Zone morte", "deadzone", 0, .9, 100)):
+                (tr("Scroll wheel"), "scroll_speed", .1, 15, 10),
+                (tr("Dead zone"), "deadzone", 0, .9, 100)):
             control, slider, value_label = self._slider_control(
                 attr, getattr(self.profile, attr), low, high, scale)
             label_widget = QLabel(label)
@@ -553,12 +554,12 @@ class ProfileEditor(QWidget):
                 lambda value, key=attr, factor=scale, text=value_label:
                 self._set_profile_value(key, value / factor, text))
         self.sections.addWidget(group)
-        self._heading("Navigation")
-        self._section("Général", self.profile.global_bindings)
+        self._heading(tr("Navigation"))
+        self._section(tr("General"), self.profile.global_bindings)
 
         if self.profile.apps:
-            self._heading("Applications")
-        add_app = QPushButton("Ajouter une application...", self)
+            self._heading(tr("Applications"))
+        add_app = QPushButton(tr("Add an application..."), self)
         add_app.setObjectName("settingsAction")
         _style_profile_button(add_app, padding="6px 12px", radius=6)
         add_app.ensurePolished()
@@ -570,8 +571,8 @@ class ProfileEditor(QWidget):
                           lambda selected=name: self._remove_context(self.profile.apps, selected),
                           self._application_icon(name))
         if self.profile.sites:
-            self._heading("Sites web")
-        add_site = QPushButton("Ajouter un site web...", self)
+            self._heading(tr("Websites"))
+        add_site = QPushButton(tr("Add a website..."), self)
         add_site.setObjectName("settingsAction")
         _style_profile_button(add_site, padding="6px 12px", radius=6)
         add_site.ensurePolished()
@@ -595,7 +596,7 @@ class ProfileEditor(QWidget):
         slider.setStyleSheet("background:#1b355b; border:0;")
         slider.setRange(round(low * scale), round(high * scale))
         slider.setValue(round(current * scale))
-        value_label = QLabel(f"{current:.2f}".replace(".", ","))
+        value_label = QLabel(QLocale().toString(float(current), "f", 2))
         value_label.setMinimumWidth(48)
         value_label.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
         row.addWidget(slider, 1)
@@ -604,7 +605,7 @@ class ProfileEditor(QWidget):
 
     def _set_profile_value(self, key: str, value: float, label: QLabel):
         setattr(self.profile, key, value)
-        label.setText(f"{value:.2f}".replace(".", ","))
+        label.setText(QLocale().toString(float(value), "f", 2))
 
     @staticmethod
     def _application_name(executable: str) -> str:
@@ -698,8 +699,8 @@ class ProfileEditor(QWidget):
             remove_button = QPushButton(header)
             remove_button.setObjectName("removeSection")
             _style_profile_button(remove_button)
-            remove_button.setAccessibleName("Supprimer")
-            remove_button.setToolTip("Supprimer")
+            remove_button.setAccessibleName(tr("Remove"))
+            remove_button.setToolTip(tr("Remove"))
             remove_button.setIcon(cross_icon())
             remove_button.setIconSize(QSize(16, 16))
             remove_button.setFixedSize(21, 21)
@@ -724,7 +725,7 @@ class ProfileEditor(QWidget):
             row.setHorizontalSpacing(8)
             row.setColumnStretch(0, 1)
             row.setColumnStretch(2, 1)
-            label = QLabel(self.ACTION_LABELS.get(binding.action, binding.action))
+            label = QLabel(tr(self.ACTION_LABELS.get(binding.action, binding.action)))
             label.setObjectName("bindingAction")
             row.addWidget(label, 0, 0, Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
             hotkey = SvgView()
@@ -738,8 +739,8 @@ class ProfileEditor(QWidget):
             edit.setIcon(pencil_icon())
             edit.setIconSize(QSize(14, 14))
             edit.setObjectName("editBinding")
-            edit.setAccessibleName("Modifier le raccourci")
-            edit.setToolTip("Modifier le raccourci")
+            edit.setAccessibleName(tr("Edit shortcut"))
+            edit.setToolTip(tr("Edit shortcut"))
             edit.setFixedSize(24, 24)
             edit.setFlat(True)
             edit.setCursor(Qt.CursorShape.PointingHandCursor)
@@ -749,8 +750,8 @@ class ProfileEditor(QWidget):
             remove.setObjectName("removeBinding")
             remove.setFlat(True)
             remove.setCursor(Qt.CursorShape.PointingHandCursor)
-            remove.setAccessibleName("Supprimer le raccourci")
-            remove.setToolTip("Supprimer le raccourci")
+            remove.setAccessibleName(tr("Remove shortcut"))
+            remove.setToolTip(tr("Remove shortcut"))
             remove.setIcon(cross_icon())
             remove.setIconSize(QSize(14, 14))
             remove.setFixedSize(24, 24)
@@ -770,7 +771,7 @@ class ProfileEditor(QWidget):
         separator.setStyleSheet("background:#4b83bd; border:0;")
         separator.setFixedHeight(1)
         actions_layout.addWidget(separator)
-        add = QPushButton("Ajouter un raccourci...")
+        add = QPushButton(tr("Add a shortcut..."))
         add.setObjectName("settingsAction")
         _style_profile_button(add, padding="6px 12px", radius=6)
         add.clicked.connect(lambda _checked=False, target=bindings: self.add_binding(target))
@@ -785,31 +786,31 @@ class ProfileEditor(QWidget):
     def edit_binding(self, bindings, trigger):
         dialog = QDialog(self)
         dialog.setObjectName("bindingEditor")
-        dialog.setWindowTitle("Modifier le raccourci")
+        dialog.setWindowTitle(tr("Edit shortcut"))
         form = QFormLayout(dialog)
         buttons = QLineEdit(trigger)
         buttons.setObjectName("bindingLogicalInput")
         action = QComboBox()
         action.setObjectName("bindingWindowsAction")
         for value in ACTIONS:
-            action.addItem(self.ACTION_LABELS[value], value)
+            action.addItem(tr(self.ACTION_LABELS[value]), value)
         binding = bindings[trigger]
         action.setCurrentIndex(action.findData(binding.action))
         keys = QLineEdit(binding.keys)
         scope = QComboBox()
-        scope.addItems(["Général", "Application", "Site web"])
+        scope.addItems([tr("General"), tr("Application"), tr("Website")])
         context = QLineEdit()
         for index, contexts in ((1, self.profile.apps), (2, self.profile.sites)):
             for name, mapping in contexts.items():
                 if mapping is bindings:
                     scope.setCurrentIndex(index)
                     context.setText(name)
-        form.addRow("Boutons logiques (+ pour combiner)", buttons)
-        form.addRow("Action Windows", action)
-        form.addRow("Touches clavier", keys)
-        form.addRow("Condition", scope)
-        form.addRow("Application (.exe) ou domaine", context)
-        capture = QPushButton("Enregistrer une combinaison avec la manette…")
+        form.addRow(tr("Logical buttons (+ to combine)"), buttons)
+        form.addRow(tr("Windows action"), action)
+        form.addRow(tr("Keyboard keys"), keys)
+        form.addRow(tr("Condition"), scope)
+        form.addRow(tr("Application (.exe) or domain"), context)
+        capture = QPushButton(tr("Record a combination with the controller…"))
         capture.setEnabled(self.controller_manager is not None)
         form.addRow(capture)
         captured = []
@@ -826,13 +827,13 @@ class ProfileEditor(QWidget):
             elif captured:
                 capturing[0] = False
                 self.controller_manager.end_input_capture()
-                capture.setText("Enregistrer une combinaison avec la manette…")
+                capture.setText(tr("Record a combination with the controller…"))
         def begin_capture():
             captured.clear()
             capture_device[0] = None
             capturing[0] = True
             self.controller_manager.begin_input_capture()
-            capture.setText("Actionnez les boutons, puis relâchez…")
+            capture.setText(tr("Press the buttons, then release…"))
         capture.clicked.connect(begin_capture)
         if self.controller_manager:
             self.controller_manager.controller_button_event.connect(capture_event)
@@ -840,8 +841,8 @@ class ProfileEditor(QWidget):
         error.setWordWrap(True)
         form.addRow(error)
         controls = QHBoxLayout()
-        apply = QPushButton("Enregistrer")
-        cancel = QPushButton("Annuler")
+        apply = QPushButton(tr("Save"))
+        cancel = QPushButton(tr("Cancel"))
         controls.addWidget(apply)
         controls.addWidget(cancel)
         form.addRow(controls)
@@ -852,7 +853,7 @@ class ProfileEditor(QWidget):
                 name = context.text().strip().lower().removeprefix("www.")
                 target = bindings
                 if scope.currentIndex() and not name:
-                    raise ValueError("Indiquez une application ou un domaine")
+                    raise ValueError(tr("Enter an application or a domain"))
                 if scope.currentIndex() == 0:
                     target = self.profile.global_bindings
                 elif scope.currentIndex() == 1:
@@ -860,7 +861,7 @@ class ProfileEditor(QWidget):
                 else:
                     target = self.profile.sites.get(name, {})
                 if (target is not bindings or normalized != trigger) and normalized in target:
-                    raise ValueError("Ce bouton est déjà attribué dans ce contexte")
+                    raise ValueError(tr("This button is already assigned in this context"))
                 if scope.currentIndex() == 1:
                     self.profile.apps.setdefault(name, target)
                 elif scope.currentIndex() == 2:
@@ -883,8 +884,8 @@ class ProfileEditor(QWidget):
     def _begin_capture(self, bindings, trigger, binding, widget):
         if self.controller_manager is None:
             QMessageBox.warning(
-                self, "Manette requise",
-                "Connectez une manette pour enregistrer un bouton ou une combinaison.")
+                self, tr("Controller required"),
+                tr("Connect a controller to record a button or a combination."))
             return
         if self._capturing is not None:
             self._cancel_capture()
@@ -924,7 +925,7 @@ class ProfileEditor(QWidget):
             return
         new_trigger = normalize_trigger("+".join(self._capture_order))
         if new_trigger != old_trigger and new_trigger in bindings:
-            QMessageBox.warning(self, "Bouton déjà utilisé", "Cette touche est déjà attribuée.")
+            QMessageBox.warning(self, tr("Button already in use"), tr("This button is already assigned."))
             widget.setText(self._trigger_label(old_trigger))
             return
         bindings.pop(old_trigger)
@@ -953,15 +954,15 @@ class ProfileEditor(QWidget):
         self.draw()
 
     def add_binding(self, bindings):
-        actions = [self.ACTION_LABELS[action] for action in ACTIONS]
+        actions = [tr(self.ACTION_LABELS[action]) for action in ACTIONS]
         action, ok = QInputDialog.getItem(
-            self, "Ajouter un raccourci", "Action", actions, 0, False)
+            self, tr("Add a shortcut"), tr("Action"), actions, 0, False)
         if ok and action:
             selected = ACTIONS[actions.index(action)]
             available = [button for button in BUTTONS if button not in bindings]
             if not available:
-                QMessageBox.warning(self, "Aucun bouton disponible",
-                                    "Supprimez ou remplacez un raccourci existant.")
+                QMessageBox.warning(self, tr("No button available"),
+                                    tr("Remove or replace an existing shortcut."))
                 return
             bindings[available[0]] = Binding(selected)
             self.draw()
@@ -969,7 +970,9 @@ class ProfileEditor(QWidget):
     def add_app(self):
         # Standard Windows file picker; selecting the executable is more reliable than
         # enumerating uninstall registry entries (portable apps are supported too).
-        filename, _ = QFileDialog.getOpenFileName(self, "Sélectionner un programme installé", os.environ.get("ProgramFiles", "C:\\Program Files"), "Applications (*.exe)")
+        filename, _ = QFileDialog.getOpenFileName(
+            self, tr("Select an installed program"),
+            os.environ.get("ProgramFiles", "C:\\Program Files"), tr("Applications (*.exe)"))
         if filename:
             self.profile.apps.setdefault(
                 Path(filename).name.lower(),
@@ -977,7 +980,7 @@ class ProfileEditor(QWidget):
             self.draw()
 
     def add_site(self):
-        domain, ok = QInputDialog.getText(self, "Ajouter un site web", "Domaine (ex. youtube.com)")
+        domain, ok = QInputDialog.getText(self, tr("Add a website"), tr("Domain (e.g. youtube.com)"))
         domain = domain.strip().lower().removeprefix("www.")
         if ok and domain and "." in domain and "/" not in domain and " " not in domain:
             self.profile.sites.setdefault(domain, {})
@@ -988,24 +991,24 @@ class ProfileCreationDialog(QDialog):
     def __init__(self, models: list[str], parent=None):
         super().__init__(parent)
         self.existing_profiles = set(models)
-        self.setWindowTitle("Ajouter un profil")
+        self.setWindowTitle(tr("Add a profile"))
         self.setObjectName("profileCreationDialog")
         self.resize(430, 190)
         root = QVBoxLayout(self)
         form = QFormLayout()
         self.name_input = QLineEdit()
         self.name_input.setObjectName("newProfileName")
-        form.addRow("Nom", self.name_input)
+        form.addRow(tr("Name"), self.name_input)
         self.model_picker = QComboBox()
         self.model_picker.setObjectName("profileModel")
         self.model_picker.addItems(models)
-        form.addRow("Modèle", self.model_picker)
+        form.addRow(tr("Model"), self.model_picker)
         root.addLayout(form)
         buttons = QHBoxLayout()
-        self.create_button = QPushButton("Créer le profil")
+        self.create_button = QPushButton(tr("Create profile"))
         self.create_button.setObjectName("createProfile")
         self.create_button.clicked.connect(self._create)
-        self.cancel_button = QPushButton("Annuler")
+        self.cancel_button = QPushButton(tr("Cancel"))
         self.cancel_button.setObjectName("cancelProfile")
         self.cancel_button.clicked.connect(self._confirm_cancel)
         buttons.addStretch()
@@ -1034,8 +1037,8 @@ class ProfileCreationDialog(QDialog):
 
     def _confirm_cancel(self):
         answer = QMessageBox.question(
-            self, "Annuler la création",
-            "Êtes-vous sûre de vouloir annuler la création du profil en cours ?",
+            self, tr("Cancel creation"),
+            tr("Are you sure you want to cancel creating this profile?"),
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
             QMessageBox.StandardButton.No)
         if answer == QMessageBox.StandardButton.Yes:
@@ -1075,7 +1078,7 @@ class DebugWindow(QDialog):
         title_layout.setSpacing(7)
         icon = ScalableIconLabel(QIcon(str(APP_ICON)), QSize(32, 32))
         title_layout.addWidget(icon)
-        heading = QLabel("DEBUG")
+        heading = QLabel(tr("DEBUG"))
         heading.setObjectName("debugHeading")
         title_layout.addWidget(heading)
         header_layout.addWidget(title, 0, 1, Qt.AlignmentFlag.AlignCenter)
@@ -1157,7 +1160,7 @@ class DebugWindow(QDialog):
             button.blockSignals(False)
             if source != "raw_input":
                 self.sources.set_enabled(source, False)
-        self.append_event(source, f"ERROR: {message}")
+        self.append_event(source, tr("ERROR: {message}").format(message=message))
 
     def showEvent(self, event):
         self._install_native_filter()
@@ -1193,7 +1196,7 @@ class SettingsDialog(QDialog):
         self.profiles = settings.profiles
         self.current_profile_name: str | None = None
         self.profile_editor: ProfileEditor | None = None
-        self.setWindowTitle("Settings")
+        self.setWindowTitle(tr("Settings"))
         self.setObjectName("settingsDialog")
         self.setWindowIcon(QIcon(str(APP_ICON)))
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint | Qt.WindowType.Window)
@@ -1213,7 +1216,7 @@ class SettingsDialog(QDialog):
         logo_layout = QHBoxLayout(logo)
         logo_layout.setContentsMargins(0, 0, 0, 0)
         logo_layout.setSpacing(4)
-        mark = ScalableIconLabel(QIcon(str(APP_ICON)), QSize(20, 20))
+        mark = ScalableIconLabel(QIcon(str(APP_ICON)), QSize(24, 24))
         logo_layout.addWidget(mark)
         brand = QLabel(APP_NAME)
         brand.setObjectName("settingsBrand")
@@ -1246,12 +1249,12 @@ class SettingsDialog(QDialog):
         general_layout = QVBoxLayout(general_tab)
         general_layout.setContentsMargins(22, 18, 22, 18)
         general_layout.setSpacing(0)
-        general_layout.addWidget(ProfileSectionHeading("Démarrage"))
+        general_layout.addWidget(ProfileSectionHeading(tr("Startup")))
         general_layout.addSpacing(SECTION_CONTENT_GAP)
-        self.startup_checkbox = QCheckBox("Lancer au démarrage")
+        self.startup_checkbox = QCheckBox(tr("Launch at startup"))
         self.startup_checkbox.setObjectName("startupEnabled")
         self.startup_checkbox.setChecked(settings.startup_enabled)
-        self.minimized_checkbox = QCheckBox("Réduit dans la barre des tâches")
+        self.minimized_checkbox = QCheckBox(tr("Minimized to the taskbar"))
         self.minimized_checkbox.setObjectName("startMinimized")
         self.minimized_checkbox.setChecked(settings.start_minimized)
         minimized_option = QWidget()
@@ -1264,7 +1267,31 @@ class SettingsDialog(QDialog):
         general_layout.addWidget(self.startup_checkbox)
         general_layout.addWidget(minimized_option)
         general_layout.addSpacing(20)
-        general_layout.addWidget(ProfileSectionHeading("Profils"))
+        general_layout.addWidget(ProfileSectionHeading(tr("Language")))
+        general_layout.addSpacing(SECTION_CONTENT_GAP)
+        language_form = QFormLayout()
+        language_form.setContentsMargins(8, 0, 0, 0)
+        language_form.setHorizontalSpacing(16)
+        self.language_picker = QComboBox()
+        self.language_picker.setObjectName("languagePicker")
+        self.language_picker.addItem(tr("Automatic (Windows language)"), AUTO)
+        for code, name in LANGUAGES.items():
+            self.language_picker.addItem(name, code)
+        self.language_picker.setCurrentIndex(
+            max(0, self.language_picker.findData(settings.language)))
+        language_form.addRow(tr("Interface language"), self.language_picker)
+        general_layout.addLayout(language_form)
+        self.language_note = QLabel(tr("The new language applies the next time pawz starts."))
+        self.language_note.setObjectName("languageNote")
+        self.language_note.setWordWrap(True)
+        self.language_note.setContentsMargins(8, CONTROL_ROW_GAP // 2, 0, 0)
+        self.language_note.setVisible(False)
+        self.language_picker.currentIndexChanged.connect(
+            lambda *_: self.language_note.setVisible(
+                self.language_picker.currentData() != settings.language))
+        general_layout.addWidget(self.language_note)
+        general_layout.addSpacing(20)
+        general_layout.addWidget(ProfileSectionHeading(tr("Profiles")))
         general_layout.addSpacing(SECTION_CONTENT_GAP)
         default_profile_form = QFormLayout()
         self.default_profile_picker = QComboBox()
@@ -1274,17 +1301,17 @@ class SettingsDialog(QDialog):
         default_profile_form.setContentsMargins(8, 0, 0, 0)
         default_profile_form.setHorizontalSpacing(16)
         default_profile_form.addRow(
-            "Profil assigné par défaut", self.default_profile_picker)
+            tr("Default assigned profile"), self.default_profile_picker)
         general_layout.addLayout(default_profile_form)
         general_layout.addSpacing(20)
-        general_layout.addWidget(ProfileSectionHeading("Mode jeu"))
+        general_layout.addWidget(ProfileSectionHeading(tr("Game mode")))
         general_layout.addSpacing(SECTION_CONTENT_GAP)
-        self.game_auto_checkbox = QCheckBox("Automatique pour les applications en plein écran")
+        self.game_auto_checkbox = QCheckBox(tr("Automatic for full-screen applications"))
         self.game_auto_checkbox.setObjectName("gameModeAuto")
         self.game_auto_checkbox.setToolTip(
-            "En mode jeu, pawz n'envoie plus rien et laisse la manette au jeu. "
-            "Les navigateurs et lecteurs vidéo n'y passent jamais. "
-            "MOINS + PLUS bascule le mode jeu à la main.")
+            tr("In game mode, pawz stops sending input and leaves the controller to the game. "
+               "Browsers and video players never switch to it. "
+               "MINUS + PLUS toggles game mode by hand."))
         self.game_auto_checkbox.setChecked(settings.game_mode_auto)
         general_layout.addWidget(self.game_auto_checkbox)
         general_layout.addSpacing(CONTROL_ROW_GAP)
@@ -1293,27 +1320,27 @@ class SettingsDialog(QDialog):
         game_lists.setHorizontalSpacing(16)
         self.games_edit = QLineEdit(", ".join(settings.games))
         self.games_edit.setObjectName("gamesList")
-        self.games_edit.setPlaceholderText("jeu.exe, autre-jeu.exe")
+        self.games_edit.setPlaceholderText(tr("game.exe, other-game.exe"))
         self.non_games_edit = QLineEdit(", ".join(settings.non_games))
         self.non_games_edit.setObjectName("nonGamesList")
-        self.non_games_edit.setPlaceholderText("appli-plein-ecran.exe")
-        game_lists.addRow("Toujours en mode jeu", self.games_edit)
-        game_lists.addRow("Jamais en mode jeu", self.non_games_edit)
+        self.non_games_edit.setPlaceholderText(tr("full-screen-app.exe"))
+        game_lists.addRow(tr("Always in game mode"), self.games_edit)
+        game_lists.addRow(tr("Never in game mode"), self.non_games_edit)
         general_layout.addLayout(game_lists)
         general_layout.addSpacing(20)
-        general_layout.addWidget(ProfileSectionHeading("Debug"))
+        general_layout.addWidget(ProfileSectionHeading(tr("Debug")))
         general_layout.addSpacing(SECTION_CONTENT_GAP)
-        self.debug_startup_checkbox = QCheckBox("Lancer la fenêtre de debug au démarrage")
+        self.debug_startup_checkbox = QCheckBox(tr("Open the debug window at startup"))
         self.debug_startup_checkbox.setObjectName("debugWindowOnStartup")
         self.debug_startup_checkbox.setChecked(settings.debug_window_on_startup)
         general_layout.addWidget(self.debug_startup_checkbox)
-        self.debug_button = QPushButton("Debug Window")
+        self.debug_button = QPushButton(tr("Debug Window"))
         self.debug_button.setObjectName("openDebugWindow")
         self.debug_button.clicked.connect(self.open_debug_window)
         general_layout.addSpacing(CONTROL_ROW_GAP)
         general_layout.addWidget(self.debug_button)
         general_layout.addStretch()
-        self.tabs.addTab(general_tab, "GÉNÉRAL")
+        self.tabs.addTab(general_tab, tr("GENERAL"))
 
         profiles_tab = QWidget()
         profiles_tab.setObjectName("settingsPage")
@@ -1324,7 +1351,7 @@ class SettingsDialog(QDialog):
         profile_actions_layout = QVBoxLayout(profile_actions)
         profile_actions_layout.setContentsMargins(14, 16, 14, 14)
         profile_actions_layout.setSpacing(18)
-        self.add_profile_button = QPushButton("Ajouter un profil...")
+        self.add_profile_button = QPushButton(tr("Add a profile..."))
         self.add_profile_button.setObjectName("settingsAction")
         self.add_profile_button.clicked.connect(self.add_profile)
         profile_actions_layout.addWidget(
@@ -1342,16 +1369,16 @@ class SettingsDialog(QDialog):
         profile_selectors.setHorizontalSpacing(8)
         profile_selectors.setVerticalSpacing(8)
         profile_selectors.setColumnStretch(1, 1)
-        profile_label = QLabel("Profil")
+        profile_label = QLabel(tr("Profile"))
         profile_label.setObjectName("profilePickerLabel")
         profile_label.setBuddy(self.profile_picker)
         profile_selectors.addWidget(profile_label, 0, 0, Qt.AlignmentFlag.AlignLeft)
         profile_selectors.addWidget(self.profile_picker, 0, 1)
         action_column = 2
         for title, name, callback in (
-                ("Dupliquer", "duplicateProfile", self.duplicate_profile),
-                ("Modifier", "renameProfile", self.rename_profile),
-                ("Supprimer", "deleteProfile", self.delete_profile)):
+                (tr("Duplicate"), "duplicateProfile", self.duplicate_profile),
+                (tr("Rename"), "renameProfile", self.rename_profile),
+                (tr("Delete"), "deleteProfile", self.delete_profile)):
             button = profile_action_button(title, {
                 "duplicateProfile": "duplicate", "renameProfile": "edit", "deleteProfile": "delete"
             }[name])
@@ -1364,10 +1391,10 @@ class SettingsDialog(QDialog):
         self.display_model_picker = QComboBox()
         self.display_model_picker.setObjectName("displayControllerModel")
         for model in self.catalog.definitions:
-            self.display_model_picker.addItem(model.model, model.id)
+            self.display_model_picker.addItem(model_name(model), model.id)
         self.display_model_picker.setCurrentIndex(max(0, self.display_model_picker.findData(settings.display_controller_model)))
         self.display_model_picker.currentIndexChanged.connect(self.change_display_model)
-        display_label = QLabel("Afficher les boutons de")
+        display_label = QLabel(tr("Show buttons of"))
         display_label.setObjectName("displayControllerLabel")
         display_label.setBuddy(self.display_model_picker)
         profile_selectors.addWidget(display_label, 1, 0, Qt.AlignmentFlag.AlignLeft)
@@ -1379,14 +1406,14 @@ class SettingsDialog(QDialog):
         self.profile_editor_layout.setContentsMargins(0, 0, 0, 0)
         profiles_layout.addWidget(self.profile_editor_host, 1)
         self.profile_picker.currentIndexChanged.connect(self._select_profile)
-        self.tabs.addTab(profiles_tab, "PROFILS")
+        self.tabs.addTab(profiles_tab, tr("PROFILES"))
         self.controllers_page = ControllersPage(settings, self.catalog, controller_manager)
         self.controllers_page.catalog_changed.connect(self._reload_display_models)
-        self.tabs.addTab(self.controllers_page, "MANETTES")
+        self.tabs.addTab(self.controllers_page, tr("CONTROLLERS"))
         self._select_profile(self.profile_picker.currentIndex())
         if initial_tab is not None:
             tab_index = self.tabs.indexOf(
-                profiles_tab if initial_tab in ("Profils", "PROFILS") else general_tab)
+                profiles_tab if initial_tab == "profiles" else general_tab)
             self.tabs.setCurrentIndex(tab_index)
 
         footer_actions = QWidget()
@@ -1394,9 +1421,9 @@ class SettingsDialog(QDialog):
         buttons = QHBoxLayout(footer_actions)
         buttons.setContentsMargins(18, 12, 18, 12)
         buttons.setSpacing(8)
-        self.save_button = QPushButton("Enregistrer")
+        self.save_button = QPushButton(tr("Save"))
         self.save_button.setObjectName("settingsFooter")
-        self.close_button = QPushButton("Fermer")
+        self.close_button = QPushButton(tr("Close"))
         self.close_button.setObjectName("settingsFooter")
         self.close_button.clicked.connect(self.reject)
         buttons.addStretch()
@@ -1448,7 +1475,7 @@ class SettingsDialog(QDialog):
             return
         name = dialog.profile_name
         if name in self.profiles:
-            QMessageBox.warning(self, "Profil existant", "Un profil porte déjà ce nom.")
+            QMessageBox.warning(self, tr("Profile exists"), tr("A profile already has this name."))
             return
         profile = copy.deepcopy(self.profiles[dialog.model_name])
         profile.name = name
@@ -1469,7 +1496,7 @@ class SettingsDialog(QDialog):
         self.display_model_picker.blockSignals(True)
         self.display_model_picker.clear()
         for model in self.catalog.definitions:
-            self.display_model_picker.addItem(model.model, model.id)
+            self.display_model_picker.addItem(model_name(model), model.id)
         self.display_model_picker.setCurrentIndex(max(0, self.display_model_picker.findData(selected)))
         self.display_model_picker.blockSignals(False)
         self.change_display_model()
@@ -1497,23 +1524,24 @@ class SettingsDialog(QDialog):
 
     def duplicate_profile(self):
         self._store_profile()
-        name, ok = QInputDialog.getText(self, "Dupliquer", "Nom du profil")
+        name, ok = QInputDialog.getText(self, tr("Duplicate"), tr("Profile name"))
         if ok:
             try:
                 self.settings.duplicate_profile(self.current_profile_name, name.strip())
                 self._reload_profiles(name.strip())
             except ValueError as exc:
-                QMessageBox.warning(self, "Profil invalide", str(exc))
+                QMessageBox.warning(self, tr("Invalid profile"), tr(str(exc)))
 
     def rename_profile(self):
         self._store_profile()
-        name, ok = QInputDialog.getText(self, "Renommer", "Nom du profil", text=self.current_profile_name)
+        name, ok = QInputDialog.getText(
+            self, tr("Rename"), tr("Profile name"), text=self.current_profile_name)
         if ok and name.strip() != self.current_profile_name:
             try:
                 self.settings.rename_profile(self.current_profile_name, name.strip())
                 self._reload_profiles(name.strip())
             except ValueError as exc:
-                QMessageBox.warning(self, "Profil invalide", str(exc))
+                QMessageBox.warning(self, tr("Invalid profile"), tr(str(exc)))
 
     def delete_profile(self):
         self._store_profile()
@@ -1521,7 +1549,7 @@ class SettingsDialog(QDialog):
             self.settings.remove_profile(self.current_profile_name)
             self._reload_profiles(self.settings.default_profile)
         except ValueError as exc:
-            QMessageBox.warning(self, "Profil protégé", str(exc))
+            QMessageBox.warning(self, tr("Protected profile"), tr(str(exc)))
 
     def _cancel_active_capture(self):
         if self.profile_editor is not None:
@@ -1573,7 +1601,7 @@ class ControllerArtwork(QWidget):
                             26 * scale, 25 * scale)
         if self.connected and self.primary and crown_area.contains(event.position()):
             QToolTip.showText(
-                event.globalPosition().toPoint(), "Primary Controller", self)
+                event.globalPosition().toPoint(), tr("Primary controller"), self)
         else:
             QToolTip.hideText()
         super().mouseMoveEvent(event)
@@ -1701,7 +1729,7 @@ class ControllerSlot(QWidget):
         self.name.setMinimumHeight(19)
         layout.addWidget(self.name)
 
-        self.forget_button = QPushButton("Oublier")
+        self.forget_button = QPushButton(tr("Forget"))
         self.forget_button.setObjectName("forgetController")
         self.forget_button.setFixedSize(59, 21)
         self.forget_button.clicked.connect(self._request_forget)
@@ -1734,7 +1762,7 @@ class ControllerSlot(QWidget):
         self.profile_picker.currentIndexChanged.connect(self._profile_selected)
         layout.addWidget(self.profile_picker, 0, Qt.AlignmentFlag.AlignHCenter)
 
-        self.set_primary = QPushButton("SET PRIMARY")
+        self.set_primary = QPushButton(tr("SET PRIMARY"))
         self.set_primary.setObjectName("setPrimary")
         self.set_primary.setFixedSize(95, 25)
         self.set_primary.clicked.connect(self._request_primary)
@@ -1774,7 +1802,7 @@ class ControllerSlot(QWidget):
     def update_battery(self, power_level: str, animate: bool = False):
         was_known = self._battery_known
         if power_level == "wired":
-            label, percentage = "Wired", 100
+            label, percentage = tr("Wired"), 100
         else:
             percentage = battery_percentage(power_level)
             if percentage is None:
@@ -1849,7 +1877,7 @@ class MainWindow(QMainWindow):
         logo_layout = QHBoxLayout(logo)
         logo_layout.setContentsMargins(0, 0, 0, 0)
         logo_layout.setSpacing(5)
-        mark = ScalableIconLabel(QIcon(str(APP_ICON)), QSize(27, 27))
+        mark = ScalableIconLabel(QIcon(str(APP_ICON)), QSize(32, 32))
         mark.setObjectName("brandIcon")
         logo_layout.addWidget(mark)
         brand = QLabel(APP_NAME)
@@ -1923,13 +1951,13 @@ class MainWindow(QMainWindow):
         footer_layout.setContentsMargins(0, 19, 0, 19)
         footer_layout.setSpacing(27)
         footer_layout.addStretch()
-        manage = QPushButton("Manage profiles")
+        manage = QPushButton(tr("Manage profiles"))
         manage.setObjectName("primaryAction")
         manage.setFixedSize(196, 36)
         manage.setIcon(action_icon("profiles"))
         manage.setIconSize(QSize(17, 17))
         manage.clicked.connect(self.manage_profiles)
-        settings_button = QPushButton("Settings")
+        settings_button = QPushButton(tr("Settings"))
         settings_button.setObjectName("primaryAction")
         settings_button.setFixedSize(196, 36)
         settings_button.setIcon(action_icon("settings"))
@@ -1958,15 +1986,16 @@ class MainWindow(QMainWindow):
         menu = QMenu()
         menu.setObjectName("trayMenu")
         menu.setStyleSheet(CSS)
-        menu.addAction("Configuration", self.show_from_tray)
-        menu.addAction("Quitter", app.quit)
+        menu.addAction(tr("Configuration"), self.show_from_tray)
+        menu.addAction(tr("Quit"), app.quit)
         self.tray.setContextMenu(menu)
         self.tray.activated.connect(self._tray_activated)
         self.tray.setToolTip(APP_NAME)
         game_mode_changed = getattr(self.manager, "game_mode_changed", None)
         if game_mode_changed is not None:
             game_mode_changed.connect(
-                lambda active: self.tray.setToolTip(f"{APP_NAME} — mode jeu" if active else APP_NAME))
+                lambda active: self.tray.setToolTip(
+                    tr("{app} — game mode").format(app=APP_NAME) if active else APP_NAME))
         self.tray.show()
 
     def refresh(self, *_):
@@ -2073,8 +2102,8 @@ class MainWindow(QMainWindow):
             return
         name = self.settings.known_devices[key]
         answer = QMessageBox.question(
-            self, "Oublier cette manette",
-            f"Oublier « {name} » et supprimer son attribution de profil ?",
+            self, tr("Forget this controller"),
+            tr("Forget “{name}” and remove its profile assignment?").format(name=name),
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
             QMessageBox.StandardButton.No)
         if answer != QMessageBox.StandardButton.Yes:
@@ -2091,7 +2120,7 @@ class MainWindow(QMainWindow):
         self.refresh()
 
     def manage_profiles(self):
-        self.open_settings("Profils")
+        self.open_settings("profiles")
 
     def open_settings(self, initial_tab: str | None = None):
         dialog = SettingsDialog(
@@ -2114,12 +2143,13 @@ class MainWindow(QMainWindow):
         self.settings.game_mode_auto = dialog.game_auto_checkbox.isChecked()
         self.settings.games = executable_list(dialog.games_edit.text())
         self.settings.non_games = executable_list(dialog.non_games_edit.text())
+        self.settings.language = dialog.language_picker.currentData()
         save(self.settings)
         self.refresh()
         try:
             configure_startup(self.settings)
         except OSError as exc:
-            QMessageBox.warning(self, f"{APP_NAME} — Démarrage", str(exc))
+            QMessageBox.warning(self, tr("{app} — Startup").format(app=APP_NAME), str(exc))
 
     def show_debug_window(self):
         self.debug_window.showNormal()
