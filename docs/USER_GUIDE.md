@@ -58,7 +58,8 @@ Settings have four tabs: **GENERAL**, **DISPLAY**, **PROFILES** and **CONTROLLER
 ### Display
 - **Interface language**: **Automatic (Windows language)** uses the Windows display language when pawz has a translation for it (English and French for now), and English otherwise.
 - **Color scheme**: **Comfy Turquoise** (default) or **Midnight Blue**, the original dark blue look.
-- Both apply when pawz restarts: after saving a change, pawz offers to restart right away.
+- **Controller style**, how controllers are drawn, in the theme's colours: **Eye Candy** (default: dark body, buttons in the button colour, outlined), **Dark**, **Light**, or **Original** (the artwork's own black and white). It applies at once, in the settings too.
+- The language and color scheme apply when pawz restarts: after saving a change, pawz offers to restart right away.
 
 ### Profiles
 - Shortcuts are grouped by priority: **General**, then per application, then per website; the most specific wins.

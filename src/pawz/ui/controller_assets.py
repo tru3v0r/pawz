@@ -13,9 +13,13 @@ from PySide6.QtWidgets import QWidget
 
 from pawz.core.controller_catalog import ControllerDefinition
 from pawz.infra.storage import DATA_DIR
+from pawz.ui import artwork_styles, themes
 from pawz.ui.themes import themed
 
 ASSET_DIR = Path(__file__).resolve().parent / "assets" / "controllers"
+# Gamepad Asset Pack silhouettes for models without artwork of their own (custom copies).
+FAMILY_ARTWORK = {"xbox": "library/xbox-wireless.svg", "playstation": "library/dualsense.svg",
+                  "nintendo": "library/switch-pro.svg"}
 
 
 def prompt_path(logical: str, model: ControllerDefinition | None) -> Path | None:
@@ -90,8 +94,27 @@ def svg_bytes(path: str, modified: int) -> bytes:
     return Path(path).read_bytes()
 
 
+@lru_cache(maxsize=128)
+def _styled_bytes(path: str, modified: int, style: str, theme: str) -> bytes:
+    text = svg_bytes(path, modified).decode("utf-8")
+    return artwork_styles.styled(text, style, themes.THEMES[theme]).encode("utf-8")
+
+
+def artwork_bytes(path: Path) -> bytes:
+    """An illustration's SVG: bundled controller artwork in the current style and
+    theme, other files (the user's own illustrations) as they are."""
+    modified = path.stat().st_mtime_ns
+    try:
+        relative = path.resolve().relative_to(ASSET_DIR.resolve())
+    except ValueError:
+        return svg_bytes(str(path), modified)
+    if relative.parts[0] in ("prompts", "input-icons"):
+        return svg_bytes(str(path), modified)
+    return _styled_bytes(str(path), modified, artwork_styles.current(), themes.current().id)
+
+
 def renderer_for(path: Path, parent=None) -> QSvgRenderer:
-    return QSvgRenderer(QByteArray(svg_bytes(str(path), path.stat().st_mtime_ns)), parent)
+    return QSvgRenderer(QByteArray(artwork_bytes(path)), parent)
 
 
 def resolve_artwork(model: ControllerDefinition, custom: str | None = None) -> Path | None:
@@ -105,6 +128,8 @@ def resolve_artwork(model: ControllerDefinition, custom: str | None = None) -> P
             candidates.append(Path(custom))  # Existing absolute-path preferences.
     if model.svg:
         candidates.append(ASSET_DIR / model.svg)
+    if model.family in FAMILY_ARTWORK:
+        candidates.append(ASSET_DIR / FAMILY_ARTWORK[model.family])
     candidates.append(ASSET_DIR / (model.family + ".svg"))
     candidates.append(ASSET_DIR / "library-generic.svg")
     candidates.append(ASSET_DIR / "generic.svg")
@@ -126,7 +151,7 @@ class SvgView(QWidget):
         self.setFocusPolicy(Qt.FocusPolicy.NoFocus)
 
     def set_path(self, path: Path | None):
-        self.renderer.load(QByteArray(path.read_bytes()) if path else QByteArray())
+        self.renderer.load(QByteArray(artwork_bytes(path)) if path else QByteArray())
         self.update()
 
     def set_render_scale(self, scale: float):

@@ -758,5 +758,55 @@
     "file": "Gamepad-Asset-Pack-LICENSE.txt",
     "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Asset-Pack/a6d1113b0b3b2438bbbcb08a33f9a25eb2391d7c/LICENSE",
     "sha256": "5031ec24de405dc6bfba19cb1ccdbba6374ee18461caa20a3ad990e5d1f128e1"
+  },
+  {
+    "file": "library/xbox-360.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Asset-Pack/a6d1113b0b3b2438bbbcb08a33f9a25eb2391d7c/Connection%20Icon%20Pack/Controller%20Type/SVG/VSCView%20Xbox%20360%20Controller.svg",
+    "sha256": "4dd0de46a4a0effd7883cdc1b6a1bb709ddf73d5e5f6205a1695c2bce5de8d8b"
+  },
+  {
+    "file": "library/xbox-wireless.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Asset-Pack/a6d1113b0b3b2438bbbcb08a33f9a25eb2391d7c/Connection%20Icon%20Pack/Controller%20Type/SVG/VSCView%20Xbox%20Wireless%20Controller.svg",
+    "sha256": "dfd793cfb4cc39bfec8d610272854a0a055363d3503a3f8c116dc9c05f4969ef"
+  },
+  {
+    "file": "library/dualshock-3.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Asset-Pack/a6d1113b0b3b2438bbbcb08a33f9a25eb2391d7c/Connection%20Icon%20Pack/Controller%20Type/SVG/VSCView%20DualShock%203%20Controller.svg",
+    "sha256": "e51d9f86ccce65429eb110bbcf236c304fd7dfe24bbd559d0df7c4ca7b1c260d"
+  },
+  {
+    "file": "library/dualshock-4.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Asset-Pack/a6d1113b0b3b2438bbbcb08a33f9a25eb2391d7c/Connection%20Icon%20Pack/Controller%20Type/SVG/VSCView%20DualShock%204%20Controller.svg",
+    "sha256": "9aa620fb7903f2ebb0bec39782df8ffe83089a309a31c5b4490a35e5473c16d0"
+  },
+  {
+    "file": "library/dualsense.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Asset-Pack/a6d1113b0b3b2438bbbcb08a33f9a25eb2391d7c/Connection%20Icon%20Pack/Controller%20Type/SVG/VSCView%20DualSense%20Controller.svg",
+    "sha256": "a316662f5fb318b5c6ab2ceab90889276e14e6c006eccaa36d2c4c876359069e"
+  },
+  {
+    "file": "library/switch-pro.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Asset-Pack/a6d1113b0b3b2438bbbcb08a33f9a25eb2391d7c/Connection%20Icon%20Pack/Controller%20Type/SVG/VSCView%20Switch%20Pro%20Controller.svg",
+    "sha256": "fb1dac0371c778903731966d10cc384647356b67c95156278faf01cf862143ae"
+  },
+  {
+    "file": "library/joycon.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Asset-Pack/a6d1113b0b3b2438bbbcb08a33f9a25eb2391d7c/Connection%20Icon%20Pack/Controller%20Type/SVG/VSCView%20Switch%20Joy-Con.svg",
+    "sha256": "7918377a67de03e6e08032d714dfa90d04f3967b84e5f4810e85c7ba763b0a83"
+  },
+  {
+    "file": "library/joycon-grip.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Asset-Pack/a6d1113b0b3b2438bbbcb08a33f9a25eb2391d7c/Connection%20Icon%20Pack/Controller%20Type/SVG/VSCView%20Switch%20Joy-Con%20Grip.svg",
+    "sha256": "dc5f015c0e2d2e86e93f1729b44b1123915bc2cf52556a5c6dd2c872269c8a7e"
+  },
+  {
+    "file": "library/steam-controller.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Asset-Pack/a6d1113b0b3b2438bbbcb08a33f9a25eb2391d7c/Connection%20Icon%20Pack/Controller%20Type/SVG/VSCView%20Steam%20Controller.svg",
+    "sha256": "cb0699aa26d0334c70296e30893f9b4b006fc2f7985c38faf7db757c670b1022"
+  },
+  {
+    "file": "library/steam-deck.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Asset-Pack/a6d1113b0b3b2438bbbcb08a33f9a25eb2391d7c/Connection%20Icon%20Pack/Controller%20Type/SVG/VSCView%20Steam%20Deck.svg",
+    "sha256": "c5b9d9ab248a5480c16599bc6323e4ad69ae9ff0b5d4697d14a8ab30380cf995"
   }
 ]

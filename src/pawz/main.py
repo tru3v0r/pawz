@@ -14,7 +14,7 @@ from pawz.infra.debug_events import ETW_HELPER_FLAG
 from pawz.infra.etw_helper import main as etw_helper_main
 from pawz.infra.startup import configure_startup
 from pawz.infra.storage import load
-from pawz.ui import themes
+from pawz.ui import artwork_styles, themes
 from pawz.ui.windows import CSS, RESTART_FLAG, MainWindow, load_fonts, stylesheet
 
 
@@ -48,6 +48,7 @@ def main():
         settings = load()
         i18n.install(app, settings.language)
         themes.set_current(settings.theme)
+        artwork_styles.set_current(settings.controller_style)
         app.setStyleSheet(stylesheet())
         try:
             if not smoke_report:

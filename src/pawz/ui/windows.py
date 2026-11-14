@@ -67,6 +67,7 @@ from pawz.i18n import AUTO, LANGUAGES, tr
 from pawz.infra.debug_events import RawInputListener, WindowsEventSources
 from pawz.infra.startup import configure_startup
 from pawz.infra.storage import DATA_DIR, save
+from pawz.ui import artwork_styles
 from pawz.ui.controller_assets import SvgView, renderer_for, resolve_artwork
 from pawz.ui.controllers_page import ControllersPage, model_name
 from pawz.ui.rendering import ScalableIconLabel, configure_text_rendering, vector_icon
@@ -1382,6 +1383,11 @@ class SettingsDialog(QDialog):
         display_label.setBuddy(self.display_model_picker)
         profile_selectors.addWidget(display_label, 1, 0, Qt.AlignmentFlag.AlignLeft)
         profile_selectors.addWidget(self.display_model_picker, 1, 1)
+        self.display_model_preview = SvgView()
+        self.display_model_preview.setObjectName("displayModelPreview")
+        self.display_model_preview.setFixedHeight(96)
+        profile_selectors.addWidget(self.display_model_preview, 2, 1)
+        self._update_display_model_preview()
         profiles_layout.addLayout(profile_selectors)
         self.profile_editor_host = QWidget()
         self.profile_editor_host.setObjectName("profileEditorHost")
@@ -1437,9 +1443,18 @@ class SettingsDialog(QDialog):
         for theme in THEMES.values():
             self.theme_picker.addItem(tr(theme.name), theme.id)
         self.theme_picker.setCurrentIndex(max(0, self.theme_picker.findData(settings.theme)))
-        for index, (heading, label, picker) in enumerate((
-                (tr("Language"), tr("Interface language"), self.language_picker),
-                (tr("Theme"), tr("Color scheme"), self.theme_picker))):
+        self.controller_style_picker = QComboBox()
+        self.controller_style_picker.setObjectName("controllerStylePicker")
+        for style, name in artwork_styles.STYLES.items():
+            self.controller_style_picker.addItem(tr(name), style)
+        self.controller_style_picker.setCurrentIndex(
+            max(0, self.controller_style_picker.findData(settings.controller_style)))
+        self._initial_controller_style = artwork_styles.current()
+        self.controller_style_picker.currentIndexChanged.connect(self._preview_controller_style)
+        for index, (heading, rows) in enumerate((
+                (tr("Language"), ((tr("Interface language"), self.language_picker),)),
+                (tr("Theme"), ((tr("Color scheme"), self.theme_picker),
+                               (tr("Controller style"), self.controller_style_picker))))):
             if index:
                 layout.addSpacing(20)
             layout.addWidget(ProfileSectionHeading(heading))
@@ -1447,9 +1462,11 @@ class SettingsDialog(QDialog):
             form = QFormLayout()
             form.setContentsMargins(8, 0, 0, 0)
             form.setHorizontalSpacing(16)
-            picker_label = QLabel(label)
-            picker_label.setMinimumWidth(140)
-            form.addRow(picker_label, picker)
+            form.setVerticalSpacing(CONTROL_ROW_GAP)
+            for label, picker in rows:
+                picker_label = QLabel(label)
+                picker_label.setMinimumWidth(140)
+                form.addRow(picker_label, picker)
             layout.addLayout(form)
         layout.addSpacing(20)
         self.display_note = QLabel(tr("Language and theme changes apply when pawz restarts."))
@@ -1462,6 +1479,12 @@ class SettingsDialog(QDialog):
         layout.addWidget(self.display_note)
         layout.addStretch()
         return tab
+
+    def _preview_controller_style(self, *_):
+        """Controller drawings follow the chosen style at once (restored on cancel)."""
+        artwork_styles.set_current(self.controller_style_picker.currentData())
+        self._update_display_model_preview()
+        self.controllers_page.refresh()
 
     def display_changed(self) -> bool:
         """Whether the chosen language or theme differs from the running one."""
@@ -1523,9 +1546,20 @@ class SettingsDialog(QDialog):
 
     def change_display_model(self, *_):
         self.settings.display_controller_model = self.display_model_picker.currentData()
+        self._update_display_model_preview()
         if self.profile_editor:
             self.profile_editor.display_model = self.catalog.get(self.settings.display_controller_model)
             self.profile_editor.draw()
+
+    def _update_display_model_preview(self):
+        """Show the controller whose buttons the shortcuts are drawn with."""
+        try:
+            model = self.catalog.get(self.display_model_picker.currentData())
+        except KeyError:
+            model = None
+        artwork = resolve_artwork(model) if model else None
+        self.display_model_preview.set_path(artwork)
+        self.display_model_preview.setToolTip(model_name(model) if model else "")
 
     def _reload_display_models(self):
         selected = self.display_model_picker.currentData()
@@ -1593,6 +1627,7 @@ class SettingsDialog(QDialog):
 
     def reject(self):
         self._cancel_active_capture()
+        artwork_styles.set_current(self._initial_controller_style)
         super().reject()
 
     def closeEvent(self, event):
@@ -2177,6 +2212,7 @@ class MainWindow(QMainWindow):
         display_changed = dialog.display_changed()
         self.settings.language = dialog.language_picker.currentData()
         self.settings.theme = dialog.theme_picker.currentData()
+        self.settings.controller_style = dialog.controller_style_picker.currentData()
         save(self.settings)
         self.refresh()
         try:

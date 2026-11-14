@@ -1,13 +1,15 @@
-# Illustrations de modèles de manettes
+# Controller model drawings
 
-Ces 18 SVG sont des dessins vectoriels stylisés originaux créés pour pawz,
-distribués sous la licence GPL-3.0 du projet. Ils ne sont pas des illustrations
-officielles des fabricants, ne contiennent aucun logo de fabricant et ne sont
-pas issus de photographies ou de SVG commerciaux.
+These SVGs are original stylized vector drawings made for pawz, distributed
+under the project's GPL-3.0 licence, for the models the Gamepad Asset Pack
+does not cover: the Xbox Adaptive Controller and the Logitech F310, F510 and
+F710. They are not official manufacturer illustrations, contain no
+manufacturer logo and are not derived from photographs or commercial SVGs.
 
-Ils illustrent des modèles de présentation : les positions et détails dessinés
-ne constituent ni un mapping matériel, ni une certification de prise en charge.
-Les noms servent uniquement à identifier les modèles concernés.
+They illustrate presentation models: the drawn positions and details are
+neither a hardware mapping nor a certification of support. Names only identify
+the models concerned.
 
-Le script `scripts/generate-controller-illustrations.py` permet de les régénérer,
-ainsi que les quatre icônes originales d’axes dans `input-icons/`.
+`scripts/generate-controller-illustrations.py` regenerates them, along with the
+four original axis icons in `input-icons/`. The other models use the Gamepad
+Asset Pack silhouettes in `library/`.

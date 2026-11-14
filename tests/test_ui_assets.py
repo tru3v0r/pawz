@@ -84,7 +84,7 @@ def test_vendored_resources_match_their_recorded_hashes(qapp):
 
     from PySide6.QtSvg import QSvgRenderer
     manifest = json.loads((ASSET_DIR / "upstream-manifest.json").read_text())
-    assert sum(record["file"].endswith(".svg") for record in manifest) == 149
+    assert sum(record["file"].endswith(".svg") for record in manifest) == 159
     for record in manifest:
         assert hashlib.sha256((ASSET_DIR / record["file"]).read_bytes()).hexdigest() == record["sha256"]
         if record["file"].endswith(".svg"):

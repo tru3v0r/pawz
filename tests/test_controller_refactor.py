@@ -177,7 +177,7 @@ def test_svg_fallback_invalid_custom_and_physical_labels(qapp, tmp_path):
     assert models["microsoft.xbox-one"].physical_labels["SOUTH"] == "A"
     invalid = tmp_path / "bad.svg"
     invalid.write_text("invalid")
-    assert resolve_artwork(models["sony.dualsense"], str(invalid)).name == "sony.dualsense.svg"
+    assert resolve_artwork(models["sony.dualsense"], str(invalid)).name == "dualsense.svg"
     assert resolve_artwork(models["sony.dualsense"], "asset:xbox.svg").name == "xbox.svg"
 
 

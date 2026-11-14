@@ -1,5 +1,8 @@
 """Rebuild original, logo-free controller illustrations and axis symbols.
 
+Only models without a Gamepad Asset Pack silhouette (``library/`` in the catalogue)
+get a drawing: the Xbox Adaptive Controller and the Logitech F310/F510/F710.
+
 These are stylized drawings for pawz, not manufacturer artwork or evidence of
 hardware verification. They never contain raw input mappings or device GUIDs.
 """
@@ -163,8 +166,10 @@ def main():
     models_dir = ASSETS / "models"
     models_dir.mkdir(exist_ok=True)
     catalog = json.loads(CATALOG.read_text(encoding="utf-8"))
+    generated = 0
     for model in catalog["models"]:
-        if model["id"].startswith("generic."):
+        # The generic model and models drawn by the Gamepad Asset Pack keep that artwork.
+        if model["id"].startswith("generic.") or model.get("svg", "").startswith("library/"):
             continue
         mid = model["id"]
         art = (joycon() if mid == "nintendo.joycon" else adaptive() if mid == "microsoft.adaptive"
@@ -175,6 +180,7 @@ def main():
         filename = mid + ".svg"
         (models_dir / filename).write_text(svg, encoding="utf-8")
         model["svg"] = "models/" + filename
+        generated += 1
     CATALOG.write_text(json.dumps(catalog, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     inputs_dir = ASSETS / "input-icons"
     inputs_dir.mkdir(exist_ok=True)
@@ -188,7 +194,7 @@ def main():
                    + '<g fill="none" stroke="#65baff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">'
                    + arrow + '</g></svg>\n')
             (inputs_dir / f"{stick_name}-{axis}.svg").write_text(svg, encoding="utf-8")
-    print("Generated 18 model illustrations and 4 axis icons.")
+    print(f"Generated {generated} model illustrations and 4 axis icons.")
 
 
 if __name__ == "__main__":

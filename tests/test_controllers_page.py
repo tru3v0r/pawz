@@ -62,12 +62,14 @@ def test_correspondence_cells_and_icons_are_centered_and_update_on_model_change(
     assert page.settings.controller_mappings["device"] == {"SOUTH": "b4"}
 
 
-def test_all_named_models_have_packaged_original_svg_illustrations(qapp):
+def test_all_named_models_have_packaged_svg_illustrations(qapp):
     models = [model for model in load_builtin_catalog() if not model.id.startswith("generic.")]
     assert len(models) == 18
+    # Asset-pack silhouettes where the pack has the controller, original drawings otherwise.
+    original = {"microsoft.adaptive", "logitech.f310", "logitech.f510", "logitech.f710"}
     for model in models:
         path = ASSET_DIR / model.svg
-        assert path.parent.name == "models"
+        assert path.parent.name == ("models" if model.id in original else "library")
         assert path.is_file() and QSvgRenderer(str(path)).isValid()
         assert resolve_artwork(model) == path
         assert not model.verified
@@ -93,3 +95,40 @@ def test_axes_have_distinct_vector_icons_and_correspondence_controls_survive_scr
     row = next(row for row in range(page.table.rowCount()) if page.table.item(row, 0).text() == "LEFT_X")
     assert page.table.cellWidget(row, 1).renderer.isValid()
     assert "input-icons" in page.table.cellWidget(row, 1).property("svgSources")[0]
+
+
+def test_custom_models_fall_back_to_their_family_silhouette(qapp):
+    from dataclasses import replace
+    model = next(model for model in load_builtin_catalog() if model.id == "sony.dualshock-4")
+    copy = replace(model, id="custom.copy", svg="")
+    assert resolve_artwork(copy) == ASSET_DIR / "library" / "dualsense.svg"
+
+
+def test_profiles_tab_shows_the_controller_whose_buttons_are_drawn(qtbot):
+    from pawz.core.models import Settings
+    from pawz.ui.windows import SettingsDialog
+    dialog = SettingsDialog(Settings.defaults())
+    qtbot.addWidget(dialog)
+    preview = dialog.display_model_preview
+    assert preview.renderer.isValid()
+    picker = dialog.display_model_picker
+    picker.setCurrentIndex(picker.findData("nintendo.switch-pro"))
+    assert preview.toolTip() == "Nintendo Switch Pro Controller"
+    assert preview.renderer.isValid()
+
+
+def test_models_are_recognized_from_sdl_guid_usb_ids_then_name_fragments():
+    from pawz.core.controller_services import GENERIC_MODEL, resolve_model, usb_id
+    catalog = load_builtin_catalog()
+    switch_pro = "030056fb7e0500000920000000006803"  # a real Switch Pro over Bluetooth
+    assert usb_id(switch_pro) == "057e:2009"
+    assert usb_id("78696e70757401000000000000000000") is None  # "xinput": no USB ids
+    assert usb_id("not hex") is None
+    assert resolve_model(catalog, switch_pro, "Wireless Gamepad") == "nintendo.switch-pro"
+    assert resolve_model(catalog, "030000005e040000120b000000000000", "") == "microsoft.xbox-series"
+    assert resolve_model(catalog, "", "Xbox 360 Controller") == "microsoft.xbox-360"
+    assert resolve_model(catalog, "", "PS5 Controller") == "sony.dualsense"
+    assert resolve_model(catalog, "", "Nintendo Switch Joy-Con (R)") == "nintendo.joycon"
+    assert resolve_model(catalog, "", "XInput Controller") == GENERIC_MODEL
+    # The user's choice still wins.
+    assert resolve_model(catalog, switch_pro, "", "sony.dualsense") == "sony.dualsense"

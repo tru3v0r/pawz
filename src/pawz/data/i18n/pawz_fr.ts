@@ -542,6 +542,10 @@ Choisissez manuellement le modèle en cas d’ambiguïté.</translation>
         <translation>Jeu de couleurs</translation>
     </message>
     <message>
+        <source>Controller style</source>
+        <translation>Style des manettes</translation>
+    </message>
+    <message>
         <source>Restart {app}</source>
         <translation>Redémarrer {app}</translation>
     </message>
@@ -716,6 +720,22 @@ Choisissez manuellement le modèle en cas d’ambiguïté.</translation>
     <message>
         <source>Midnight Blue</source>
         <translation>Midnight Blue</translation>
+    </message>
+    <message>
+        <source>Eye Candy</source>
+        <translation>Eye Candy</translation>
+    </message>
+    <message>
+        <source>Dark</source>
+        <translation>Sombre</translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation>Clair</translation>
+    </message>
+    <message>
+        <source>Original</source>
+        <translation>Original</translation>
     </message>
 </context>
 <context>

@@ -191,5 +191,6 @@
   "games": [],
   "non_games": [],
   "language": "auto",
-  "theme": "comfy_turquoise"
+  "theme": "comfy_turquoise",
+  "controller_style": "eye_candy"
 }
