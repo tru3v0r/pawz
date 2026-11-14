@@ -718,6 +718,10 @@ Choisissez manuellement le modèle en cas d’ambiguïté.</translation>
         <translation>Comfy Turquoise</translation>
     </message>
     <message>
+        <source>Danger Red</source>
+        <translation>Danger Red</translation>
+    </message>
+    <message>
         <source>Midnight Blue</source>
         <translation>Midnight Blue</translation>
     </message>

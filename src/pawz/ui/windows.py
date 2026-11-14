@@ -1385,8 +1385,9 @@ class SettingsDialog(QDialog):
         profile_selectors.addWidget(self.display_model_picker, 1, 1)
         self.display_model_preview = SvgView()
         self.display_model_preview.setObjectName("displayModelPreview")
-        self.display_model_preview.setFixedHeight(96)
-        profile_selectors.addWidget(self.display_model_preview, 2, 1)
+        # Beside its picker, under the profile action buttons, centred on the row.
+        self.display_model_preview.setFixedSize(3 * 34 + 2 * profile_selectors.horizontalSpacing(), 64)
+        profile_selectors.addWidget(self.display_model_preview, 1, 2, 1, 3, Qt.AlignmentFlag.AlignCenter)
         self._update_display_model_preview()
         profiles_layout.addLayout(profile_selectors)
         self.profile_editor_host = QWidget()
@@ -1645,18 +1646,67 @@ class DraggableHeader(QWidget):
 
 
 class ControllerArtwork(QWidget):
+    CROWN_SPACE = 12  # reserved above the drawing so the crown stays inside the widget
+    # Crown outline around (0, 0) = middle of its base, in pixels.
+    CROWN = ((-9, -9), (-5, -5), (0, -13), (5, -5), (9, -9), (7, 0), (-7, 0))
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.connected = False
         self.primary = False
         self.svg_renderer = None
+        self._top_edge: tuple[tuple, tuple[float, QColor]] | None = None
+        self.crown_rect = QRectF()
         self.setMouseTracking(True)
 
     def set_illustration(self, path):
         if self.svg_renderer:
             self.svg_renderer.deleteLater()
         self.svg_renderer = renderer_for(path, self) if path else None
+        self._top_edge = None
         self.update()
+
+    def artwork_rect(self) -> QRectF:
+        size = self.svg_renderer.defaultSize()
+        size.scale(self.width(), self.height() - self.CROWN_SPACE, Qt.AspectRatioMode.KeepAspectRatio)
+        return QRectF((self.width() - size.width()) / 2,
+                      self.CROWN_SPACE + (self.height() - self.CROWN_SPACE - size.height()) / 2,
+                      size.width(), size.height())
+
+    def top_edge(self, rect: QRectF) -> tuple[float, QColor]:
+        """Where the drawing's outline crosses the vertical centre line, and its colour."""
+        key = (rect.width(), rect.height())
+        if self._top_edge is None or self._top_edge[0] != key:
+            image = QImage(max(1, round(rect.width())), max(1, round(rect.height())),
+                           QImage.Format.Format_ARGB32_Premultiplied)
+            image.fill(Qt.GlobalColor.transparent)
+            painter = QPainter(image)
+            painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+            self.svg_renderer.render(painter, QRectF(0, 0, image.width(), image.height()))
+            painter.end()
+            x = image.width() // 2
+            y = next((row for row in range(image.height()) if image.pixelColor(x, row).alpha() > 128),
+                     0)
+            color = QColor(image.pixelColor(x, y))
+            color.setAlpha(255)
+            self._top_edge = (key, (y, color))
+        return self._top_edge[1]
+
+    def paint_crown(self, painter: QPainter, rect: QRectF):
+        """The crown stands on the drawing's top line, outlined like that line."""
+        top, color = self.top_edge(rect)
+        line = max(1.0, artwork_styles.OUTLINE_WIDTH * max(rect.width(), rect.height()))
+        base = QPoint(round(rect.center().x()), round(rect.top() + top + line / 2))
+        crown = QPainterPath()
+        crown.moveTo(base.x() + self.CROWN[0][0], base.y() + self.CROWN[0][1])
+        for dx, dy in self.CROWN[1:]:
+            crown.lineTo(base.x() + dx, base.y() + dy)
+        crown.closeSubpath()
+        painter.setPen(QPen(color, line, Qt.PenStyle.SolidLine, Qt.PenCapStyle.RoundCap,
+                            Qt.PenJoinStyle.RoundJoin))
+        painter.setBrush(QColor("#f9c74f"))
+        painter.drawPath(crown)
+        self.crown_rect = crown.boundingRect().adjusted(-2, -2, 2, 2)
 
     def set_state(self, connected: bool, primary: bool):
         self.connected = connected
@@ -1666,10 +1716,13 @@ class ControllerArtwork(QWidget):
         self.update()
 
     def mouseMoveEvent(self, event):
-        scale = min((self.width() - 18) / 160, (self.height() - 25) / 116)
-        origin_x = (self.width() - 160 * scale) / 2
-        crown_area = QRectF(origin_x + 66.5 * scale, 18 - 3 * scale,
-                            26 * scale, 25 * scale)
+        if self.svg_renderer and self.svg_renderer.isValid():
+            crown_area = self.crown_rect
+        else:
+            scale = min((self.width() - 18) / 160, (self.height() - 25) / 116)
+            origin_x = (self.width() - 160 * scale) / 2
+            crown_area = QRectF(origin_x + 66.5 * scale, 18 - 3 * scale,
+                                26 * scale, 25 * scale)
         if self.connected and self.primary and crown_area.contains(event.position()):
             QToolTip.showText(
                 event.globalPosition().toPoint(), tr("Primary controller"), self)
@@ -1685,25 +1738,11 @@ class ControllerArtwork(QWidget):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         if self.svg_renderer and self.svg_renderer.isValid():
-            size = self.svg_renderer.defaultSize()
-            size.scale(self.size(), Qt.AspectRatioMode.KeepAspectRatio)
+            rect = self.artwork_rect()
             painter.setOpacity(1.0 if self.connected else 0.2)
-            self.svg_renderer.render(painter, QRectF((self.width()-size.width())/2,
-                (self.height()-size.height())/2, size.width(), size.height()))
+            self.svg_renderer.render(painter, rect)
             if self.connected and self.primary:
-                painter.setPen(Qt.PenStyle.NoPen)
-                painter.setBrush(QColor("#f9c74f"))
-                crown = QPainterPath()
-                cx = self.width() / 2
-                crown.moveTo(cx - 9, 5)
-                crown.lineTo(cx - 5, 9)
-                crown.lineTo(cx, 1)
-                crown.lineTo(cx + 5, 9)
-                crown.lineTo(cx + 9, 5)
-                crown.lineTo(cx + 7, 14)
-                crown.lineTo(cx - 7, 14)
-                crown.closeSubpath()
-                painter.drawPath(crown)
+                self.paint_crown(painter, rect)
             return
         scale = min((self.width() - 18) / 160, (self.height() - 25) / 116)
         painter.translate((self.width() - 160 * scale) / 2, 18)

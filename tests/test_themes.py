@@ -79,7 +79,8 @@ def test_display_tab_lists_themes_and_flags_a_change(qtbot):
     dialog = windows.SettingsDialog(Settings.defaults())
     qtbot.addWidget(dialog)
     picker = dialog.theme_picker
-    assert [picker.itemText(i) for i in range(picker.count())] == ["Comfy Turquoise", "Midnight Blue"]
+    assert [picker.itemText(i) for i in range(picker.count())] == [
+        "Comfy Turquoise", "Danger Red", "Midnight Blue"]
     assert picker.currentData() == themes.COMFY_TURQUOISE
     picker.setCurrentIndex(picker.findData(themes.MIDNIGHT_BLUE))
     assert dialog.display_changed() and not dialog.display_note.isHidden()
@@ -109,3 +110,19 @@ def test_new_instance_waits_for_the_previous_one_and_drops_the_flag(monkeypatch)
     main.wait_for_previous_instance(argv)
     assert argv == ["pawz.exe", "--other"]
     assert waited == [(42, 15)]
+
+
+def test_danger_red_fills_buttons_red_with_one_hue_and_the_same_ratios():
+    theme = themes.THEMES[themes.DANGER_RED]
+    assert themes.map_color(themes.BUTTON_FILL, theme.id) == "#c62828"
+    assert themes.map_color(themes.BRAND, theme.id) == "#c62828"
+    accent_hue = themes._oklch("#c62828")[2]
+    for color in source_colors() - {themes.BRAND, themes.BUTTON_FILL}:
+        if not themes._is_blue(color):
+            continue
+        mapped = themes.map_color(color, theme.id)
+        expected = min(1.0, themes.luminance(color) * theme.luminance_factor)
+        assert themes.luminance(mapped) == pytest.approx(expected, abs=0.004), color
+        lightness, chroma, hue = themes._oklch(mapped)
+        if chroma > 0.03 and 0.1 < lightness < 0.95:  # hue is meaningless for greys
+            assert abs((hue - accent_hue + 180) % 360 - 180) < 6, color

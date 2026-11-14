@@ -1100,3 +1100,27 @@ def test_disconnected_controller_can_be_forgotten(monkeypatch):
     window._battery_timer.stop()
     window.close()
     window.debug_window.close()
+
+
+def test_primary_crown_stands_on_the_drawings_top_line(qtbot):
+    from pathlib import Path
+
+    from pawz.ui import artwork_styles
+    from pawz.ui.controller_assets import ASSET_DIR
+    from pawz.ui.windows import ControllerArtwork
+    artwork_styles.set_current(artwork_styles.EYE_CANDY)
+    widget = ControllerArtwork()
+    qtbot.addWidget(widget)
+    widget.resize(126, 97)
+    widget.set_illustration(Path(ASSET_DIR / "library" / "switch-pro.svg"))
+    widget.set_state(True, True)
+    image = widget.grab().toImage()
+    rect = widget.artwork_rect()
+    top, color = widget.top_edge(rect)
+    assert rect.top() >= ControllerArtwork.CROWN_SPACE
+    # The crown's base sits on the outline, and it is drawn inside the widget.
+    assert abs(widget.crown_rect.bottom() - 2 - (rect.top() + top)) <= 2.5
+    assert widget.crown_rect.top() >= -2
+    assert color.name() == "#3187c7"  # Eye Candy outline (Midnight Blue)
+    crown_centre = widget.crown_rect.center().toPoint()
+    assert image.pixelColor(crown_centre.x(), crown_centre.y() + 2).name() == "#f9c74f"

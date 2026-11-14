@@ -5,7 +5,8 @@ Another theme maps each of those colours to its own. Comfy Turquoise makes the
 button fill its accent #00a8b0 and keeps the luminance ratios between colours:
 every blue's luminance is multiplied by the same factor (accent / button fill,
 about 4, capped at white) and its hue turned towards the accent's. The app name
-also takes the accent. Neutral and status colours (battery, controller artwork,
+also takes the accent. Danger Red does the same with a red accent, every colour
+taking exactly the accent's hue. Neutral and status colours (battery, controller artwork,
 YouTube red) are not blue and stay as they are.
 
 The theme is chosen in Settings and applied at startup, like the language.
@@ -25,6 +26,7 @@ from pawz.i18n import QT_TR_NOOP
 
 MIDNIGHT_BLUE = "midnight_blue"
 COMFY_TURQUOISE = "comfy_turquoise"
+DANGER_RED = "danger_red"
 DEFAULT = COMFY_TURQUOISE
 BRAND = "#3989cf"  # application name in window headers
 BUTTON_FILL = "#20527b"  # button background
@@ -39,6 +41,9 @@ class Theme:
     accent: str | None = None  # None: the source colours unchanged
     anchor: str = BUTTON_FILL  # the source colour that becomes the accent
     overrides: dict[str, str] = field(default_factory=dict)
+    # True: blues keep their small hue differences around the accent; False: they all
+    # take the accent's hue (near red, those differences drift into brown and orange).
+    keep_hue_offsets: bool = True
 
     @property
     def luminance_factor(self) -> float:
@@ -49,6 +54,8 @@ class Theme:
 THEMES = {theme.id: theme for theme in (
     Theme(COMFY_TURQUOISE, QT_TR_NOOP("Comfy Turquoise"), "#00a8b0", BUTTON_FILL,
           {BRAND: "#00a8b0", BUTTON_FILL: "#00a8b0"}),
+    Theme(DANGER_RED, QT_TR_NOOP("Danger Red"), "#c62828", BUTTON_FILL,
+          {BRAND: "#c62828", BUTTON_FILL: "#c62828"}, keep_hue_offsets=False),
     Theme(MIDNIGHT_BLUE, QT_TR_NOOP("Midnight Blue")),
 )}
 _current = THEMES[MIDNIGHT_BLUE]
@@ -140,7 +147,8 @@ def map_color(color: str, theme_id: str) -> str:
     if target >= 1:
         return "#ffffff"
     _, chroma, hue = _oklch(color)
-    hue = (hue + _oklch(theme.accent)[2] - _oklch(theme.anchor)[2]) % 360
+    hue = ((hue - _oklch(theme.anchor)[2] if theme.keep_hue_offsets else 0)
+           + _oklch(theme.accent)[2]) % 360
     # Same hue shift for every blue, then the lightness that gives the scaled
     # luminance; chroma is reduced only when the colour would leave sRGB.
     while True:
