@@ -56,7 +56,7 @@ def load(relative: str) -> Any:
 def load_folder(relative: str) -> tuple[tuple[str, Any], ...]:
     """Every JSON file under ``data/<relative>`` (subfolders too, schemas aside), as
     (path relative to that folder, content), sorted by path; each validated against
-    ``<relative>/<folder name>.schema.json``."""
+    its own ``<name>.schema.json`` or else ``<relative>/<folder name>.schema.json``."""
     root = BUNDLED_DATA / relative
     schema = root / f"{root.name}.schema.json"
     files = []
@@ -64,7 +64,8 @@ def load_folder(relative: str) -> tuple[tuple[str, Any], ...]:
         if path.name.endswith(".schema.json"):
             continue
         data = _read(path)
-        _validate(data, schema, path)
+        own = path.with_name(path.name.removesuffix(".json") + ".schema.json")
+        _validate(data, own if own.is_file() else schema, path)
         files.append((path.relative_to(root).as_posix(), data))
     return tuple(files)
 

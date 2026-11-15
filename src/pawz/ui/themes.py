@@ -30,32 +30,33 @@ from PySide6.QtGui import QIcon, QIconEngine, QPainter, QPixmap
 from PySide6.QtSvg import QSvgRenderer
 from PySide6.QtWidgets import QApplication, QWidget
 
-from pawz.i18n import QT_TR_NOOP
+from pawz import data_files
 
-CORPORATE_BLUE = "midnight_blue"  # its id from when it was named Corporate Blue: saved settings use it
-COMFY_TURQUOISE = "comfy_turquoise"
-DANGER_RED = "danger_red"
-CHEEKY_GREEN = "cheeky_green"
-JUICY_ORANGE = "juicy_orange"
-SQUISHY_PURPLE = "squishy_purple"
-DEFAULT = COMFY_TURQUOISE
+# The interface is written in Corporate Blue colours; themes (data/themes/themes.json)
+# name them by role.
+CORPORATE_BLUE = "midnight_blue"  # its id from an earlier name: saved settings use it
 BRAND = "#3989cf"  # application name in window headers
 BUTTON_FILL = "#20527b"  # button background
 BUTTON_OUTLINE = "#3187c7"  # button borders
 WINDOW_BACKGROUND = "#223d68"  # main window and dialogs
 BUTTON_HOVER = "#28618e"  # hovered buttons and list items
 SELECTION = "#2765cc"  # selected list item
+PANEL = "#1b355b"  # the darker colour of panels, fields and lists
+ROLES = {"brand": BRAND, "button_fill": BUTTON_FILL, "button_outline": BUTTON_OUTLINE,
+         "window_background": WINDOW_BACKGROUND, "button_hover": BUTTON_HOVER,
+         "selection": SELECTION, "panel": PANEL}
+_DATA = data_files.load("themes/themes.json")
+DEFAULT: str = _DATA["default"]
 # Other themes draw hover and selection as darker shades of their button fill (the
 # luminance ratio would make them lighter, up to white in bright themes).
-SHADES = {BUTTON_HOVER: 0.75, SELECTION: 0.6}
-PANEL = "#1b355b"  # the darker colour of panels, fields and lists
+SHADES = {ROLES[role]: share for role, share in _DATA["hover_shades"].items()}
 _HEX = re.compile(r"#[0-9a-fA-F]{6}\b")
 
 
 @dataclass(frozen=True)
 class Theme:
     id: str
-    name: str  # marked for translation; display with tr()
+    name: str  # English label from the data file; display with tr()
     accent: str | None = None  # None: the source colours unchanged
     anchor: str = BUTTON_FILL  # the source colour that becomes the accent
     overrides: dict[str, str] = field(default_factory=dict)
@@ -72,27 +73,11 @@ class Theme:
         return luminance(self.accent) / luminance(self.anchor) if self.accent else 1.0
 
 
-THEMES = {theme.id: theme for theme in (
-    Theme(CHEEKY_GREEN, QT_TR_NOOP("Cheeky Green"), "#27ae60", WINDOW_BACKGROUND,
-          {WINDOW_BACKGROUND: "#27ae60", PANEL: "#1c7e46", BUTTON_FILL: "#27ae60"},
-          keep_hue_offsets=False, match_chroma=True),
-    Theme(COMFY_TURQUOISE, QT_TR_NOOP("Comfy Turquoise"), "#00a8b0", BUTTON_FILL,
-          {BRAND: "#00a8b0", BUTTON_FILL: "#00a8b0"}),
-    Theme(CORPORATE_BLUE, QT_TR_NOOP("Corporate Blue")),
-    # Bright: the window colour, also the buttons' (like Comfy Turquoise's accent),
-    # and a darker one for panels, fields and lists.
-    Theme(DANGER_RED, QT_TR_NOOP("Danger Red"), "#c0392b", WINDOW_BACKGROUND,
-          {WINDOW_BACKGROUND: "#c0392b", PANEL: "#9e0000", BUTTON_FILL: "#c0392b"},
-          keep_hue_offsets=False, match_chroma=True),
-    Theme(JUICY_ORANGE, QT_TR_NOOP("Juicy Orange"), "#f39c12", WINDOW_BACKGROUND,
-          {WINDOW_BACKGROUND: "#f39c12", PANEL: "#fa8f00", BUTTON_FILL: "#f39c12"},
-          keep_hue_offsets=False, match_chroma=True),
-    # Dark like Corporate Blue (the fill has about its luminance), with bright purple
-    # button outlines and title; the fill about as saturated as the outlines allow.
-    Theme(SQUISHY_PURPLE, QT_TR_NOOP("Squishy Purple"), "#6d329a", BUTTON_FILL,
-          {BRAND: "#b026ff", BUTTON_FILL: "#6d329a", BUTTON_OUTLINE: "#b026ff"},
-          keep_hue_offsets=False),
-)}
+THEMES = {entry["id"]: Theme(
+    entry["id"], entry["label"], entry.get("accent"), ROLES[entry.get("anchor", "button_fill")],
+    {ROLES[role]: colour for role, colour in entry.get("overrides", {}).items()},
+    entry.get("keep_hue_offsets", True), entry.get("match_chroma", False))
+    for entry in _DATA["themes"]}
 _current = THEMES[CORPORATE_BLUE]
 
 
@@ -226,8 +211,8 @@ def map_color(color: str, theme_id: str) -> str:
     return _with_luminance(target, chroma, hue)
 
 
-KNEE = 0.55  # scaled luminances above this are compressed below LIGHTEST
-LIGHTEST = 0.82
+KNEE: float = _DATA["light_tints"]["knee"]  # scaled luminances above it are compressed
+LIGHTEST: float = _DATA["light_tints"]["lightest"]  # below this
 
 
 def scaled_luminance(value: float, theme: Theme) -> float:

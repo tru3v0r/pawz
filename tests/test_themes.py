@@ -12,7 +12,7 @@ from pawz.ui import themes, windows
 
 @pytest.fixture
 def turquoise():
-    themes.set_current(themes.COMFY_TURQUOISE)
+    themes.set_current("comfy_turquoise")
     yield themes.current()
     themes.set_current(themes.CORPORATE_BLUE)
 
@@ -26,7 +26,7 @@ def test_corporate_blue_is_the_source_palette_unchanged():
 
 
 def test_comfy_turquoise_fills_buttons_with_the_accent_and_keeps_luminance_ratios():
-    theme = themes.THEMES[themes.COMFY_TURQUOISE]
+    theme = themes.THEMES["comfy_turquoise"]
     assert themes.map_color(themes.BUTTON_FILL, theme.id) == "#00a8b0"
     assert theme.luminance_factor == pytest.approx(4.0, abs=0.05)
     for color in source_colors() - {themes.BRAND, themes.BUTTON_FILL} - set(themes.SHADES):
@@ -39,9 +39,9 @@ def test_comfy_turquoise_fills_buttons_with_the_accent_and_keeps_luminance_ratio
 
 
 def test_comfy_turquoise_turns_blues_turquoise_and_leaves_neutrals():
-    assert themes.map_color("#ffffff", themes.COMFY_TURQUOISE) == "#ffffff"
-    assert themes.map_color("#f26945", themes.COMFY_TURQUOISE) == "#f26945"  # low battery
-    background = themes.map_color("#10233f", themes.COMFY_TURQUOISE)
+    assert themes.map_color("#ffffff", "comfy_turquoise") == "#ffffff"
+    assert themes.map_color("#f26945", "comfy_turquoise") == "#f26945"  # low battery
+    background = themes.map_color("#10233f", "comfy_turquoise")
     red, green, blue = (int(background[i:i + 2], 16) for i in (1, 3, 5))
     assert green > red and blue > red  # blue-green, no longer navy
     assert abs(green - blue) < 20
@@ -50,7 +50,7 @@ def test_comfy_turquoise_turns_blues_turquoise_and_leaves_neutrals():
 def test_turquoise_stylesheet_uses_the_accent_for_title_and_button_fill(turquoise):
     css = windows.stylesheet()
     assert "QLabel#settingsBrand { color:#00a8b0;" in css
-    outline = themes.map_color(themes.BUTTON_OUTLINE, themes.COMFY_TURQUOISE)
+    outline = themes.map_color(themes.BUTTON_OUTLINE, "comfy_turquoise")
     assert f"QPushButton {{ background:#00a8b0; border:1px solid {outline};" in css
     assert "#3187c7" not in css and "#223d68" not in css
 
@@ -66,12 +66,12 @@ def test_icons_and_inline_styles_follow_the_theme(qtbot, turquoise):
 
 def test_theme_setting_defaults_to_comfy_turquoise_and_round_trips():
     settings = Settings.defaults()
-    assert settings.theme == themes.DEFAULT == themes.COMFY_TURQUOISE
+    assert settings.theme == themes.DEFAULT == "comfy_turquoise"
     settings.theme = themes.CORPORATE_BLUE
     assert Settings.parse(settings.dump()).theme == themes.CORPORATE_BLUE
     raw = settings.dump()
     raw.pop("theme")
-    assert Settings.parse(raw).theme == themes.COMFY_TURQUOISE  # existing settings files
+    assert Settings.parse(raw).theme == "comfy_turquoise"  # existing settings files
     assert themes.set_current("unknown").id == themes.DEFAULT
     themes.set_current(themes.CORPORATE_BLUE)
 
@@ -84,10 +84,10 @@ def test_display_tab_lists_themes_and_previews_them_at_once(qtbot, qapp):
     assert [picker.itemText(i) for i in range(picker.count())] == [
         "Cheeky Green", "Comfy Turquoise", "Corporate Blue", "Danger Red", "Juicy Orange",
         "Squishy Purple"]
-    assert picker.currentData() == themes.COMFY_TURQUOISE
+    assert picker.currentData() == "comfy_turquoise"
     try:
-        picker.setCurrentIndex(picker.findData(themes.DANGER_RED))
-        assert themes.current().id == themes.DANGER_RED
+        picker.setCurrentIndex(picker.findData("danger_red"))
+        assert themes.current().id == "danger_red"
         assert "#c0392b" in qapp.styleSheet() and "#c0392b" in dialog.styleSheet()
         assert not dialog.display_changed() and dialog.display_note.isHidden()  # no restart
         dialog.reject()  # Close without saving: back to the theme in use
@@ -141,7 +141,7 @@ def _screens(qapp, settings, manager, switch_to=None):
     return images
 
 
-@pytest.mark.parametrize("theme_id", [themes.SQUISHY_PURPLE, themes.COMFY_TURQUOISE])
+@pytest.mark.parametrize("theme_id", ["squishy_purple", "comfy_turquoise"])
 def test_a_live_theme_switch_looks_exactly_like_starting_in_that_theme(qapp, monkeypatch, theme_id):
     settings, manager = _scene(monkeypatch)
     try:
@@ -185,9 +185,9 @@ def test_new_instance_waits_for_the_previous_one_and_drops_the_flag(monkeypatch)
 
 
 @pytest.mark.parametrize(("theme_id", "window", "dark"), [
-    (themes.DANGER_RED, "#c0392b", "#9e0000"),
-    (themes.JUICY_ORANGE, "#f39c12", "#fa8f00"),
-    (themes.CHEEKY_GREEN, "#27ae60", "#1c7e46"),
+    ("danger_red", "#c0392b", "#9e0000"),
+    ("juicy_orange", "#f39c12", "#fa8f00"),
+    ("cheeky_green", "#27ae60", "#1c7e46"),
 ])
 def test_bright_themes_use_their_window_and_dark_colours_and_are_as_vivid(theme_id, window, dark):
     theme = themes.THEMES[theme_id]
@@ -210,7 +210,7 @@ def test_bright_themes_use_their_window_and_dark_colours_and_are_as_vivid(theme_
 
 
 @pytest.mark.parametrize(("theme_id", "fill", "outline"), [
-    (themes.SQUISHY_PURPLE, "#6d329a", "#b026ff"),
+    ("squishy_purple", "#6d329a", "#b026ff"),
 ])
 def test_dark_themes_have_bright_outlines_one_hue_and_the_same_ratios(theme_id, fill, outline):
     theme = themes.THEMES[theme_id]

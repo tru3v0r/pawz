@@ -11,7 +11,7 @@ from pawz.ui import themes
 from pawz.ui.controller_assets import ASSET_DIR, artwork_bytes
 
 SWITCH_PRO = ASSET_DIR / "library" / "switch-pro.svg"
-TURQUOISE = themes.THEMES[themes.COMFY_TURQUOISE]
+TURQUOISE = themes.THEMES["comfy_turquoise"]
 
 
 def colors(svg: str) -> set[str]:

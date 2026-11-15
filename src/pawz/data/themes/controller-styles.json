@@ -1,0 +1,12 @@
+{
+  "description": "How bundled controller drawings are drawn, in the order Settings lists them. body and details: the colours of the drawing's dark and light areas, in Corporate Blue colours (or a theme role such as button_fill), mapped by the current theme. Without them the files keep their own colours. The kind of drawing is the code's: eye_candy outlines every shape, dark and light mix body and details by lightness. outline_width: Eye Candy's outline, as a share of the drawing's largest side. glyph_size: smaller shapes are letters and symbols, left light and unoutlined.",
+  "default": "eye_candy",
+  "outline_width": 0.012,
+  "glyph_size": 0.035,
+  "styles": [
+    {"id": "eye_candy", "label": "Eye Candy", "body": "#10233f", "details": "button_fill"},
+    {"id": "dark", "label": "Dark", "body": "#10233f", "details": "#65baff"},
+    {"id": "light", "label": "Light", "body": "#f5f7fb", "details": "button_fill"},
+    {"id": "original", "label": "Original"}
+  ]
+}

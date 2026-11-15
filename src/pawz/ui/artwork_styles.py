@@ -19,21 +19,23 @@ import math
 import re
 import xml.etree.ElementTree as ET
 
-from pawz.i18n import QT_TR_NOOP
+from pawz import data_files
 from pawz.ui import themes
 
+# Kinds of drawing the code knows; data/themes/controller-styles.json lists the styles,
+# their labels and palettes.
 EYE_CANDY, DARK, LIGHT, ORIGINAL = "eye_candy", "dark", "light", "original"
-DEFAULT = EYE_CANDY
-STYLES = {EYE_CANDY: QT_TR_NOOP("Eye Candy"), DARK: QT_TR_NOOP("Dark"),
-          LIGHT: QT_TR_NOOP("Light"), ORIGINAL: QT_TR_NOOP("Original")}
-# (body, details) in Corporate Blue colours.
-PALETTES = {DARK: ("#10233f", "#65baff"), LIGHT: ("#f5f7fb", themes.BUTTON_FILL),
-            EYE_CANDY: ("#10233f", themes.BUTTON_FILL)}
-OUTLINE_WIDTH = 0.012  # Eye Candy outline, as a share of the drawing's largest side
+_DATA = data_files.load("themes/controller-styles.json")
+DEFAULT: str = _DATA["default"]
+STYLES = {entry["id"]: entry["label"] for entry in _DATA["styles"]}
+# (body, details) in Corporate Blue colours; a theme role stands for its colour.
+PALETTES = {entry["id"]: tuple(themes.ROLES.get(entry[key], entry[key]) for key in ("body", "details"))
+            for entry in _DATA["styles"] if "body" in entry}
+OUTLINE_WIDTH: float = _DATA["outline_width"]  # Eye Candy outline, share of the largest side
 # Eye Candy: shapes smaller than this share of the drawing are glyphs and symbols
 # (letters on buttons, arrows): they stay light and get no outline, or they would
 # vanish into their button.
-GLYPH_SIZE = 0.035
+GLYPH_SIZE: float = _DATA["glyph_size"]
 SHAPES = {"path", "circle", "ellipse", "rect", "polygon", "polyline", "line"}
 SVG_NS = "http://www.w3.org/2000/svg"
 _HEX = re.compile(r"#[0-9a-fA-F]{6}\b")

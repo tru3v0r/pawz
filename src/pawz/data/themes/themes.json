@@ -1,0 +1,14 @@
+{
+  "description": "Colour themes, in the order Settings lists them. The interface is written in Corporate Blue colours, named here by role (brand: application name; button_fill, button_outline, button_hover, selection; window_background; panel: the darker colour of panels, fields and lists). A theme without accent keeps them. Otherwise every blue's luminance is multiplied by luminance(accent) / luminance(anchor role), keeping the ratios, and its hue turned to the accent's: by the same shift (keep_hue_offsets, the default) or exactly the accent's hue; match_chroma makes every colour as vivid as the accent. overrides set a role's colour outright. id: stored in the settings, never change it (midnight_blue is Corporate Blue's from an earlier name). hover_shades: in themes with an accent, hover and selection are these shares of the button fill's luminance. light_tints: scaled luminances above knee are compressed below lightest, so light colours stay tints instead of white.",
+  "default": "comfy_turquoise",
+  "hover_shades": {"button_hover": 0.75, "selection": 0.6},
+  "light_tints": {"knee": 0.55, "lightest": 0.82},
+  "themes": [
+    {"id": "cheeky_green", "label": "Cheeky Green", "accent": "#27ae60", "anchor": "window_background", "overrides": {"window_background": "#27ae60", "panel": "#1c7e46", "button_fill": "#27ae60"}, "keep_hue_offsets": false, "match_chroma": true},
+    {"id": "comfy_turquoise", "label": "Comfy Turquoise", "accent": "#00a8b0", "anchor": "button_fill", "overrides": {"brand": "#00a8b0", "button_fill": "#00a8b0"}},
+    {"id": "midnight_blue", "label": "Corporate Blue"},
+    {"id": "danger_red", "label": "Danger Red", "accent": "#c0392b", "anchor": "window_background", "overrides": {"window_background": "#c0392b", "panel": "#9e0000", "button_fill": "#c0392b"}, "keep_hue_offsets": false, "match_chroma": true},
+    {"id": "juicy_orange", "label": "Juicy Orange", "accent": "#f39c12", "anchor": "window_background", "overrides": {"window_background": "#f39c12", "panel": "#fa8f00", "button_fill": "#f39c12"}, "keep_hue_offsets": false, "match_chroma": true},
+    {"id": "squishy_purple", "label": "Squishy Purple", "accent": "#6d329a", "anchor": "button_fill", "overrides": {"brand": "#b026ff", "button_fill": "#6d329a", "button_outline": "#b026ff"}, "keep_hue_offsets": false}
+  ]
+}

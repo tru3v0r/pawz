@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Colour themes",
+  "type": "object",
+  "required": ["description", "default", "hover_shades", "light_tints", "themes"],
+  "additionalProperties": false,
+  "$defs": {
+    "colour": {"type": "string", "pattern": "^#[0-9a-f]{6}$"},
+    "role": {"enum": ["brand", "button_fill", "button_outline", "button_hover", "selection", "window_background", "panel"]},
+    "share": {"type": "number", "exclusiveMinimum": 0, "exclusiveMaximum": 1}
+  },
+  "properties": {
+    "description": {"type": "string"},
+    "default": {"type": "string"},
+    "hover_shades": {
+      "type": "object", "additionalProperties": false, "required": ["button_hover", "selection"],
+      "properties": {"button_hover": {"$ref": "#/$defs/share"}, "selection": {"$ref": "#/$defs/share"}}
+    },
+    "light_tints": {
+      "type": "object", "additionalProperties": false, "required": ["knee", "lightest"],
+      "properties": {"knee": {"$ref": "#/$defs/share"}, "lightest": {"$ref": "#/$defs/share"}}
+    },
+    "themes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "label"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z_]+$"},
+          "label": {"type": "string", "minLength": 1},
+          "accent": {"$ref": "#/$defs/colour"},
+          "anchor": {"$ref": "#/$defs/role"},
+          "overrides": {
+            "type": "object",
+            "propertyNames": {"$ref": "#/$defs/role"},
+            "additionalProperties": {"$ref": "#/$defs/colour"}
+          },
+          "keep_hue_offsets": {"type": "boolean"},
+          "match_chroma": {"type": "boolean"}
+        },
+        "dependentRequired": {"anchor": ["accent"], "overrides": ["accent"], "accent": ["anchor"]}
+      }
+    }
+  }
+}

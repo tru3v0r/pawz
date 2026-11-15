@@ -28,6 +28,8 @@ STICK_DIRECTIONS = ("RIGHT_STICK_LEFT", "RIGHT_STICK_RIGHT")
 TRIGGER_INPUTS = BUTTONS + STICK_DIRECTIONS  # what a shortcut can be bound to
 SYSTEM_DEFAULT_PROFILE_ID = "00000000-0000-0000-0000-000000000001"
 ACTIONS = ACTION_IDS
+DEFAULT_THEME: str = data_files.load("themes/themes.json")["default"]
+DEFAULT_CONTROLLER_STYLE: str = data_files.load("themes/controller-styles.json")["default"]
 BROWSER_PROCESSES = applications.BROWSER_PROCESSES  # report the domain: site shortcuts
 
 
@@ -201,8 +203,8 @@ class Settings:
     games: list[str] = field(default_factory=list)  # always games
     non_games: list[str] = field(default_factory=list)  # never games
     language: str = "auto"  # "auto" (follow Windows) or a code from pawz.i18n.LANGUAGES
-    theme: str = "comfy_turquoise"  # an id from pawz.ui.themes.THEMES
-    controller_style: str = "eye_candy"  # an id from pawz.ui.artwork_styles.STYLES
+    theme: str = DEFAULT_THEME  # an id from data/themes/themes.json
+    controller_style: str = DEFAULT_CONTROLLER_STYLE  # from data/themes/controller-styles.json
     added_defaults: list[str] = field(default_factory=list)  # ids from ADDED_DEFAULTS applied
 
     @classmethod
@@ -294,8 +296,8 @@ class Settings:
                    str(raw.get("display_controller_model", "generic.sdl-gamecontroller")),
                    game_mode_auto, games, non_games,
                    language if isinstance(language := raw.get("language", "auto"), str) else "auto",
-                   theme if isinstance(theme := raw.get("theme"), str) else "comfy_turquoise",
-                   style if isinstance(style := raw.get("controller_style"), str) else "eye_candy",
+                   theme if isinstance(theme := raw.get("theme"), str) else DEFAULT_THEME,
+                   style if isinstance(style := raw.get("controller_style"), str) else DEFAULT_CONTROLLER_STYLE,
                    list(added))
         settings.add_new_defaults()
         return settings
