@@ -2,7 +2,7 @@
 
 A Windows app that lets you control your entire PC with a gamepad. 🐾
 
-Pointer and scrolling on the sticks, shortcuts per profile, per application and per website, magnetic window edges and buttons, an editing layer and a game mode that steps aside for games.
+Pointer and scrolling on the sticks, shortcuts per profile, per application and per website, magnetic window edges and buttons, an editing layer and a game mode that steps aside for games. The main window shows each controller with its held buttons lit up live; the interface comes in English and French, with three colour themes.
 
 **Platform: Windows 10/11 · Python 3.12 · status: prototype (0.1.0).**
 

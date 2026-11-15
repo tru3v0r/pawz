@@ -10,7 +10,7 @@
 
 ## Threads
 
-`InputThread` (a `QThread`) owns SDL/pygame, polls controllers at 250 Hz (20 Hz with none connected) and injects input, so pointer smoothness does not depend on the Qt event loop. It only reads a copy of the settings (`ControllerManager.config`), republished by the Qt thread every 250 ms and after each hardware change. Device discoveries come back through a queued signal and are written to `settings` by the Qt thread only. A lock serializes polling and input capture. `stop()` releases every held mouse button. Time steps use `time.perf_counter()`: `time.monotonic()` only advances in ~15.6 ms steps on Windows.
+`InputThread` (a `QThread`) owns SDL/pygame, polls controllers at 250 Hz (20 Hz with none connected) and injects input, so pointer smoothness does not depend on the Qt event loop. It only reads a copy of the settings (`ControllerManager.config`), republished by the Qt thread every 250 ms and after each hardware change. Device discoveries come back through a queued signal and are written to `settings` by the Qt thread only. A lock serializes polling and input capture. `stop()` releases every held mouse button. Time steps use `time.perf_counter()`: `time.monotonic()` only advances in ~15.6 ms steps on Windows. Each poll also publishes `live_state` per device (held buttons, raw stick axes) by replacing whole values, which the main window reads about 30 times a second while it is visible.
 
 ## Actions and output
 
@@ -39,13 +39,19 @@
 
 ## Persistence (v2)
 
-`settings.json` keeps separate sections: `profiles`, `assignments`, `known_devices`, `controller_mappings`, `device_preferences`, `display_controller_model` and the game mode options, in a single atomic write so profile renames and assignments never get out of sync. The custom catalogue is `controllers/catalog.json`, separate from the immutable built-in one; imported illustrations live under `illustrations/` in the settings folder.
+`settings.json` keeps separate sections: `profiles`, `assignments`, `known_devices`, `controller_mappings`, `device_preferences`, `display_controller_model`, the game mode options and the display options (`language`, `theme`, `controller_style`), in a single atomic write so profile renames and assignments never get out of sync. The settings folder also holds the custom catalogue (`controllers/catalog.json`, separate from the immutable built-in one), imported illustrations (`illustrations/`), drawings renamed with Name inputs (`artwork/`, plus `asset-pack-names/` for pull requests) and, optionally, the user's Auto-detect rules (`auto-detect.json`).
 
 `PAWZ_DATA_DIR` isolates a test configuration; otherwise the folder is `%APPDATA%/pawz`, copied from a previous app name on first launch. v1 settings are backed up before migration; migrated profile ids are deterministic and later migrations are idempotent. Legacy button names are accepted when reading, and logical names are written. The built-in profile is protected by `SYSTEM_DEFAULT_PROFILE_ID`, even after a rename; a deep copy gets a new UUID; duplicate ids and duplicate shortcuts after normalization are refused.
 
 ## Hardware identity
 
 An in-memory table `SDL instance → registered id` tracks connected devices. A new instance reuses, when possible, a free slot with a matching GUID; otherwise it gets a UUID. Old `GUID#occurrence` keys stay readable. The GUID alone is never an input-state key. pygame exposes no universal serial number, so identical devices can be ambiguous after reconnection or restart.
+
+## Controller artwork
+
+`controller_assets.resolve_artwork()` picks the device's choice, the model's drawing, its family's or the generic one; a bundled drawing is replaced by its named copy when there is one (the user's in the settings folder, then `controllers/named/`). `artwork_bytes()` styles bundled drawings (`artwork_styles`, in the current theme), cached per file, style and theme. The main window finds named elements (`id` = logical input) with `QSvgRenderer.boundsOnElement` and lights pressed inputs there; a d-pad named as one block lights the arm of the pressed direction; inputs it cannot place are drawn between the grips. Prompt icons in the mappings table are painted by `PromptDelegate`, not cell widgets, which Qt only places for visible rows.
+
+`engine/auto_detect.py` turns element bounds into shapes relative to the box around all of them and applies the rules of `data/controllers/auto-detect.json`; `ui/artwork_editor.py` renames elements in the file's text, so only `id` and `inkscape:label` change.
 
 ## Catalogue and sources
 

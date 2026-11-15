@@ -3,7 +3,8 @@
 ## Layout
 - `pawz/__init__.py`: the application's identity (`APP_NAME`, `APP_ID`, previous names, `PAWZ_` environment prefix). Renaming the app means changing these constants, the package folder and the docs.
 - `core/models.py`: typed settings model and validation; shortcut priority global → application → most specific domain.
-- `core/controllers.py`: SDL GameController discovery, polling on a dedicated thread at 250 Hz (20 Hz without a controller), execution of gesture effects, pointer and wheel, game mode, haptics.
+- `core/controllers.py`: SDL GameController discovery, polling on a dedicated thread at 250 Hz (20 Hz without a controller), execution of gesture effects, pointer and wheel, game mode, haptics; publishes `live_state` (held buttons, raw sticks) for the main window.
+- `core/controller_services.py`: model resolution (chosen model, known GUID, USB ids in the SDL GUID, exact name, name fragments), device identity, raw mappings and calibration.
 - `engine/` (pure: no Qt, SDL or Windows, enforced by a test):
   - `actions.py`: action catalogue (id, label, behaviour) and the `OutputSink` interface; adding an action is a single entry.
   - `gestures.py`: gesture rules (held clicks, combinations, layers, long press, capture), table-tested.
@@ -15,7 +16,14 @@
 - `infra/browser.py`: token-protected loopback HTTP server receiving the active tab.
 - `infra/storage.py`: atomic JSON persistence in `%APPDATA%\pawz\settings.json`, migration from a previous app name.
 - `infra/startup.py`: logon registration in the user's Run key.
-- `ui/`: Qt windows, profile editor, controller pages, notification icon. `ui/themes.py`: colour themes (see Themes below).
+- `ui/`: Qt windows and widgets.
+  - `windows.py`: main window (controller slots, crown, live inputs), settings dialog, profile editor, stylesheet, notification icon.
+  - `controllers_page.py`, `controller_tables.py`: the Controllers tab, its identification table and the illustration picker.
+  - `controller_assets.py`: illustration and prompt SVGs (resolution, named copies, styling, the table delegate).
+  - `artwork_editor.py`: the Name inputs window and Auto-detect.
+  - `artwork_styles.py`, `themes.py`: controller styles and colour themes (below).
+  - `rendering.py`: native-DPI icons and text rendering.
+- `data/controllers/`: the built-in catalogue (`catalog.json`), its JSON Schema and the Auto-detect rules (`auto-detect.json`, see [Controllers](CONTROLLERS.md#auto-detect-rules)).
 - `i18n.py` and `data/i18n/`: interface language (see Translations below).
 - `main.py`: wiring and lifecycle.
 - `browser-extension/`: Manifest V3 extension for Chrome, Edge, Brave and Firefox; its texts are in `_locales/<language>/messages.json`.
@@ -24,7 +32,7 @@ See [Architecture](ARCHITECTURE.md) for threading, gestures, magnetism and persi
 
 ## Running and testing
 - Run: `powershell -ExecutionPolicy Bypass -File scripts\run-windows.ps1`.
-- Tests: `python -m pytest -q`. With `PAWZ_VISUAL_TESTS=1`, pixel comparisons of the settings and main windows run too (see Architecture).
+- Tests: `python -m pytest -q`. With `PAWZ_VISUAL_TESTS=1`, pixel comparisons of the settings and main windows run too (see Architecture). `tests/conftest.py` resets the theme and controller style before each test and hides the named drawings saved in the user's settings folder, so a developer's own settings never change the results.
 - Lint and types: `python -m ruff check .`, `pyright src`.
 
 ## Translations
@@ -41,21 +49,25 @@ A test fails while a `.ts` file is out of date with the code, while an entry is 
 To add a language: `python scripts/update-translations.py --new de`, translate `pawz_de.ts`, run the script again, then add the code and the language's own name to `LANGUAGES` in `src/pawz/i18n.py`. The language is chosen in Settings (`language` in the settings file: `auto` follows Windows); Qt's own translations of standard dialogs are loaded alongside. For the browser extension, add `browser-extension/_locales/<language>/messages.json`.
 
 ## Themes
-The stylesheet (`CSS` in `ui/windows.py`), inline styles and icons are written in Midnight Blue colours. A theme in `ui/themes.py` maps each of them: Comfy Turquoise fills buttons with its accent `#00a8b0` and keeps the luminance ratios between colours: every blue's relative luminance is multiplied by the same factor (accent / button fill, about 4, capped at white) and its hue turned to the accent's. The application name takes the accent too. Danger Red does the same with `#c62828`, but gives every colour the accent's exact hue (`keep_hue_offsets=False`): near red, the small hue differences between the original blues drift into brown and orange. Neutral and status colours are left alone. Write new colours in Midnight Blue and pass inline styles through `themed()` (the application stylesheet is `stylesheet()`; icons from `vector_icon()` are themed already). A new theme is one `Theme` entry: an accent, the source colour it replaces (`anchor`), and overrides for colours that should not simply follow the ratio. The theme, like the language, is applied at startup; saving a change offers to restart (the new instance waits for the old one to exit, since it holds the browser bridge port).
+The stylesheet (`CSS` in `ui/windows.py`), inline styles and icons are written in Midnight Blue colours. A theme in `ui/themes.py` maps each of them: Comfy Turquoise fills buttons with its accent `#00a8b0` and keeps the luminance ratios between colours: every blue's relative luminance is multiplied by the same factor (accent / button fill, about 4, capped at white) and its hue turned to the accent's. The application name takes the accent too. Danger Red fills buttons with a dark red, `#9b1c1c`, close to the original fill's luminance, so the theme stays as dark as Midnight Blue; button outlines and the application name take a bright red, `#ff2d2d`. It gives every colour the accent's exact hue (`keep_hue_offsets=False`): near red, the small hue differences between the original blues drift into brown and orange. Neutral and status colours are left alone. Write new colours in Midnight Blue and pass inline styles through `themed()` (the application stylesheet is `stylesheet()`; icons from `vector_icon()` are themed already). A new theme is one `Theme` entry: an accent, the source colour it replaces (`anchor`), and overrides for colours that should not simply follow the ratio. The theme, like the language, is applied at startup; saving a change offers to restart (the new instance waits for the old one to exit, since it holds the browser bridge port).
 
 ## Controller styles
-`ui/artwork_styles.py` redraws the bundled controller artwork (`controllers/library/`, `controllers/models/`, `library-generic.svg`; never prompts or the user's own SVGs) in the setting `controller_style`. Dark and Light map each colour to a mix of a body and a detail colour according to its lightness; Eye Candy fills dark areas with the body colour and light ones with the button fill, and outlines every visible, opaque shape in the button outline colour, compensating each shape's transform so outlines look even. The palettes are Midnight Blue colours passed through the current theme. `controller_assets.artwork_bytes()` applies the style, cached per file, style and theme; the style changes live, without a restart.
+`ui/artwork_styles.py` redraws the bundled controller artwork (`controllers/library/`, `controllers/models/`, `library-generic.svg` and their named copies; never prompts or the user's imported SVGs) in the setting `controller_style`. Dark and Light map each colour to a mix of a body and a detail colour according to its lightness; Eye Candy fills dark areas with the body colour and light ones with the button fill, and outlines every visible, opaque shape in the button outline colour, compensating each shape's transform so outlines look even. The palettes are Midnight Blue colours passed through the current theme. `controller_assets.artwork_bytes()` applies the style, cached per file, style and theme; the style changes live, without a restart.
 
-## Logo
-`design/` (git-ignored) holds the working files. `python scripts/update-logo.py` rebuilds `src/pawz/ui/assets/logo.svg` (framed square, PowerPoint's invisible text layer removed) and `logo.ico` from `design/logo/logo.svg`.
+## Scripts
+- `run-windows.ps1`, `build-windows.ps1`, `test-build-windows.ps1`: run from source, build, check a build (below).
+- `update-translations.py`: extract and compile translations (above).
+- `update-logo.py`: rebuilds `src/pawz/ui/assets/logo.svg` (framed square, PowerPoint's invisible text layer removed) and `logo.ico` from `design/logo/logo.svg`; `design/` (git-ignored) holds the working files.
+- `vendor-controller-assets.py`: downloads the pinned Gamepad Prompt Asset Pack and Gamepad Asset Pack files and rewrites `upstream-manifest.json`; never run by the app.
+- `generate-controller-illustrations.py`: redraws the four pawz controller drawings and the axis icons.
 
 ## Build
 `powershell -ExecutionPolicy Bypass -File scripts\build-windows.ps1`
 
-PyInstaller must run **on Windows**. The build is a `onedir` distribution in `dist\pawz` (do not move the `.exe` alone), with the docs, the example settings, the extension and the licence copied next to it. `pawz.spec` only ships what pawz uses: Qt Core/Gui/Widgets/Svg, the controller part of pygame and Qt's own translations for the target languages. `scripts/test-build-windows.ps1` then starts the executable from `%TEMP%` with isolated settings and checks the catalogue, schema, SVGs and fonts; it catches a library removed by mistake.
+PyInstaller must run **on Windows**. The build is a `onedir` distribution in `dist\pawz` (do not move the `.exe` alone), with the docs, the example settings, the extension and the licence copied next to it. `pawz.spec` only ships what pawz uses: Qt Core/Gui/Widgets/Svg, the controller part of pygame and Qt's own translations for the target languages. `scripts/test-build-windows.ps1` then starts the executable from `%TEMP%` with isolated settings and checks the catalogue, schema, SVGs and fonts; it catches a library removed by mistake. If the build cannot empty `dist\pawz` ("being used by another process"), close pawz, Explorer windows on that folder and any sync client watching it, or rename the folder aside.
 
 ## Settings file
-`schema_version` 2, with a backup and migration from v1. `profiles` maps names to rules; `assignments` maps a registered device id to a profile name (old `GUID#occurrence` keys stay readable). `known_devices` remembers discovered controllers. `game_mode_auto`, `games` and `non_games` drive game mode. `language` is `auto` or a language code; `theme` is `comfy_turquoise` or `midnight_blue`; `controller_style` is `eye_candy`, `dark`, `light` or `original`. `browser_token` is generated on first launch: never publish a settings file containing it. `config/example-settings.json` shows the defaults.
+`schema_version` 2, with a backup and migration from v1. `profiles` maps names to rules; `assignments` maps a registered device id to a profile name (old `GUID#occurrence` keys stay readable). `known_devices` remembers discovered controllers. `game_mode_auto`, `games` and `non_games` drive game mode. `language` is `auto` or a language code; `theme` is `comfy_turquoise`, `danger_red` or `midnight_blue`; `controller_style` is `eye_candy`, `dark`, `light` or `original`. `browser_token` is generated on first launch: never publish a settings file containing it. `config/example-settings.json` shows the defaults.
 
 ## Environment variables
 - `PAWZ_DATA_DIR`: settings folder (isolates a test configuration).

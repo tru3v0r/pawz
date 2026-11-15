@@ -4,7 +4,7 @@
 
 - **Logo**: a controller with four coloured buttons spelling P A W Z as the toes of a paw, drawn for pawz: `ui/assets/logo.svg` for the interface and `logo.ico` (16 to 256 px) for the executable. Both are made from `design/logo/logo.svg` by `scripts/update-logo.py`, framed square and without PowerPoint's invisible text layer. Working files (PSD, SVG, drafts) live in the git-ignored `design/` folder.
 - **Controller drawings** for the models the Gamepad Asset Pack does not cover (Xbox Adaptive Controller, Logitech F310/F510/F710): stylized SVGs under `controllers/models/`, with no manufacturer image or logo. The other models use the asset pack's silhouettes (below). The drawings are not a hardware certification or calibration plans. `scripts/generate-controller-illustrations.py` regenerates them and the four X/Y axis icons under `controllers/input-icons/`.
-- **Action icons** (pencil, cross, duplicate, settings, profiles, website) under `ui/assets/icons/`, with vector disabled variants.
+- **Action icons** (pencil, cross, plus, duplicate, copy, check, settings, profiles, website) under `ui/assets/icons/`, with vector disabled variants.
 
 Brand names identify controller models; they imply no affiliation.
 

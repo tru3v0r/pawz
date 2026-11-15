@@ -41,14 +41,14 @@ The Windows on-screen keyboard does not open automatically: use `Win` + `Ctrl` +
 
 ## Main window
 - Slots show connected controllers and known, disconnected ones. Use the side arrows when they do not all fit.
-- The crown marks the primary controller, the one allowed to open pawz. With a single controller it becomes primary automatically; otherwise click **SET PRIMARY**.
+- The crown, standing on top of the drawing, marks the primary controller, the one allowed to open pawz. With a single controller it becomes primary automatically; otherwise click **SET PRIMARY**.
 - Battery level and assigned profile appear under each connected controller. Values marked `~` are estimates: SDL only reports a coarse level (low, medium, full).
 - While the window is open, each connected controller shows its held buttons and moved sticks. When its drawing names its inputs (an element or layer with the logical name as its id, such as `SOUTH`, `LEFT_TRIGGER` or `LEFT_STICK`), they light up where they are drawn; otherwise they appear, translucent, between the grips.
 - **Forget**, under a disconnected controller, removes its name, mapping and profile assignment after confirmation.
 - **Manage profiles** opens the profiles tab of **Settings**.
 
 ## Settings
-Settings have four tabs: **GENERAL**, **DISPLAY**, **PROFILES** and **CONTROLLERS** (see [Controllers](CONTROLLERS.md)). Changes apply with **Save**; **Close** discards them.
+Settings have five tabs: **GENERAL**, **DISPLAY**, **PROFILES**, **CONTROLLERS** and **ABOUT**. Changes apply with **Save**; **Close** discards them.
 
 ### General
 - **Launch at startup** registers pawz at logon; **Minimized to the taskbar** starts it minimized.
@@ -58,19 +58,27 @@ Settings have four tabs: **GENERAL**, **DISPLAY**, **PROFILES** and **CONTROLLER
 
 ### Display
 - **Interface language**: **Automatic (Windows language)** uses the Windows display language when pawz has a translation for it (English and French for now), and English otherwise.
-- **Color scheme**: **Comfy Turquoise** (default), **Danger Red**, or **Midnight Blue**, the original dark blue look.
+- **Color scheme**: **Comfy Turquoise** (default), **Danger Red** (dark, with bright red outlines) or **Midnight Blue**, the original dark blue look.
 - **Controller style**, how controllers are drawn, in the theme's colours: **Eye Candy** (default: dark body, buttons in the button colour, outlined), **Dark**, **Light**, or **Original** (the artwork's own black and white). It applies at once, in the settings too.
 - The language and color scheme apply when pawz restarts: after saving a change, pawz offers to restart right away.
 
 ### Profiles
+- The **+** after the profile buttons adds a profile; the other buttons duplicate, rename and delete the selected one.
+- **Show buttons of** draws shortcuts with another controller's buttons, shown beside it.
 - Shortcuts are grouped by priority: **General**, then per application, then per website; the most specific wins.
-- **Add an application...** picks an `.exe`, portable ones included; VLC gets the video shortcuts above. Adding a website asks for a domain such as `youtube.com`.
+- **Add an application...** picks an `.exe`, portable ones included; VLC gets the video shortcuts above. Adding a website asks for a domain such as `youtube.com`; website shortcuts need the browser extension (below), as the **Websites** section reminds.
 - Click a shortcut's controller buttons to capture new ones: press one or several buttons at once; the combination is recorded when one is released.
 - The pencil edits a shortcut (buttons, action, keys, context); the cross removes it.
 
 #### Sensitivity
 - **Mouse**: pointer speed. **Scroll wheel**: scroll speed. **Dead zone**: stick dead zone.
 - **Magnetism**, 10 to 100 %: see below.
+
+### Controllers
+Controller models, mappings, calibration, illustrations, naming inputs and Auto-detect: see [Controllers, mappings and profiles](CONTROLLERS.md).
+
+### About
+The version, the licence and the credits: the controller drawings and button icons come from the Gamepad Asset Pack and Gamepad Prompt Asset Pack by Al. Lopez (AL2009man).
 
 ## Magnetism
 Magnetism draws the pointer to resizable window edges, to window caption buttons (minimize, maximize, close) and to desktop icons.
