@@ -7,6 +7,7 @@
 - `core/controller_services.py` resolves models, tracks connection instances, validates and reads raw mappings, and captures changes for calibration. It knows neither Qt nor Windows actions.
 - `core/controllers.py` uses SDL GameController first. A model's raw mapping completes or replaces SDL; a per-device override wins over the model. Unknown joysticks are kept for calibration, with no assumed indices.
 - `core/models.py` holds profiles and their protected operations.
+- Content is data, not code: default shortcuts, known applications, actions, controller identification and prompts, themes and controller styles, languages are JSON files in `src/pawz/data/`, read once by `pawz/data_files.py` and validated against their JSON Schemas. A broken file stops pawz at startup with its path. The code keeps logic and protocol constants (SDL indices, Windows key codes).
 
 ## Threads
 
@@ -14,7 +15,7 @@
 
 ## Actions and output
 
-`engine/actions.py` describes each action once: label, held mouse button, fixed or free key combination, or internal action (open the settings, toggle game mode). Settings validation, the profile editor, the gesture engine and execution all read this catalogue. Execution goes through an `OutputSink` (clicks, key combinations, pointer, wheel), implemented for Windows by `WindowsOutput` and replaced by a fake in tests.
+`data/actions/actions.json` describes each action once: label, held mouse button, fixed or free key combination, or internal action (open the settings, toggle game mode), and `engine/actions.py` loads it. Settings validation, the profile editor, the gesture engine and execution all read this catalogue. Execution goes through an `OutputSink` (clicks, key combinations, pointer, wheel), implemented for Windows by `WindowsOutput` and replaced by a fake in tests.
 
 `infra/windows.py` injects with `SendInput`: a key combination is sent as one batch, so it cannot interleave with other input. Each input carries `INPUT_TAG` in `dwExtraInfo`.
 
