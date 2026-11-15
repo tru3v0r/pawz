@@ -173,3 +173,29 @@ def test_identity_is_centralized_and_previous_settings_are_migrated(tmp_path):
     assert (new / "settings.json").read_text(encoding="utf-8") == "{}"
     assert (new / "illustrations").is_dir()
     assert storage.migrate_previous_data(new, tmp_path) is None  # done once
+
+
+def test_video_shortcuts_seek_with_the_right_stick_sideways():
+    profile = Settings.defaults().profiles["Default"]
+    for bindings in (profile.apps["vlc.exe"], profile.sites["youtube.com"]):
+        assert bindings["RIGHT_STICK_LEFT"] == Binding("key_combo", "left")
+        assert bindings["RIGHT_STICK_RIGHT"] == Binding("key_combo", "right")
+
+
+def test_older_settings_get_new_default_shortcuts_once_without_overwriting():
+    raw = Settings.defaults().dump()
+    raw.pop("added_defaults")  # saved by an older pawz
+    profile = raw["profiles"]["Default"]
+    for trigger in ("RIGHT_STICK_LEFT", "RIGHT_STICK_RIGHT"):
+        del profile["apps"]["vlc.exe"][trigger]
+        del profile["sites"]["youtube.com"][trigger]
+    profile["sites"]["youtube.com"]["RIGHT_STICK_LEFT"] = {"action": "play_pause", "keys": ""}
+    settings = Settings.parse(raw)
+    default = settings.profiles["Default"]
+    assert default.apps["vlc.exe"]["RIGHT_STICK_RIGHT"] == Binding("key_combo", "right")
+    assert default.sites["youtube.com"]["RIGHT_STICK_LEFT"] == Binding("play_pause")  # kept
+    assert "video-stick-seek" in settings.added_defaults
+    # Removed afterwards, it does not come back.
+    del default.apps["vlc.exe"]["RIGHT_STICK_RIGHT"]
+    again = Settings.parse(settings.dump())
+    assert "RIGHT_STICK_RIGHT" not in again.profiles["Default"].apps["vlc.exe"]

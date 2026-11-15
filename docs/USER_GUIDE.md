@@ -21,6 +21,7 @@ Button names below are those printed on a Nintendo controller; the position is g
 |---|---|
 | Left stick | Move the pointer |
 | Right stick, vertical | Scroll |
+| Right stick, sideways | Free for shortcuts ("right stick left" / "right stick right"), once per push |
 | Right stick click | Middle click |
 | A (right) / B (bottom) | Left / right click (hold A to drag) |
 | X (top) / Y (left) | Copy / paste (Ctrl+C / Ctrl+V) |
@@ -29,6 +30,7 @@ Button names below are those printed on a Nintendo controller; the position is g
 | L / R in Firefox, Chrome, Edge or Brave | Previous / next tab |
 | Y (left) / X (top) on YouTube and in VLC | Play-pause (Space) / full screen (`F`) |
 | Left stick click on YouTube / in VLC | Subtitles (`C` on YouTube, `V` in VLC) |
+| Right stick pushed left / right on YouTube and in VLC | Jump back / forward (← / →), once per push |
 | − / + | Volume down / up |
 | HOME | Windows key |
 | HOME held 0.8 s (primary controller) | Open pawz |

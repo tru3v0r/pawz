@@ -56,6 +56,9 @@ GAME_RUMBLE = {"game_on": (0.35, 0.1, 120), "game_off": (0.0, 0.3, 40)}
 GAME_CHECK_S = 0.25
 # Held, it turns magnetism on when the profile is not in automatic mode.
 MAGNET_TRIGGER = "RIGHT_TRIGGER"
+# Right stick sideways (RIGHT_STICK_LEFT / RIGHT_STICK_RIGHT): pressed past this
+# deflection, released back under the other.
+STICK_PRESS, STICK_RELEASE = 0.6, 0.4
 
 
 def battery_percentage(power_level: str) -> int | None:
@@ -380,6 +383,18 @@ class ControllerManager(QObject):
     def _release_button(self, device, button):
         self._apply(self.gestures.release(device, normalize_trigger(button)))
 
+    def _stick_directions(self, key: str, x: float, y: float, now: float) -> None:
+        """The right stick pushed left or right presses RIGHT_STICK_LEFT or
+        RIGHT_STICK_RIGHT, once per push: mostly sideways past ``STICK_PRESS``, released
+        back under ``STICK_RELEASE`` (the gap stops a push at the edge from repeating)."""
+        x, y = self._stick(key, "RIGHT", x, y, self._profile(key).deadzone)
+        for name, sign in (("RIGHT_STICK_LEFT", -1), ("RIGHT_STICK_RIGHT", 1)):
+            held = self.gestures.is_pressed(key, name)
+            if not held and sign * x > STICK_PRESS and abs(x) > abs(y):
+                self._press_button(key, name, now)
+            elif held and sign * x < STICK_RELEASE:
+                self._release_button(key, name)
+
     def _stick(self, key: str, stick: str, x: float, y: float,
                deadzone: float) -> tuple[float, float]:
         """Deadzoned stick position, ignored until the stick has been seen at rest.
@@ -452,11 +467,12 @@ class ControllerManager(QObject):
                         self._press_button(key, logical, now)
                     elif value <= .5 and held:
                         self._release_button(key, logical)
-                self._apply(self.gestures.tick(key, now))
                 def axis(n, mapping=mapping, joystick=self.joysticks[key], joy=joy):
                     source = mapping.get(("LEFT_X", "LEFT_Y", "RIGHT_X", "RIGHT_Y")[n])
                     return (read_raw(joystick, source) if source else
                             joy.get_axis(n) / 32767.0 if joy is not None else 0.0)
+                self._stick_directions(key, axis(2), axis(3), now)
+                self._apply(self.gestures.tick(key, now))
                 state = self.gestures.devices.get(key)
                 touches = tuple(sorted((touchpad, x, y) for (touchpad, _), (x, y)
                                        in self._touches.get(key, {}).items()))

@@ -21,6 +21,9 @@ BUTTONS = (
     "DPAD_RIGHT", "BACK", "START", "GUIDE", "MISC1", "PADDLE1", "PADDLE2",
     "PADDLE3", "PADDLE4", "TOUCHPAD", "LEFT_TRIGGER", "RIGHT_TRIGGER",
 )
+# Right stick pushed sideways: triggers like buttons (its vertical axis scrolls).
+STICK_DIRECTIONS = ("RIGHT_STICK_LEFT", "RIGHT_STICK_RIGHT")
+TRIGGER_INPUTS = BUTTONS + STICK_DIRECTIONS  # what a shortcut can be bound to
 SYSTEM_DEFAULT_PROFILE_ID = "00000000-0000-0000-0000-000000000001"
 ACTIONS = ACTION_IDS
 DEFAULT_BINDINGS = {"b": "left_click", "a": "right_click", "y": "key_combo", "x": "key_combo", "l": "previous", "r": "next", "minus": "volume_down", "plus": "volume_up", "home": "win", "right_stick": "middle_click",
@@ -40,10 +43,19 @@ BROWSER_PROCESSES = ("firefox.exe", "brave.exe", "chrome.exe", "msedge.exe")
 BROWSER_BINDINGS = {"l": "tab_previous", "r": "tab_next"}
 # Video shortcuts, (action, keys): the same buttons on YouTube and in VLC. Subtitles
 # use the left stick click, the one button left free; VLC toggles them with "v".
+# The right stick pushed left or right jumps back or forward, like the arrow keys.
+SEEK_BINDINGS = {"RIGHT_STICK_LEFT": ("key_combo", "left"), "RIGHT_STICK_RIGHT": ("key_combo", "right")}
 YOUTUBE_BINDINGS = {"x": ("play_pause", ""), "y": ("fullscreen", ""),
-                    "left_stick": ("subtitles", "")}
+                    "left_stick": ("subtitles", ""), **SEEK_BINDINGS}
 VLC_BINDINGS = {"x": ("play_pause", ""), "y": ("fullscreen", ""),
-                "left_stick": ("key_combo", "v")}
+                "left_stick": ("key_combo", "v"), **SEEK_BINDINGS}
+# Default shortcuts added after release, by id: settings saved before an id existed
+# get its shortcuts once, in the profiles that already have the context ("apps" or
+# "sites", then the executable or domain), on buttons still free. The id is then
+# recorded, so a shortcut removed later does not come back.
+ADDED_DEFAULTS = {
+    "video-stick-seek": (("apps", "vlc.exe", SEEK_BINDINGS), ("sites", "youtube.com", SEEK_BINDINGS)),
+}
 
 
 def vlc_bindings() -> dict[str, Binding]:
@@ -53,11 +65,11 @@ def vlc_bindings() -> dict[str, Binding]:
 def normalize_trigger(trigger: str) -> str:
     trigger = migrate_legacy_trigger(trigger)
     buttons = trigger.split("+")
-    if not buttons or any(button not in BUTTONS for button in buttons):
+    if not buttons or any(button not in TRIGGER_INPUTS for button in buttons):
         raise ValueError(f"Unknown controller button: {trigger!r}")
     if len(set(buttons)) != len(buttons):
         raise ValueError(f"Duplicate controller button: {trigger!r}")
-    return "+".join(sorted(buttons, key=BUTTONS.index))
+    return "+".join(sorted(buttons, key=TRIGGER_INPUTS.index))
 
 @dataclass
 class Binding:
@@ -184,6 +196,7 @@ class Settings:
     language: str = "auto"  # "auto" (follow Windows) or a code from pawz.i18n.LANGUAGES
     theme: str = "comfy_turquoise"  # an id from pawz.ui.themes.THEMES
     controller_style: str = "eye_candy"  # an id from pawz.ui.artwork_styles.STYLES
+    added_defaults: list[str] = field(default_factory=list)  # ids from ADDED_DEFAULTS applied
 
     @classmethod
     def defaults(cls) -> Settings:
@@ -196,7 +209,21 @@ class Settings:
         apps["vlc.exe"] = {k: Binding(*v) for k, v in VLC_BINDINGS.items()}
         p = Profile("Default", bindings, apps,
                     {"youtube.com": {k: Binding(*v) for k, v in YOUTUBE_BINDINGS.items()}})
-        return cls({"Default": p})
+        return cls({"Default": p}, added_defaults=list(ADDED_DEFAULTS))  # already in there
+
+    def add_new_defaults(self) -> None:
+        """Give settings saved by an older pawz the default shortcuts added since."""
+        for addition, contexts in ADDED_DEFAULTS.items():
+            if addition in self.added_defaults:
+                continue
+            for profile in self.profiles.values():
+                for kind, context, shortcuts in contexts:
+                    bindings = getattr(profile, kind).get(context)
+                    if bindings is None:
+                        continue
+                    for trigger, binding in shortcuts.items():
+                        bindings.setdefault(normalize_trigger(trigger), Binding(*binding))
+            self.added_defaults.append(addition)
 
     @classmethod
     def parse(cls, raw: dict) -> Settings:
@@ -242,7 +269,10 @@ class Settings:
                     raise ValueError(f"Device preference {key} must be a string")
         game_mode_auto = _parse_bool(raw, "game_mode_auto", True)
         games, non_games = (_parse_apps(raw, key) for key in ("games", "non_games"))
-        return cls(profiles, assignments, dict(raw.get("known_devices", {})),
+        added = raw.get("added_defaults", [])
+        if not isinstance(added, list) or not all(isinstance(item, str) for item in added):
+            raise ValueError("added_defaults must be a list of ids")
+        settings = cls(profiles, assignments, dict(raw.get("known_devices", {})),
                    str(raw.get("browser_token", "")), int(raw.get("port", 8765)),
                    primary_device, startup_enabled, start_minimized,
                    debug_window_on_startup, default_profile,
@@ -252,7 +282,10 @@ class Settings:
                    game_mode_auto, games, non_games,
                    language if isinstance(language := raw.get("language", "auto"), str) else "auto",
                    theme if isinstance(theme := raw.get("theme"), str) else "comfy_turquoise",
-                   style if isinstance(style := raw.get("controller_style"), str) else "eye_candy")
+                   style if isinstance(style := raw.get("controller_style"), str) else "eye_candy",
+                   list(added))
+        settings.add_new_defaults()
+        return settings
 
     def dump(self) -> dict:
         return {"schema_version": self.SCHEMA_VERSION, "profiles": {k: v.dump() for k, v in self.profiles.items()},
@@ -269,7 +302,8 @@ class Settings:
                 "game_mode_auto": self.game_mode_auto,
                 "games": list(self.games), "non_games": list(self.non_games),
                 "language": self.language, "theme": self.theme,
-                "controller_style": self.controller_style}
+                "controller_style": self.controller_style,
+                "added_defaults": list(self.added_defaults)}
 
     def duplicate_profile(self, name: str, new_name: str) -> Profile:
         self._validate_profile_name(new_name)

@@ -32,6 +32,7 @@ def prompt_path(logical: str, model: ControllerDefinition | None) -> Path | None
         "LEFT_SHOULDER": "Left Bumper", "RIGHT_SHOULDER": "Right Bumper",
         "LEFT_TRIGGER": "Left Trigger", "RIGHT_TRIGGER": "Right Trigger",
         "LEFT_STICK": "Left Stick Click", "RIGHT_STICK": "Right Stick Click",
+        "RIGHT_STICK_LEFT": "Right Joystick Left", "RIGHT_STICK_RIGHT": "Right Joystick Right",
         "BACK": "Select", "START": "Start", "DPAD_UP": "D-PAD Up",
         "DPAD_DOWN": "D-PA Down", "DPAD_LEFT": "D-PAD Left", "DPAD_RIGHT": "D-PAD Right",
     }

@@ -73,7 +73,9 @@ from pawz.core.controllers import battery_percentage
 from pawz.core.models import (
     ACTIONS,
     BUTTONS,
+    STICK_DIRECTIONS,
     SYSTEM_DEFAULT_PROFILE_ID,
+    TRIGGER_INPUTS,
     Binding,
     Profile,
     normalize_trigger,
@@ -766,7 +768,7 @@ class ProfileEditor(QWidget):
         content_layout.setSpacing(SHORTCUT_ROW_GAP)
         for index, trigger in enumerate(sorted(
                 bindings,
-                key=lambda value: tuple(BUTTONS.index(item) for item in value.split("+")))):
+                key=lambda value: tuple(TRIGGER_INPUTS.index(item) for item in value.split("+")))):
             if index:
                 separator = QFrame()
                 separator.setObjectName("bindingRowSeparator")
@@ -1014,7 +1016,7 @@ class ProfileEditor(QWidget):
             self, tr("Add a shortcut"), tr("Action"), actions, 0, False)
         if ok and action:
             selected = ACTIONS[actions.index(action)]
-            available = [button for button in BUTTONS if button not in bindings]
+            available = [button for button in TRIGGER_INPUTS if button not in bindings]
             if not available:
                 QMessageBox.warning(self, tr("No button available"),
                                     tr("Remove or replace an existing shortcut."))
@@ -1932,6 +1934,7 @@ class ControllerArtwork(QWidget):
 
     def paint_live(self, painter: QPainter, rect: QRectF):
         pressed, axes, touches = self.live
+        pressed = pressed - set(STICK_DIRECTIONS)  # drawn as the stick's deflection already
         sticks = [(name, axes[index], axes[index + 1]) for name, index in (("LEFT_STICK", 0), ("RIGHT_STICK", 2))
                   if max(abs(axes[index]), abs(axes[index + 1])) > self.STICK_THRESHOLD]
         if not pressed and not sticks and not touches:

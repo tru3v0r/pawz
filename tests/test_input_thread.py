@@ -268,3 +268,20 @@ def test_touchpad_contacts_are_published_until_the_finger_lifts(qapp, fake_sdl, 
     manager.poll()
     assert manager.live_state[key][2] == ()
     manager.stop()
+
+
+def test_right_stick_sideways_seeks_once_per_push_in_vlc(qapp, fake_sdl, monkeypatch):
+    pad = joystick(1)
+    right_x = [0.0]
+    pad.get_axis = lambda index: right_x[0] * 32767 if index == 2 else 0
+    fake_sdl.append(pad)
+    monkeypatch.setattr(controllers.windows, "active_process", lambda: "vlc.exe")
+    sent = []
+    monkeypatch.setattr(controllers.windows, "key_combo", sent.append)
+    manager = at_rest(ControllerManager(Settings.defaults(), bridge(), threaded=False))
+    for value in (-0.9, -0.95, -0.6, -0.9, 0.0, 0.9, 0.3):
+        right_x[0] = value
+        manager.poll()
+    # -0.6 is still held (0.51 past the dead zone; released under 0.4): one push left, then one right.
+    assert sent == ["left", "right"]
+    manager.stop()
