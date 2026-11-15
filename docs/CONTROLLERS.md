@@ -22,7 +22,41 @@ Detection tries, in order: a model chosen by hand, a GUID listed in a definition
 
 Each named model has an illustration, from the Gamepad Asset Pack when it has the controller (see [Assets](ASSETS.md)), shown in **CONTROLLERS**, in **PROFILES** and on the main window. The identification table shows manufacturer, model, family, SDL GUID and status. Mappings show button icons in the physical label column; X/Y axes have their own symbols. Full labels stay available as tooltips and for accessibility.
 
-Shortcut buttons use the bundled Gamepad Prompt Asset Pack SVGs, matching the chosen model. Under the drawing, **Calibrate…** opens the calibration; **Change illustration…** lists every bundled drawing and your imported ones with a preview, and can import one too; **Import custom…** imports your own valid SVG (4 MB maximum); **Restore default** goes back to the model's drawing. **Name inputs…** shows the drawing in its own colours: click a button, stick or trigger, then pick its logical input; the element gets that name as its `id` and Inkscape layer name, which the main window uses to light it up live. Imported drawings are renamed in place. Bundled ones stay untouched: a renamed copy goes to `%APPDATA%\pawz\artwork\` and is used instead, and for Gamepad Asset Pack files a second copy goes to `%APPDATA%\pawz\asset-pack-names\` at its path in that repository, ready for a pull request. Only the names change in the file. **Auto-detect** guesses the inputs from the positions and sizes of the elements, with a confidence percentage for each, and keeps the names you chose by hand: a diamond of four same-size round buttons on the right is the face buttons; round shapes 1.3 to 2.4 times their size are sticks (right: nearest the face buttons; left: same size on the left half); four arrows mirroring the face buttons are the d-pad directions, and a single block where the right stick would be mirrored is the `DPAD`; small buttons mirrored around the centre are Back/Start, then Misc/Guide; a small button alone on the centre line is Guide; a wide centred rectangle is the touchpad. The rules and their thresholds are in `src/pawz/data/controllers/auto-detect.json`; a copy at `%APPDATA%\pawz\auto-detect.json` is used instead when present. A cross drawn as one shape can be named `DPAD`: each direction then lights up its arm, the cross being split in thirds. Imports are copied to the settings folder; preferences store relative `asset:` / `user:` references.
+Shortcut buttons use the bundled Gamepad Prompt Asset Pack SVGs, matching the chosen model.
+
+Under the drawing, **Calibrate…** opens the calibration (above) and **Name inputs…** the naming window (below); **Change illustration…** lists every bundled drawing and your imported ones with a preview, and can import one too; **Import custom…** imports your own valid SVG (4 MB maximum); **Restore default** goes back to the model's drawing. Imports are copied to the settings folder; preferences store relative `asset:` / `user:` references.
+
+## Naming inputs
+
+The main window lights up held buttons where they are drawn when the drawing names them: an element (or Inkscape layer) whose `id` is the logical input, such as `SOUTH`, `LEFT_TRIGGER`, `LEFT_STICK` or `DPAD` (any case, `pawz-` prefix allowed). Inputs it cannot place appear, translucent, between the grips.
+
+**Name inputs…** shows the drawing in its own colours: click a button, stick or trigger, then pick its input. The element gets that name as its `id` and as its Inkscape layer name; only those attributes change in the file. A cross drawn as one shape can be named `DPAD`: each direction then lights up its arm, the cross being split in thirds (an arm is 36 % of its width).
+
+- Imported drawings are renamed in place.
+- Bundled drawings stay untouched: the renamed copy goes to `%APPDATA%\pawz\artwork\` and is used instead. For Gamepad Asset Pack files, a second copy goes to `%APPDATA%\pawz\asset-pack-names\` at its path in that repository (`Connection Icon Pack/Controller Type/SVG/…`), ready for a pull request.
+- pawz ships named copies of eight silhouettes (see [Assets](ASSETS.md)), so the live display works without naming anything.
+
+**Auto-detect** guesses the inputs from the positions and sizes of the elements and shows a confidence percentage for each. Names you chose by hand are kept; a manual change replaces a guess.
+
+## Auto-detect rules
+
+The rules are data, not code: `src/pawz/data/controllers/auto-detect.json`. A copy at `%APPDATA%\pawz\auto-detect.json` is used instead when present, to experiment without touching the project. The file holds:
+
+- `min_confidence`: guesses below this percentage are dropped;
+- `body`: shapes larger than `max_size` (the body, outlines) or smaller than `min_size` (specks) are ignored;
+- `rules`: run in order; each one only sees elements no earlier rule took.
+
+Positions are fractions of the box around all shapes (`x` 0 left to 1 right, `y` 0 top to 1 bottom); sizes are fractions of its width. Each rule has an `id`, a `type`, its thresholds, the inputs it assigns (`inputs` or `input`), a `confidence` (the best it can claim, 0 to 1) and a `comment`. Its score (how well the geometry fits, 0 to 1, each criterion falling linearly to 0 at its tolerance) times its `confidence` gives the percentage.
+
+| Type | Finds | Main parameters |
+|---|---|---|
+| `diamond` | four shapes left/right/top/bottom around one centre: face buttons, d-pad arrows | `region`, `shape` (`round`, `not-round`, `any`), `max_size`, `size_tolerance`, `alignment_tolerance`; `mirror_of` (a rule id), `mirror_tolerance`, `mirror_y_tolerance` to require the mirror image of another group; `inputs` by `left`/`right`/`top`/`bottom` |
+| `sticks` | the right stick (right half, nearest the face buttons) and the left one (left half, same size; mirror symmetry is a bonus) | `face_ratio` (size range in face-button sizes), `shape`, `size_tolerance`, `mirror_tolerance`, `inputs` by `right`/`left` |
+| `mirror` | one shape where a reference would be, mirrored left-right: a one-piece d-pad | `mirror_of` (inputs or rule ids, tried in order), `region`, `face_ratio`, `tolerance`, `prefer_shape`, `input` |
+| `centre_pairs` | small shapes mirrored around the centre line, widest pair first | `region`, `face_ratio`, `tolerance`, `pairs` (a list of `[left, right]` inputs) |
+| `centre_single` | one shape on the centre line: Guide, a touchpad | `region`, `face_ratio` or `min_width`/`max_width`, `shape`, `tolerance`, `input` |
+
+`face_ratio` sizes are relative to the face buttons the first `diamond` rule found (the `face-buttons` rule). A new kind of pattern needs a new rule type in `src/pawz/engine/auto_detect.py`; new rules of the existing types only need the JSON. `tests/test_auto_detect.py` runs the rules on the bundled silhouettes: the Switch Pro result must match the names given by hand.
 
 Artwork is resolved in this order: device, model, family, generic. A disconnected device keeps a dimmed drawing. **Forget** removes its settings, mapping and profile assignment.
 
