@@ -43,7 +43,7 @@ The Windows on-screen keyboard does not open automatically: use `Win` + `Ctrl` +
 - Slots show connected controllers and known, disconnected ones. Use the side arrows when they do not all fit.
 - The crown, standing on top of the drawing, marks the primary controller, the one allowed to open pawz. With a single controller it becomes primary automatically; otherwise click **SET PRIMARY**.
 - Battery level and assigned profile appear under each connected controller. Values marked `~` are estimates: SDL only reports a coarse level (low, medium, full).
-- While the window is open, each connected controller shows its held buttons, moved sticks and fingers on its touchpad (DualShock 4, DualSense, and others SDL reports touchpads for). When its drawing names its inputs (an element or layer with the logical name as its id, such as `SOUTH`, `LEFT_TRIGGER` or `LEFT_STICK`), they light up where they are drawn; otherwise they appear, translucent, between the grips.
+- While the window is open, each connected controller shows its held buttons, moved sticks and fingers on its touchpad (DualShock 4, DualSense, and others SDL reports touchpads for). When its drawing names its inputs (an element or layer with the logical name as its id, such as `SOUTH`, `LEFT_TRIGGER` or `LEFT_STICK`), they light up where they are drawn; those the drawing does not show appear in a small medallion at its bottom-right corner while they are held.
 - **Forget**, under a disconnected controller, removes its name, mapping and profile assignment after confirmation.
 - **Manage profiles** opens the profiles tab of **Settings**.
 

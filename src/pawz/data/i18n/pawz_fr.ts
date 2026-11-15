@@ -230,6 +230,10 @@ Relâchez les contrôles avant chaque capture.</translation>
         <translation>Calibrer…</translation>
     </message>
     <message>
+        <source>{model} (silhouette)</source>
+        <translation>{model} (silhouette)</translation>
+    </message>
+    <message>
         <source>Known controller</source>
         <translation>Manette connue</translation>
     </message>

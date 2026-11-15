@@ -24,13 +24,44 @@ LIBRARY_ARTWORK = {
     "joycon": "Switch Joy-Con", "joycon-grip": "Switch Joy-Con Grip",
     "steam-controller": "Steam Controller", "steam-deck": "Steam Deck",
 }
-# Detailed drawings (shoulders and triggers visible), stored with the layers named
-# here removed: manufacturer logos are trademarks and are not redistributed.
+# Detailed drawings (shoulders and triggers visible), stored without the elements
+# listed: manufacturer logos and platform marks are trademarks and are not
+# redistributed. "label:" selects an Inkscape layer name, "id:" an element id;
+# "show:label:..." instead makes a hidden layer visible.
+PACK = "Controller Asset Pack/"
 DETAILED_ARTWORK = {
     "switch-pro-detailed": (
-        "Controller Asset Pack/Nintendo Switch Controller Images/Switch Pro Controller/"
-        "Default Theme/Theme SVG/Switch Pro Controller VSCView.svg",
-        ("Nintendo Switch Logo",)),
+        PACK + "Nintendo Switch Controller Images/Switch Pro Controller/Default Theme/Theme SVG/"
+        "Switch Pro Controller VSCView.svg", ("label:Nintendo Switch Logo",)),
+    "joycon-detailed": (
+        PACK + "Nintendo Switch Controller Images/Switch Joycons/Theme SVG/VSCView Joycon Theme.svg",
+        ("label:Nintendo Switch Logo",)),
+    "dualshock-4-detailed": (
+        PACK + "DualShock 4 Controller Images/Default Theme/Theme SVG/DS4 V2 VSC SVG.svg",
+        ("label:PS Icon",)),
+    "dualsense-detailed": (
+        PACK + "DualSense Controller Image/Default/Theme SVG/DualSense VSCView SVG.svg",
+        ("label:PS Button",)),  # the PS button is the logo itself
+    "xbox-360-detailed": (
+        PACK + "Xbox 360 Controller Images/Default Theme/Theme SVG/Xbox 360 VSCView - Black.svg",
+        ("label:Microsoft Text", "label:Xbox 360 Text", "id:path29313")),  # path29313: the X on Guide
+    "xbox-one-detailed": (
+        PACK + "Xbox Wireless Controller Images/Default Theme/Theme SVG/Xbox One Color/"
+        "Xbox One Controller VSCView Black.svg", ("id:path8160-9-5",)),  # the logo on Guide
+    "xbox-one-s-detailed": (
+        PACK + "Xbox Wireless Controller Images/Default Theme/Theme SVG/Xbox One Color/"
+        "Xbox One S Controller VSCView Blue.svg", ("id:path8160-9-5",)),
+    "xbox-series-detailed": (
+        PACK + "Xbox Wireless Controller Images/Default Theme/Theme SVG/Xbox Series X Color/"
+        "Xbox Series X Controller VSCView Black.svg", ("id:path8160-9-5",)),
+    "steam-controller-detailed": (
+        PACK + "Steam Controller Images/Default Theme/Theme SVG/Black/Steam Controller VSCView.svg",
+        ("label:Steam Logo",)),
+    "steam-deck-detailed": (
+        PACK + "Steam Deck Images/Theme SVG/Black/Steam Deck VSCView Overlay.svg",
+        # path8593: the STEAM wordmark on Guide; path17439: the screen's chroma-key
+        # green; the triggers are drawn but hidden in the original.
+        ("id:path8593", "id:path17439", "show:label:Triggers")),
 }
 
 
@@ -38,15 +69,53 @@ def fetch(url):
     return urlopen(Request(url, headers={"User-Agent": "pawz-assets"}), timeout=30).read()
 
 
-def without_layers(data: bytes, labels: tuple[str, ...]) -> bytes:
-    """``data`` without the self-closing elements whose Inkscape label is in ``labels``;
+def remove_element(text: str, selector: str) -> str:
+    """``text`` without the one element ``selector`` designates (and its content);
     everything else is kept byte for byte."""
+    kind, _, value = selector.partition(":")
+    attribute = {"label": "inkscape:label", "id": "id"}[kind]
+    starts = [m for m in re.finditer(r"<([a-zA-Z]+)\b[^<>]*>", text)
+              if re.search(r'\b' + re.escape(attribute) + r'="' + re.escape(value) + r'"', m.group(0))]
+    if len(starts) != 1:
+        raise SystemExit(f"Expected one element for {selector!r}, found {len(starts)}")
+    start = starts[0]
+    tag = start.group(1)
+    begin = start.start()
+    while begin > 0 and text[begin - 1] in " \t\r\n":  # with its indentation
+        begin -= 1
+    if start.group(0).endswith("/>"):
+        return text[:begin] + text[start.end():]
+    depth, position = 1, start.end()
+    for match in re.finditer(r"<(/?)" + tag + r"\b[^<>]*?(/?)>", text[start.end():]):
+        if match.group(1):
+            depth -= 1
+        elif not match.group(2):
+            depth += 1
+        if depth == 0:
+            position = start.end() + match.end()
+            return text[:begin] + text[position:]
+    raise SystemExit(f"Unclosed element for {selector!r}")
+
+
+def show_element(text: str, selector: str) -> str:
+    """``text`` with the hidden element ``selector`` designates made visible."""
+    kind, _, value = selector.partition(":")
+    attribute = {"label": "inkscape:label", "id": "id"}[kind]
+    starts = [m for m in re.finditer(r"<([a-zA-Z]+)\b[^<>]*>", text)
+              if re.search(r'\b' + re.escape(attribute) + r'="' + re.escape(value) + r'"', m.group(0))]
+    if len(starts) != 1 or "display:none" not in starts[0].group(0):
+        raise SystemExit(f"Expected one hidden element for {selector!r}")
+    tag = starts[0]
+    return text[:tag.start()] + tag.group(0).replace("display:none", "display:inline", 1) + text[tag.end():]
+
+
+def without_elements(data: bytes, selectors: tuple[str, ...]) -> bytes:
     text = data.decode("utf-8")
-    for label in labels:
-        text, count = re.subn(r'\s*<(?:path|g|rect|circle|ellipse)\b(?:[^<>]*?)inkscape:label="'
-                              + re.escape(label) + r'"[^<>]*/>', "", text, flags=re.S)
-        if count != 1:
-            raise SystemExit(f"Expected one layer labelled {label!r}, found {count}")
+    for selector in selectors:
+        if selector.startswith("show:"):
+            text = show_element(text, selector.removeprefix("show:"))
+        else:
+            text = remove_element(text, selector)
     return text.encode("utf-8")
 
 
@@ -73,8 +142,8 @@ def main():
         record = {"file": target, "url": url}
         if removed:
             record["upstream_sha256"] = hashlib.sha256(data).hexdigest()
-            record["removed_layers"] = list(removed)
-            data = without_layers(data, removed)
+            record["removed"] = list(removed)
+            data = without_elements(data, removed)
         destination = ASSETS / target
         destination.parent.mkdir(parents=True, exist_ok=True)
         destination.write_bytes(data)

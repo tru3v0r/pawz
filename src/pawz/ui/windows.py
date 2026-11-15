@@ -1736,7 +1736,7 @@ class ControllerArtwork(QWidget):
     CROWN = ((-9, -9), (-5, -5), (0, -13), (5, -5), (9, -9), (7, 0), (-7, 0))
 
     STICK_THRESHOLD = 0.2  # a stick counts as moved beyond this deflection
-    LIVE_ICON = 16  # px, pressed-button icons between the grips
+    LIVE_ICON = 16  # px, icons in the medallion of inputs the drawing does not show
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -1756,21 +1756,22 @@ class ControllerArtwork(QWidget):
             self.svg_renderer.deleteLater()
         self.svg_renderer = renderer_for(path, self) if path else None
         self._top_edge = None
-        self.named_elements = self._find_named_elements()
+        self.named_elements = self._find_named_elements(self.svg_renderer)
         self.update()
 
-    def _find_named_elements(self) -> dict[str, str]:
+    @staticmethod
+    def _find_named_elements(renderer: QSvgRenderer | None) -> dict[str, str]:
         """Logical input -> SVG element id, when the drawing names its buttons.
 
         An element (or Inkscape layer) whose id is the logical name, such as ``SOUTH``,
         ``LEFT_TRIGGER`` or ``LEFT_STICK`` (any case), marks where that input is drawn.
         """
-        if not (self.svg_renderer and self.svg_renderer.isValid()):
+        if not (renderer and renderer.isValid()):
             return {}
         found = {}
-        for logical in (*BUTTONS, "LEFT_STICK", "RIGHT_STICK", "DPAD", *TOUCH_SURFACES):
+        for logical in (*BUTTONS, "LEFT_STICK", "RIGHT_STICK", "DPAD", "TOUCHPAD", *TOUCH_SURFACES):
             for candidate in (logical, logical.lower(), "pawz-" + logical.lower()):
-                if self.svg_renderer.elementExists(candidate):
+                if renderer.elementExists(candidate):
                     found[logical] = candidate
                     break
         return found
@@ -1873,23 +1874,31 @@ class ControllerArtwork(QWidget):
             else:
                 loose_touches.append((x, y))
         if loose_buttons or loose_sticks or loose_touches:
-            self._paint_between_grips(painter, rect, loose_buttons, loose_sticks, accent, loose_touches)
+            self._paint_medallion(painter, rect, loose_buttons, loose_sticks, accent, loose_touches)
         painter.restore()
 
-    def _paint_between_grips(self, painter, rect, buttons, sticks, accent, touches=()):
-        """Unplaceable inputs, translucent, centred low on the drawing between the grips."""
-        size = self.LIVE_ICON
-        gap = 3
+    def medallion_rect(self, rect: QRectF, count: int) -> QRectF:
+        """The medallion for ``count`` items: round for one, longer for more, in the
+        drawing's bottom-right corner."""
+        size, gap, padding = self.LIVE_ICON, 3, 4
+        width = count * size + (count - 1) * gap + 2 * padding
+        height = size + 2 * padding
+        right = min(self.width() - 1.0, rect.right() + padding)
+        bottom = min(self.height() - 1.0, rect.bottom() + padding / 2)
+        return QRectF(right - width, bottom - height, width, height)
+
+    def _paint_medallion(self, painter, rect, buttons, sticks, accent, touches=()):
+        """Held inputs the drawing does not show, in a medallion: the drawing stays as
+        it is, and the medallion appears only while they are held."""
+        size, gap, padding = self.LIVE_ICON, 3, 4
         count = len(buttons) + len(sticks) + (1 if touches else 0)
-        width = count * size + (count - 1) * gap
-        x = rect.center().x() - width / 2
-        y = rect.y() + rect.height() * 0.78 - size / 2
+        medallion = self.medallion_rect(rect, count)
         backdrop = QColor(themed("#10233f"))
-        backdrop.setAlpha(150)
-        painter.setPen(Qt.PenStyle.NoPen)
+        backdrop.setAlpha(225)
+        painter.setPen(QPen(accent, 1.5))
         painter.setBrush(backdrop)
-        painter.drawRoundedRect(QRectF(x - 4, y - 3, width + 8, size + 6), (size + 6) / 2, (size + 6) / 2)
-        painter.setOpacity(painter.opacity() * 0.9)
+        painter.drawRoundedRect(medallion, medallion.height() / 2, medallion.height() / 2)
+        x, y = medallion.x() + padding, medallion.y() + padding
         for logical in buttons:
             self._prompt(logical).render(painter, QRectF(x, y, size, size))
             x += size + gap

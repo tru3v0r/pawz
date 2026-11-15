@@ -28,14 +28,14 @@ Under the drawing, **Calibrate…** opens the calibration (above) and **Name inp
 
 ## Naming inputs
 
-The main window lights up held buttons where they are drawn when the drawing names them: an element (or Inkscape layer) whose `id` is the logical input, such as `SOUTH`, `LEFT_TRIGGER`, `LEFT_STICK` or `DPAD` (any case, `pawz-` prefix allowed). Fingers on a touchpad are drawn on `TOUCHPAD` (a click lights it up too); a controller with two pads (Steam Controller, Steam Deck) uses `LEFT_TOUCHPAD` and `RIGHT_TOUCHPAD`. Inputs it cannot place appear, translucent, between the grips, touchpad contacts as a small pad with its fingers.
+The main window lights up held buttons where they are drawn when the drawing names them: an element (or Inkscape layer) whose `id` is the logical input, such as `SOUTH`, `LEFT_TRIGGER`, `LEFT_STICK` or `DPAD` (any case, `pawz-` prefix allowed). Fingers on a touchpad are drawn on `TOUCHPAD` (a click lights it up too); a controller with two pads (Steam Controller, Steam Deck) uses `LEFT_TOUCHPAD` and `RIGHT_TOUCHPAD`. Inputs it cannot place appear in a medallion at the drawing's bottom-right corner while they are held (round for one, longer for several; a touchpad contact as a small pad with its fingers): the drawing itself never changes.
 
 **Name inputs…** shows the drawing in its own colours: click a button, stick or trigger, then pick its input. The element gets that name as its `id` and as its Inkscape layer name; only those attributes change in the file. A cross drawn as one shape can be named `DPAD`: each direction then lights up its arm, the cross being split in thirds (an arm is 36 % of its width).
 
 - Imported drawings are renamed in place.
 - Bundled drawings stay untouched: the renamed copy goes to `%APPDATA%\pawz\artwork\` and is used instead. For Gamepad Asset Pack files, a second copy goes to `%APPDATA%\pawz\asset-pack-names\` at its path in that repository (`Connection Icon Pack/Controller Type/SVG/…`), ready for a pull request.
-- pawz ships named copies of eight silhouettes and of the detailed Switch Pro, whose shoulders and triggers light up too (see [Assets](ASSETS.md)), so the live display works without naming anything.
-- The detailed Switch Pro has no asset-pack copy for pull requests: its stored file lacks the upstream logo layer, so it would not be a names-only change.
+- pawz ships named copies of eight silhouettes and of every detailed drawing, whose shoulders and triggers light up too (see [Assets](ASSETS.md)), so the live display works without naming anything. On the Xbox One and Series drawings the bumpers are part of one shared outline, so LB/RB cannot light up there.
+- Detailed drawings have no asset-pack copy for pull requests: their stored files lack the upstream logos, so it would not be a names-only change.
 
 **Auto-detect** guesses the inputs from the positions and sizes of the elements and shows a confidence percentage for each. Names you chose by hand are kept; a manual change replaces a guess.
 
@@ -51,7 +51,7 @@ Positions are fractions of the box around all shapes (`x` 0 left to 1 right, `y`
 
 | Type | Finds | Main parameters |
 |---|---|---|
-| `labels` | layers the artist named ("ZR Trigger", "L Bumper", "X Button"): the most reliable rule, so it runs first | `patterns` (input → regular expression on the whole layer name, case-insensitive); `face_letters` per family (`nintendo`, `xbox`, `playstation`) and `face_pattern`, since a printed letter means a different position on each family; without a family, letters are left to the geometric rules |
+| `labels` | layers the artist named ("ZR Trigger", "L Bumper", "X Button"): the most reliable rule, so it runs first | `patterns` (input → regular expression on the whole layer name, case-insensitive; the first match names a layer); `family_patterns`, checked first, for words that mean different inputs per brand ("Share" is Back on a PlayStation pad, the capture button on an Xbox); `face_letters` per family (`nintendo`, `xbox`, `playstation`, `generic`) and `face_pattern`, since a printed letter means a different position on each family; `stop_if_named`: once that many inputs are named, only the rules in `still_run` follow, so geometry adds no wrong guesses to a well-named drawing |
 | `diamond` | four shapes left/right/top/bottom around one centre: face buttons, d-pad arrows | `region`, `shape` (`round`, `not-round`, `any`), `max_size`, `size_tolerance`, `alignment_tolerance`; `mirror_of` (a rule id), `mirror_tolerance`, `mirror_y_tolerance` to require the mirror image of another group; `inputs` by `left`/`right`/`top`/`bottom` |
 | `sticks` | the right stick (right half, nearest the face buttons) and the left one (left half, same size; mirror symmetry is a bonus) | `face_ratio` (size range in face-button sizes), `shape`, `size_tolerance`, `mirror_tolerance`, `inputs` by `right`/`left` |
 | `mirror` | one shape where a reference would be, mirrored left-right: a one-piece d-pad | `mirror_of` (inputs or rule ids, tried in order), `region`, `face_ratio`, `tolerance`, `prefer_shape`, `input` |

@@ -1180,18 +1180,21 @@ def test_named_buttons_light_up_where_they_are_drawn(qtbot, tmp_path):
     assert image.pixelColor(button.center().toPoint()).name() != "#ffffff"  # lit with the accent
 
 
-def test_unnamed_drawings_show_inputs_between_the_grips_only_while_active(qtbot):
+def test_inputs_the_drawing_lacks_appear_in_a_medallion_only_while_held(qtbot):
     from pawz.ui.controller_assets import ASSET_DIR
-    path = ASSET_DIR / "library" / "xbox-360.svg"
-    idle = _live_artwork(qtbot, path, set(), (0.05, 0.0, 0.0, 0.0)).grab().toImage()
-    active_widget = _live_artwork(qtbot, path, {"SOUTH"}, (0.0, 0.0, 0.0, 0.9))
+    path = ASSET_DIR / "library" / "xbox-360.svg"  # a silhouette: nothing named
+    idle_widget = _live_artwork(qtbot, path, set(), (0.05, 0.0, 0.0, 0.0))
+    idle = idle_widget.grab().toImage()
+    active_widget = _live_artwork(qtbot, path, {"SOUTH", "LEFT_TRIGGER"}, (0.0, 0.0, 0.0, 0.9))
     assert not active_widget.named_elements
     active = active_widget.grab().toImage()
     rect = active_widget.artwork_rect()
-    y = round(rect.y() + rect.height() * 0.78)
-    row = range(round(rect.left()), round(rect.right()))
-    assert any(idle.pixelColor(x, y) != active.pixelColor(x, y) for x in row)
-
+    medallion = active_widget.medallion_rect(rect, 3)  # two buttons and a stick
+    assert medallion.right() <= active_widget.width() and medallion.bottom() <= active_widget.height()
+    assert medallion.width() > medallion.height()  # longer than round for several items
+    assert abs(active_widget.medallion_rect(rect, 1).width() - medallion.height()) < 1  # round for one
+    centre = medallion.center().toPoint()
+    assert active.pixelColor(centre) != idle.pixelColor(centre)
 
 def test_touchpad_contacts_appear_on_the_named_touchpad(qtbot, tmp_path):
     svg = tmp_path / "pad.svg"

@@ -110,4 +110,4 @@ def test_detailed_switch_pro_ships_without_the_nintendo_logo():
     assert "Nintendo Switch Logo" not in text
     manifest = json.loads((ASSET_DIR / "upstream-manifest.json").read_text())
     record = next(r for r in manifest if r["file"] == "library/switch-pro-detailed.svg")
-    assert record["removed_layers"] == ["Nintendo Switch Logo"] and record["upstream_sha256"] != record["sha256"]
+    assert record["removed"] == ["label:Nintendo Switch Logo"] and record["upstream_sha256"] != record["sha256"]

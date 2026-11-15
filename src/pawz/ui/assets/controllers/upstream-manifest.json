@@ -813,9 +813,94 @@
     "file": "library/switch-pro-detailed.svg",
     "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Asset-Pack/a6d1113b0b3b2438bbbcb08a33f9a25eb2391d7c/Controller%20Asset%20Pack/Nintendo%20Switch%20Controller%20Images/Switch%20Pro%20Controller/Default%20Theme/Theme%20SVG/Switch%20Pro%20Controller%20VSCView.svg",
     "upstream_sha256": "4a8b5c1d6b509120b0914f2fa62e7bb80f2db96bd6ecc1e772a0143f0ab6bed2",
-    "removed_layers": [
-      "Nintendo Switch Logo"
+    "removed": [
+      "label:Nintendo Switch Logo"
     ],
     "sha256": "484c28b0112edd9eb3e54303ca3ce4cf8747ef940882e0a9d6277c5202cff28a"
+  },
+  {
+    "file": "library/joycon-detailed.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Asset-Pack/a6d1113b0b3b2438bbbcb08a33f9a25eb2391d7c/Controller%20Asset%20Pack/Nintendo%20Switch%20Controller%20Images/Switch%20Joycons/Theme%20SVG/VSCView%20Joycon%20Theme.svg",
+    "upstream_sha256": "9ba9a1c598c0eb74a49cf1c5eca35b39fb4956428f4ab1b6188e7558c0ae598a",
+    "removed": [
+      "label:Nintendo Switch Logo"
+    ],
+    "sha256": "301ac97f1242e698e972379257c4a865384cccb23916d1c23e5213a049414e6a"
+  },
+  {
+    "file": "library/dualshock-4-detailed.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Asset-Pack/a6d1113b0b3b2438bbbcb08a33f9a25eb2391d7c/Controller%20Asset%20Pack/DualShock%204%20Controller%20Images/Default%20Theme/Theme%20SVG/DS4%20V2%20VSC%20SVG.svg",
+    "upstream_sha256": "3f9049d0a2a3fe015fbae945c01ffca71e286b629db6403329e6185d1a300547",
+    "removed": [
+      "label:PS Icon"
+    ],
+    "sha256": "ea86af32f7ed799cd3267906ba44f3d3449dd7656228152ec09d8a80b2ebd6c7"
+  },
+  {
+    "file": "library/dualsense-detailed.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Asset-Pack/a6d1113b0b3b2438bbbcb08a33f9a25eb2391d7c/Controller%20Asset%20Pack/DualSense%20Controller%20Image/Default/Theme%20SVG/DualSense%20VSCView%20SVG.svg",
+    "upstream_sha256": "44db01cf7fd8a1f46ab01f6ae7c2eb18e59afff5e4a6c39387b66d7db06d9e8d",
+    "removed": [
+      "label:PS Button"
+    ],
+    "sha256": "a566f8cccf20852270a8a274dcff531a8a89117ad8ec709697589e5eeb3c22b1"
+  },
+  {
+    "file": "library/xbox-360-detailed.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Asset-Pack/a6d1113b0b3b2438bbbcb08a33f9a25eb2391d7c/Controller%20Asset%20Pack/Xbox%20360%20Controller%20Images/Default%20Theme/Theme%20SVG/Xbox%20360%20VSCView%20-%20Black.svg",
+    "upstream_sha256": "4ae83472d39e4b35cb0a22f4b19fad681f252a0d7577a8b13bdcc63aa9550356",
+    "removed": [
+      "label:Microsoft Text",
+      "label:Xbox 360 Text",
+      "id:path29313"
+    ],
+    "sha256": "37923bf8ef9f07dd3185cfeada82c8d25745a3543a3b9d4993ea8fba8b2c3e52"
+  },
+  {
+    "file": "library/xbox-one-detailed.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Asset-Pack/a6d1113b0b3b2438bbbcb08a33f9a25eb2391d7c/Controller%20Asset%20Pack/Xbox%20Wireless%20Controller%20Images/Default%20Theme/Theme%20SVG/Xbox%20One%20Color/Xbox%20One%20Controller%20VSCView%20Black.svg",
+    "upstream_sha256": "b13c51e7bc0a6b2c3e9e1150e879bece44423301ebcc55622c98a99c6283d3ee",
+    "removed": [
+      "id:path8160-9-5"
+    ],
+    "sha256": "0e9284633e5d52aa5ff704218ecce53749c6d160e3ee9d5097240a835dff713f"
+  },
+  {
+    "file": "library/xbox-one-s-detailed.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Asset-Pack/a6d1113b0b3b2438bbbcb08a33f9a25eb2391d7c/Controller%20Asset%20Pack/Xbox%20Wireless%20Controller%20Images/Default%20Theme/Theme%20SVG/Xbox%20One%20Color/Xbox%20One%20S%20Controller%20VSCView%20Blue.svg",
+    "upstream_sha256": "bceb38704d9b781c71a4e47dab1e5b5d473592029268b8d3358ad01407c27fc0",
+    "removed": [
+      "id:path8160-9-5"
+    ],
+    "sha256": "8b09805a45892f102e1952901ef4b39adc6047d5428b7b90f14e99c630a165ac"
+  },
+  {
+    "file": "library/xbox-series-detailed.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Asset-Pack/a6d1113b0b3b2438bbbcb08a33f9a25eb2391d7c/Controller%20Asset%20Pack/Xbox%20Wireless%20Controller%20Images/Default%20Theme/Theme%20SVG/Xbox%20Series%20X%20Color/Xbox%20Series%20X%20Controller%20VSCView%20Black.svg",
+    "upstream_sha256": "a1ba3b73758f3712bf1152a28d36c667996df240b03c9003be5a8f553237c948",
+    "removed": [
+      "id:path8160-9-5"
+    ],
+    "sha256": "4698dab64928ed8d91c44f6178edca384dd600b2ce81998d71c09f4ab2d925ae"
+  },
+  {
+    "file": "library/steam-controller-detailed.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Asset-Pack/a6d1113b0b3b2438bbbcb08a33f9a25eb2391d7c/Controller%20Asset%20Pack/Steam%20Controller%20Images/Default%20Theme/Theme%20SVG/Black/Steam%20Controller%20VSCView.svg",
+    "upstream_sha256": "eafd0e1905f6f59e0c661cd2c64b5703edce3c33084da4e7c26c4b01c5616f25",
+    "removed": [
+      "label:Steam Logo"
+    ],
+    "sha256": "f2110f10e3498d7e6a54c48c30d9a42b3b2ba26a06ceb82a6392557c6d3db196"
+  },
+  {
+    "file": "library/steam-deck-detailed.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Asset-Pack/a6d1113b0b3b2438bbbcb08a33f9a25eb2391d7c/Controller%20Asset%20Pack/Steam%20Deck%20Images/Theme%20SVG/Black/Steam%20Deck%20VSCView%20Overlay.svg",
+    "upstream_sha256": "a982dfe7c63df104a76dd5cd4e96220f791ed7bbdf19cd277b742daf0b1469c4",
+    "removed": [
+      "id:path8593",
+      "id:path17439",
+      "show:label:Triggers"
+    ],
+    "sha256": "c40f5eee1cc424a141d625f1950d2ccbd12fc77eaa7ef4814064d79160a3ad77"
   }
 ]

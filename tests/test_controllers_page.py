@@ -183,7 +183,7 @@ def test_illustration_dialog_lists_bundled_artwork_and_previews_the_selection(qt
     assert references[0] is None  # the model's default
     assert "asset:library/switch-pro.svg" in references and "asset:models/logitech.f310.svg" in references
     assert dialog.selection == "asset:library/dualsense.svg"
-    assert dialog.choices.currentItem().text() == "DualSense"
+    assert dialog.choices.currentItem().text() == "DualSense (silhouette)"
     assert dialog.preview.renderer.isValid()
     dialog.choices.setCurrentRow(0)
     assert dialog.selection is None and dialog.preview.renderer.isValid()

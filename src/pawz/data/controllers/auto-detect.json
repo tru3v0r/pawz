@@ -10,54 +10,104 @@
   ],
   "version": 1,
   "min_confidence": 40,
-  "body": {"comment": "the body is the largest shape; others must be smaller than max_size",
-           "max_size": 0.6, "min_size": 0.02},
+  "body": {
+    "comment": "the body is the largest shape; others must be smaller than max_size",
+    "max_size": 0.6,
+    "min_size": 0.02
+  },
   "rules": [
     {
       "id": "layer-names",
       "type": "labels",
-      "comment": "Layers the artist named, matched whole and case-insensitively. Face-button letters depend on the family; a drawing without a family leaves them to the geometric rules.",
+      "comment": "Layers the artist named, matched whole and case-insensitively; the first matching pattern names the layer. Family patterns come first, for words that mean different inputs per brand. Face-button letters depend on the family; without one they are left to the geometric rules.",
       "patterns": {
-        "LEFT_TOUCHPAD": "^left (touch ?pad|trackpad)$",
-        "RIGHT_TOUCHPAD": "^right (touch ?pad|trackpad)$",
-        "LEFT_TRIGGER": "^(zl|lt|l2)( trigger)?$|^left trigger$",
-        "RIGHT_TRIGGER": "^(zr|rt|r2)( trigger)?$|^right trigger$",
+        "LEFT_TOUCHPAD": "^left (touch ?pad|trackpad|pad)( color)?$",
+        "RIGHT_TOUCHPAD": "^right (touch ?pad|trackpad|pad)( color)?$",
+        "LEFT_TRIGGER": "^(zl|lt|l2)( triggers?| button)?$|^left triggers?$",
+        "RIGHT_TRIGGER": "^(zr|rt|r2)( triggers?| button)?$|^right triggers?$",
         "LEFT_SHOULDER": "^(l|lb|l1)( bumper| button)?$|^left (bumper|shoulder)$",
         "RIGHT_SHOULDER": "^(r|rb|r1)( bumper| button)?$|^right (bumper|shoulder)$",
         "LEFT_STICK": "^left (joystick|analog stick|thumbstick|stick)$|^(l3|ls)$",
         "RIGHT_STICK": "^right (joystick|analog stick|thumbstick|stick)$|^(r3|rs)$",
-        "DPAD": "^d-?pad$",
+        "DPAD_UP": "^(d-?pad )?up( button)?$",
+        "DPAD_DOWN": "^(d-?pad )?down( button)?$",
+        "DPAD_LEFT": "^(d-?pad )?left( button)?$",
+        "DPAD_RIGHT": "^(d-?pad )?right( button)?$",
+        "DPAD": "^(.* )?d-?pad$|^directional pads?$",
         "BACK": "^(minus|select|back|view)( button)?$",
-        "START": "^(plus|start|menu|options)( button)?$",
-        "GUIDE": "^(home|guide|ps|xbox)( button)?$",
+        "START": "^(plus|start|menu|options?)( button)?$",
+        "GUIDE": "^(home|guide|ps|xbox)( button)?$|^(xbox|steam|ps) guide button$",
         "MISC1": "^capture( button)?$",
         "TOUCHPAD": "^touch ?pad$"
       },
       "face_pattern": "^{letter}( button)?$",
       "face_letters": {
-        "nintendo": {"A": "EAST", "B": "SOUTH", "X": "NORTH", "Y": "WEST"},
-        "xbox": {"A": "SOUTH", "B": "EAST", "X": "WEST", "Y": "NORTH"},
-        "playstation": {"Cross": "SOUTH", "Circle": "EAST", "Square": "WEST", "Triangle": "NORTH"}
+        "nintendo": {
+          "A": "EAST",
+          "B": "SOUTH",
+          "X": "NORTH",
+          "Y": "WEST"
+        },
+        "xbox": {
+          "A": "SOUTH",
+          "B": "EAST",
+          "X": "WEST",
+          "Y": "NORTH"
+        },
+        "generic": {
+          "A": "SOUTH",
+          "B": "EAST",
+          "X": "WEST",
+          "Y": "NORTH"
+        },
+        "playstation": {
+          "Cross": "SOUTH",
+          "Crosss": "SOUTH",
+          "Circle": "EAST",
+          "Square": "WEST",
+          "Triangle": "NORTH"
+        }
       },
-      "confidence": 0.98
+      "confidence": 0.98,
+      "family_patterns": {
+        "playstation": {
+          "BACK": "^(share|create)( button)?$"
+        },
+        "xbox": {
+          "MISC1": "^share( button)?$"
+        }
+      },
+      "stop_if_named": 10,
+      "still_run": [
+        "shoulders-and-triggers"
+      ]
     },
     {
       "id": "face-buttons",
       "type": "diamond",
       "comment": "Four same-size buttons in a diamond on the right half.",
-      "region": {"x_min": 0.5},
+      "region": {
+        "x_min": 0.5
+      },
       "shape": "round",
       "max_size": 0.12,
       "size_tolerance": 0.15,
       "alignment_tolerance": 0.25,
-      "inputs": {"right": "EAST", "left": "WEST", "top": "NORTH", "bottom": "SOUTH"},
+      "inputs": {
+        "right": "EAST",
+        "left": "WEST",
+        "top": "NORTH",
+        "bottom": "SOUTH"
+      },
       "confidence": 0.95
     },
     {
       "id": "dpad-arrows",
       "type": "diamond",
       "comment": "Four separate arrows in a diamond on the left half, mirroring the face buttons.",
-      "region": {"x_max": 0.5},
+      "region": {
+        "x_max": 0.5
+      },
       "shape": "any",
       "max_size": 0.12,
       "size_tolerance": 0.3,
@@ -65,7 +115,12 @@
       "mirror_of": "face-buttons",
       "mirror_tolerance": 0.08,
       "mirror_y_tolerance": 0.35,
-      "inputs": {"right": "DPAD_RIGHT", "left": "DPAD_LEFT", "top": "DPAD_UP", "bottom": "DPAD_DOWN"},
+      "inputs": {
+        "right": "DPAD_RIGHT",
+        "left": "DPAD_LEFT",
+        "top": "DPAD_UP",
+        "bottom": "DPAD_DOWN"
+      },
       "confidence": 0.9
     },
     {
@@ -73,30 +128,54 @@
       "type": "sticks",
       "comment": "Round, 1.3 to 2.4 times a face button. Right: right half, nearest the face buttons. Left: left half, same size; mirror symmetry raises confidence.",
       "shape": "round",
-      "face_ratio": [1.3, 2.4],
+      "face_ratio": [
+        1.3,
+        2.4
+      ],
       "size_tolerance": 0.12,
       "mirror_tolerance": 0.06,
-      "inputs": {"right": "RIGHT_STICK", "left": "LEFT_STICK"},
+      "inputs": {
+        "right": "RIGHT_STICK",
+        "left": "LEFT_STICK"
+      },
       "confidence": 0.9
     },
     {
       "id": "trackpads",
       "type": "centre_pairs",
       "comment": "Two big round pads mirrored left and right, larger than any stick: Steam Controller trackpads.",
-      "region": {"y_max": 0.7},
-      "face_ratio": [2.5, 6.0],
+      "region": {
+        "y_max": 0.7
+      },
+      "face_ratio": [
+        2.5,
+        6.0
+      ],
       "shape": "round",
       "tolerance": 0.06,
-      "pairs": [["LEFT_TOUCHPAD", "RIGHT_TOUCHPAD"]],
+      "pairs": [
+        [
+          "LEFT_TOUCHPAD",
+          "RIGHT_TOUCHPAD"
+        ]
+      ],
       "confidence": 0.8
     },
     {
       "id": "dpad-block",
       "type": "mirror",
       "comment": "One d-pad block on the left half, where the right stick or the face buttons would be mirrored.",
-      "region": {"x_max": 0.5},
-      "face_ratio": [1.2, 4.0],
-      "mirror_of": ["RIGHT_STICK", "face-buttons"],
+      "region": {
+        "x_max": 0.5
+      },
+      "face_ratio": [
+        1.2,
+        4.0
+      ],
+      "mirror_of": [
+        "RIGHT_STICK",
+        "face-buttons"
+      ],
       "tolerance": 0.12,
       "prefer_shape": "not-round",
       "input": "DPAD",
@@ -106,28 +185,60 @@
       "id": "shoulders-and-triggers",
       "type": "top_pairs",
       "comment": "Wide shapes mirrored at the top of the drawing, topmost first: the triggers sit behind the bumpers. A single pair is taken for the bumpers.",
-      "region": {"y_max": 0.2},
+      "region": {
+        "y_max": 0.2
+      },
       "min_aspect": 1.6,
       "tolerance": 0.06,
-      "pairs": [["LEFT_TRIGGER", "RIGHT_TRIGGER"], ["LEFT_SHOULDER", "RIGHT_SHOULDER"]],
+      "pairs": [
+        [
+          "LEFT_TRIGGER",
+          "RIGHT_TRIGGER"
+        ],
+        [
+          "LEFT_SHOULDER",
+          "RIGHT_SHOULDER"
+        ]
+      ],
       "confidence": 0.85
     },
     {
       "id": "centre-pairs",
       "type": "centre_pairs",
       "comment": "Small buttons mirrored around the centre: the widest pair is Back/Start (minus/plus, share/options), the next Misc/Guide (capture/home).",
-      "region": {"x_min": 0.2, "x_max": 0.8, "y_max": 0.6},
-      "face_ratio": [0.0, 1.05],
+      "region": {
+        "x_min": 0.2,
+        "x_max": 0.8,
+        "y_max": 0.6
+      },
+      "face_ratio": [
+        0.0,
+        1.05
+      ],
       "tolerance": 0.04,
-      "pairs": [["BACK", "START"], ["MISC1", "GUIDE"]],
+      "pairs": [
+        [
+          "BACK",
+          "START"
+        ],
+        [
+          "MISC1",
+          "GUIDE"
+        ]
+      ],
       "confidence": 0.8
     },
     {
       "id": "guide",
       "type": "centre_single",
       "comment": "A small button alone on the centre line.",
-      "region": {"y_max": 0.7},
-      "face_ratio": [0.0, 1.3],
+      "region": {
+        "y_max": 0.7
+      },
+      "face_ratio": [
+        0.0,
+        1.3
+      ],
       "tolerance": 0.03,
       "input": "GUIDE",
       "confidence": 0.7
@@ -136,7 +247,9 @@
       "id": "touchpad",
       "type": "centre_single",
       "comment": "A wide rectangle centred near the top: a touchpad (not a thin strip such as the top of the shoulders).",
-      "region": {"y_max": 0.45},
+      "region": {
+        "y_max": 0.45
+      },
       "min_width": 0.2,
       "max_width": 0.6,
       "max_aspect": 4,

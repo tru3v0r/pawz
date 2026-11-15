@@ -58,7 +58,7 @@ The stylesheet (`CSS` in `ui/windows.py`), inline styles and icons are written i
 - `run-windows.ps1`, `build-windows.ps1`, `test-build-windows.ps1`: run from source, build, check a build (below).
 - `update-translations.py`: extract and compile translations (above).
 - `update-logo.py`: rebuilds `src/pawz/ui/assets/logo.svg` (framed square, PowerPoint's invisible text layer removed) and `logo.ico` from `design/logo/logo.svg`; `design/` (git-ignored) holds the working files.
-- `vendor-controller-assets.py`: downloads the pinned Gamepad Prompt Asset Pack and Gamepad Asset Pack files and rewrites `upstream-manifest.json`; `DETAILED_ARTWORK` lists the detailed drawings and the layers removed from them (logos), recorded in the manifest. Never run by the app.
+- `vendor-controller-assets.py`: downloads the pinned Gamepad Prompt Asset Pack and Gamepad Asset Pack files and rewrites `upstream-manifest.json`; `DETAILED_ARTWORK` lists the detailed drawings and what changes in them, by Inkscape label or element id: elements removed (logos, a chroma-key screen) and hidden layers shown (`show:`), recorded in the manifest. Never run by the app.
 - `generate-controller-illustrations.py`: redraws the four pawz controller drawings and the axis icons.
 
 ## Build

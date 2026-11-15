@@ -39,7 +39,7 @@
         "NORTH": "Y"
       },
       "hardware_mapping": {},
-      "svg": "library/xbox-360.svg",
+      "svg": "library/xbox-360-detailed.svg",
       "verified": false,
       "provenance": "Presentation only; hardware mapping delegated to installed SDL2. https://github.com/libsdl-org/SDL/blob/SDL2/include/SDL_gamecontroller.h; no device verified by pawz."
     },
@@ -69,7 +69,7 @@
         "NORTH": "Y"
       },
       "hardware_mapping": {},
-      "svg": "library/xbox-wireless.svg",
+      "svg": "library/xbox-one-detailed.svg",
       "verified": false,
       "provenance": "Presentation only; hardware mapping delegated to installed SDL2. https://github.com/libsdl-org/SDL/blob/SDL2/include/SDL_gamecontroller.h; no device verified by pawz."
     },
@@ -99,7 +99,7 @@
         "NORTH": "Y"
       },
       "hardware_mapping": {},
-      "svg": "library/xbox-wireless.svg",
+      "svg": "library/xbox-one-s-detailed.svg",
       "verified": false,
       "provenance": "Presentation only; hardware mapping delegated to installed SDL2. https://github.com/libsdl-org/SDL/blob/SDL2/include/SDL_gamecontroller.h; no device verified by pawz."
     },
@@ -129,7 +129,7 @@
         "NORTH": "Y"
       },
       "hardware_mapping": {},
-      "svg": "library/xbox-wireless.svg",
+      "svg": "library/xbox-series-detailed.svg",
       "verified": false,
       "provenance": "Presentation only; hardware mapping delegated to installed SDL2. https://github.com/libsdl-org/SDL/blob/SDL2/include/SDL_gamecontroller.h; no device verified by pawz."
     },
@@ -159,7 +159,7 @@
         "NORTH": "Y"
       },
       "hardware_mapping": {},
-      "svg": "library/xbox-wireless.svg",
+      "svg": "library/xbox-one-detailed.svg",
       "verified": false,
       "provenance": "Presentation only; hardware mapping delegated to installed SDL2. https://github.com/libsdl-org/SDL/blob/SDL2/include/SDL_gamecontroller.h; no device verified by pawz."
     },
@@ -189,7 +189,7 @@
         "NORTH": "Y"
       },
       "hardware_mapping": {},
-      "svg": "library/xbox-wireless.svg",
+      "svg": "library/xbox-series-detailed.svg",
       "verified": false,
       "provenance": "Presentation only; hardware mapping delegated to installed SDL2. https://github.com/libsdl-org/SDL/blob/SDL2/include/SDL_gamecontroller.h; no device verified by pawz."
     },
@@ -279,7 +279,7 @@
         "NORTH": "Triangle"
       },
       "hardware_mapping": {},
-      "svg": "library/dualshock-4.svg",
+      "svg": "library/dualshock-4-detailed.svg",
       "verified": false,
       "provenance": "Presentation only; hardware mapping delegated to installed SDL2. https://github.com/libsdl-org/SDL/blob/SDL2/include/SDL_gamecontroller.h; no device verified by pawz."
     },
@@ -309,7 +309,7 @@
         "NORTH": "Triangle"
       },
       "hardware_mapping": {},
-      "svg": "library/dualsense.svg",
+      "svg": "library/dualsense-detailed.svg",
       "verified": false,
       "provenance": "Presentation only; hardware mapping delegated to installed SDL2. https://github.com/libsdl-org/SDL/blob/SDL2/include/SDL_gamecontroller.h; no device verified by pawz."
     },
@@ -339,7 +339,7 @@
         "NORTH": "Triangle"
       },
       "hardware_mapping": {},
-      "svg": "library/dualsense.svg",
+      "svg": "library/dualsense-detailed.svg",
       "verified": false,
       "provenance": "Presentation only; hardware mapping delegated to installed SDL2. https://github.com/libsdl-org/SDL/blob/SDL2/include/SDL_gamecontroller.h; no device verified by pawz."
     },
@@ -399,7 +399,7 @@
         "NORTH": "X"
       },
       "hardware_mapping": {},
-      "svg": "library/joycon.svg",
+      "svg": "library/joycon-detailed.svg",
       "verified": false,
       "provenance": "Presentation only; hardware mapping delegated to installed SDL2. https://github.com/libsdl-org/SDL/blob/SDL2/include/SDL_gamecontroller.h; no device verified by pawz."
     },
@@ -519,7 +519,7 @@
         "NORTH": "Y"
       },
       "hardware_mapping": {},
-      "svg": "library/steam-controller.svg",
+      "svg": "library/steam-controller-detailed.svg",
       "verified": false,
       "provenance": "Presentation only; hardware mapping delegated to installed SDL2. https://github.com/libsdl-org/SDL/blob/SDL2/include/SDL_gamecontroller.h; no device verified by pawz."
     },
@@ -549,7 +549,7 @@
         "NORTH": "Y"
       },
       "hardware_mapping": {},
-      "svg": "library/steam-deck.svg",
+      "svg": "library/steam-deck-detailed.svg",
       "verified": false,
       "provenance": "Presentation only; hardware mapping delegated to installed SDL2. https://github.com/libsdl-org/SDL/blob/SDL2/include/SDL_gamecontroller.h; no device verified by pawz."
     }

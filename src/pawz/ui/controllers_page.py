@@ -88,6 +88,10 @@ class IllustrationDialog(QDialog):
         for definition in catalog.definitions:
             if definition.svg:
                 names.setdefault(definition.svg, model_name(definition))
+        for definition in catalog.definitions:  # x-detailed.svg in use: x.svg is its silhouette
+            if definition.svg and definition.svg.endswith("-detailed.svg"):
+                silhouette = definition.svg.removesuffix("-detailed.svg") + ".svg"
+                names.setdefault(silhouette, tr("{model} (silhouette)").format(model=model_name(definition)))
         root = QVBoxLayout(self)
         body = QHBoxLayout()
         column = QVBoxLayout()

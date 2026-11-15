@@ -99,10 +99,17 @@ class Detector:
         self.face_size: float | None = None
 
     def run(self, shapes: list[Shape]) -> dict[str, tuple[str, int]]:
+        only: set[str] | None = None  # set once a rule's stop_if_named is reached
         for rule in self.rules.get("rules", []):
+            if only is not None and rule["id"] not in only:
+                continue
             handler = getattr(self, "_" + rule["type"], None)
             if handler is not None:
                 handler(rule, [shape for shape in shapes if shape.id not in self.found])
+            # A drawing whose layers named most inputs needs no geometric guesses,
+            # which would only add wrong ones (a touchpad on a pad that has none).
+            if "stop_if_named" in rule and len(self.found) >= rule["stop_if_named"]:
+                only = set(rule.get("still_run", []))
         minimum = self.rules.get("min_confidence", 0)
         results = {element: (name, round(score * 100)) for element, (name, score) in self.found.items()}
         return {element: result for element, result in results.items() if result[1] >= minimum}
@@ -130,15 +137,20 @@ class Detector:
         Nintendo controller, the left one on an Xbox one); without a family they are
         left to the geometric rules.
         """
-        patterns = {name: re.compile(pattern, re.IGNORECASE) for name, pattern in rule.get("patterns", {}).items()}
-        letters = rule.get("face_letters", {}).get(self.family or "", {})
+        family = self.family or ""
+        # Family patterns first: they decide words that differ between brands
+        # ("Share" is Back on a PlayStation pad, the capture button on an Xbox).
+        entries = list(rule.get("family_patterns", {}).get(family, {}).items())
+        entries += list(rule.get("patterns", {}).items())
         face_pattern = rule.get("face_pattern", "^{letter}( button)?$")
-        for letter, name in letters.items():
-            patterns.setdefault(name, re.compile(face_pattern.format(letter=re.escape(letter)), re.IGNORECASE))
+        entries += [(name, face_pattern.format(letter=re.escape(letter)))
+                    for letter, name in rule.get("face_letters", {}).get(family, {}).items()]
+        compiled = [(name, re.compile(pattern, re.IGNORECASE)) for name, pattern in entries]
         for element_id, label in self.labels.items():
-            for name, pattern in patterns.items():
-                if pattern.search(label.strip()) and not self._taken(name):
-                    self.found[element_id] = (name, rule.get("confidence", 1))
+            for name, pattern in compiled:
+                if pattern.search(label.strip()):
+                    if not self._taken(name):
+                        self.found[element_id] = (name, rule.get("confidence", 1))
                     break
 
     def _top_pairs(self, rule: dict, shapes: list[Shape]):
