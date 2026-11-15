@@ -1,0 +1,13 @@
+{
+  "extName": {"message": "pawz Browser Bridge"},
+  "extDescription": {"message": "Ibinabahagi ang domain ng aktibong tab sa lokal na pawz desktop app."},
+  "optionsTitle": {"message": "pawz · Extension"},
+  "optionsHeading": {"message": "pawz · Koneksyon ng browser"},
+  "tokenHelpBefore": {"message": "Kopyahin ang value na"},
+  "tokenHelpAfter": {"message": "mula sa"},
+  "tokenPlaceholder": {"message": "Lokal na token ng koneksyon"},
+  "portHelpBefore": {"message": "Port (ang value na"},
+  "portHelpAfter": {"message": "sa parehong file, 8765 bilang default)"},
+  "save": {"message": "I-save"},
+  "saved": {"message": "Na-save ang mga setting."}
+}

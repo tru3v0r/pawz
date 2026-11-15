@@ -1,0 +1,13 @@
+{
+  "extName": {"message": "pawz Browser Bridge"},
+  "extDescription": {"message": "將目前分頁的網域分享給本機的 pawz 桌面應用程式。"},
+  "optionsTitle": {"message": "pawz · 擴充功能"},
+  "optionsHeading": {"message": "pawz · 瀏覽器連線"},
+  "tokenHelpBefore": {"message": "複製"},
+  "tokenHelpAfter": {"message": "的值，來源檔案："},
+  "tokenPlaceholder": {"message": "本機連線權杖"},
+  "portHelpBefore": {"message": "連接埠（同一檔案中的"},
+  "portHelpAfter": {"message": "值，預設為 8765）"},
+  "save": {"message": "儲存"},
+  "saved": {"message": "設定已儲存。"}
+}

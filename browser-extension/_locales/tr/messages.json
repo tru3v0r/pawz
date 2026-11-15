@@ -1,0 +1,13 @@
+{
+  "extName": {"message": "pawz Browser Bridge"},
+  "extDescription": {"message": "Etkin sekmenin alan adını yerel pawz masaüstü uygulamasıyla paylaşır."},
+  "optionsTitle": {"message": "pawz · Uzantı"},
+  "optionsHeading": {"message": "pawz · Tarayıcı bağlantısı"},
+  "tokenHelpBefore": {"message": "Şu değeri kopyalayın:"},
+  "tokenHelpAfter": {"message": "— kaynak dosya:"},
+  "tokenPlaceholder": {"message": "Yerel bağlantı belirteci"},
+  "portHelpBefore": {"message": "Port (aynı dosyadaki"},
+  "portHelpAfter": {"message": "değeri, varsayılan olarak 8765)"},
+  "save": {"message": "Kaydet"},
+  "saved": {"message": "Ayarlar kaydedildi."}
+}

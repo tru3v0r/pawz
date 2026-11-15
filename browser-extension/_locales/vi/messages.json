@@ -1,0 +1,13 @@
+{
+  "extName": {"message": "pawz Browser Bridge"},
+  "extDescription": {"message": "Chia sẻ tên miền của tab đang mở với ứng dụng máy tính pawz cục bộ."},
+  "optionsTitle": {"message": "pawz · Tiện ích"},
+  "optionsHeading": {"message": "pawz · Kết nối trình duyệt"},
+  "tokenHelpBefore": {"message": "Sao chép giá trị"},
+  "tokenHelpAfter": {"message": "từ"},
+  "tokenPlaceholder": {"message": "Mã kết nối cục bộ"},
+  "portHelpBefore": {"message": "Cổng (giá trị"},
+  "portHelpAfter": {"message": "trong cùng tệp, mặc định là 8765)"},
+  "save": {"message": "Lưu"},
+  "saved": {"message": "Đã lưu cài đặt."}
+}

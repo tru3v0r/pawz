@@ -1,0 +1,13 @@
+{
+  "extName": {"message": "pawz Browser Bridge"},
+  "extDescription": {"message": "แชร์โดเมนของแท็บที่ใช้งานอยู่กับแอปเดสก์ท็อป pawz ในเครื่อง"},
+  "optionsTitle": {"message": "pawz · ส่วนขยาย"},
+  "optionsHeading": {"message": "pawz · การเชื่อมต่อเบราว์เซอร์"},
+  "tokenHelpBefore": {"message": "คัดลอกค่า"},
+  "tokenHelpAfter": {"message": "จาก"},
+  "tokenPlaceholder": {"message": "โทเค็นการเชื่อมต่อในเครื่อง"},
+  "portHelpBefore": {"message": "พอร์ต (ค่า"},
+  "portHelpAfter": {"message": "ในไฟล์เดียวกัน ค่าเริ่มต้นคือ 8765)"},
+  "save": {"message": "บันทึก"},
+  "saved": {"message": "บันทึกการตั้งค่าแล้ว"}
+}

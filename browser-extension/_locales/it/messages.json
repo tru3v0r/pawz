@@ -1,0 +1,13 @@
+{
+  "extName": {"message": "pawz Browser Bridge"},
+  "extDescription": {"message": "Condivide il dominio della scheda attiva con l'app desktop pawz locale."},
+  "optionsTitle": {"message": "pawz · Estensione"},
+  "optionsHeading": {"message": "pawz · Connessione al browser"},
+  "tokenHelpBefore": {"message": "Copia il valore"},
+  "tokenHelpAfter": {"message": "da"},
+  "tokenPlaceholder": {"message": "Token di connessione locale"},
+  "portHelpBefore": {"message": "Porta (il valore"},
+  "portHelpAfter": {"message": "nello stesso file, 8765 per impostazione predefinita)"},
+  "save": {"message": "Salva"},
+  "saved": {"message": "Impostazioni salvate."}
+}

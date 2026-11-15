@@ -1,0 +1,13 @@
+{
+  "extName": {"message": "pawz Browser Bridge"},
+  "extDescription": {"message": "Compartilha o domínio da aba ativa com o aplicativo de desktop pawz local."},
+  "optionsTitle": {"message": "pawz · Extensão"},
+  "optionsHeading": {"message": "pawz · Conexão com o navegador"},
+  "tokenHelpBefore": {"message": "Copie o valor"},
+  "tokenHelpAfter": {"message": "de"},
+  "tokenPlaceholder": {"message": "Token de conexão local"},
+  "portHelpBefore": {"message": "Porta (o valor"},
+  "portHelpAfter": {"message": "do mesmo arquivo, 8765 por padrão)"},
+  "save": {"message": "Salvar"},
+  "saved": {"message": "Configurações salvas."}
+}

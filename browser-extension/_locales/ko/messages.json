@@ -1,0 +1,13 @@
+{
+  "extName": {"message": "pawz Browser Bridge"},
+  "extDescription": {"message": "활성 탭의 도메인을 로컬 pawz 데스크톱 앱과 공유합니다."},
+  "optionsTitle": {"message": "pawz · 확장 프로그램"},
+  "optionsHeading": {"message": "pawz · 브라우저 연결"},
+  "tokenHelpBefore": {"message": "다음"},
+  "tokenHelpAfter": {"message": "값을 복사하세요. 위치:"},
+  "tokenPlaceholder": {"message": "로컬 연결 토큰"},
+  "portHelpBefore": {"message": "포트(같은 파일의"},
+  "portHelpAfter": {"message": "값, 기본값 8765)"},
+  "save": {"message": "저장"},
+  "saved": {"message": "설정이 저장되었습니다."}
+}

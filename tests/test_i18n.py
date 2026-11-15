@@ -56,8 +56,52 @@ def test_auto_follows_windows_when_the_language_is_offered():
     assert i18n.resolve("fr") == "fr"
     assert i18n.resolve("en", QLocale(QLocale.Language.French)) == "en"
     assert i18n.resolve("auto", QLocale(QLocale.Language.French, QLocale.Country.Canada)) == "fr"
-    assert i18n.resolve("auto", QLocale(QLocale.Language.Japanese)) == "en"
-    assert i18n.resolve("klingon", QLocale(QLocale.Language.German)) == "en"
+    assert i18n.resolve("auto", QLocale(QLocale.Language.Japanese)) == "ja"
+    assert i18n.resolve("auto", QLocale(QLocale.Language.Swahili)) == "en"
+    assert i18n.resolve("klingon", QLocale(QLocale.Language.German)) == "de"
+    assert i18n.resolve("klingon", QLocale(QLocale.Language.Swahili)) == "en"
+
+
+@pytest.mark.parametrize(("tag", "code"), [
+    ("es-ES", "es_ES"), ("es-MX", "es_419"), ("es", "es_419"),
+    ("pt-BR", "pt_BR"), ("pt", "pt_BR"), ("pt-PT", "pt_PT"), ("pt-AO", "pt_PT"),
+    ("zh-Hans-CN", "zh_CN"), ("zh-CN", "zh_CN"), ("zh-Hant-TW", "zh_TW"), ("zh-HK", "zh_TW"),
+    ("ku", "kmr"), ("ku-TR", "kmr"), ("ku-Arab-IQ", "ckb"), ("ku-IQ", "ckb"), ("ckb", "ckb"),
+    ("nb-NO", "nb"), ("no", "nb"), ("nn-NO", "nb"), ("tl", "fil"), ("fil-PH", "fil"),
+    ("tzm", "zgh"), ("zgh-MA", "zgh"), ("kab-DZ", "kab"), ("fr-CA", "fr"), ("ar-MA", "ar"),
+    ("sw-KE", None),
+])
+def test_system_languages_map_to_the_offered_variety(tag, code):
+    assert i18n.match(tag) == code
+
+
+def test_every_language_has_its_qt_buttons(qapp):
+    """Languages Qt does not translate get OK, Cancel, Yes, No and Save from pawz."""
+    import json
+
+    from PySide6.QtCore import QLibraryInfo, QTranslator
+    buttons = json.loads(i18n.BUTTONS_FILE.read_text(encoding="utf-8"))
+    qt_dir = QLibraryInfo.path(QLibraryInfo.LibraryPath.TranslationsPath)
+    for code in i18n.LANGUAGES:
+        if code == i18n.SOURCE_LANGUAGE:
+            continue
+        if code != "pt_PT" and QTranslator().load(f"qtbase_{code}", qt_dir):
+            continue
+        assert {"OK", "Cancel", "&Yes", "&No", "Save"} <= set(buttons.get(code, {})), code
+
+
+def test_right_to_left_languages_mirror_the_interface(qapp):
+    from PySide6.QtCore import Qt
+    from PySide6.QtWidgets import QDialogButtonBox
+    try:
+        assert i18n.install(qapp, "ckb") == "ckb"
+        assert qapp.layoutDirection() == Qt.LayoutDirection.RightToLeft
+        box = QDialogButtonBox(QDialogButtonBox.StandardButton.Cancel)
+        assert box.buttons()[0].text() not in ("", "Cancel")
+        i18n.install(qapp, "fr")
+        assert qapp.layoutDirection() == Qt.LayoutDirection.LeftToRight
+    finally:
+        i18n.install(qapp, "en")
 
 
 def test_install_switches_the_interface_language(qapp):
@@ -90,10 +134,31 @@ def test_settings_dialog_offers_languages_and_explains_the_restart(qtbot):
     qtbot.addWidget(dialog)
     assert dialog.tabs.tabText(1) == "DISPLAY"
     picker = dialog.language_picker
-    assert [picker.itemData(i) for i in range(picker.count())] == ["auto", "en", "fr"]
-    assert picker.itemText(2) == "Français"
+    codes = [picker.itemData(i) for i in range(picker.count())]
+    assert codes[0] == "auto" and codes[1:] == list(i18n.LANGUAGES)
+    french = picker.findData("fr")
+    assert picker.itemText(french) == "Français"
     assert dialog.display_note.isHidden() and not dialog.display_changed()
-    picker.setCurrentIndex(2)
+    picker.setCurrentIndex(french)
     assert not dialog.display_note.isHidden() and dialog.display_changed()
     picker.setCurrentIndex(0)
     assert dialog.display_note.isHidden()
+
+
+def test_every_translation_has_an_estimated_quality():
+    assert set(i18n.QUALITY) == set(i18n.LANGUAGES) - {i18n.SOURCE_LANGUAGE}
+    assert set(i18n.QUALITY.values()) <= set(i18n.QUALITY_NAMES)
+    assert i18n.quality_note("en") == ""
+
+
+def test_settings_shows_the_quality_and_invites_speakers_to_help(qtbot):
+    from pawz.ui.windows import SettingsDialog
+    dialog = SettingsDialog(Settings.defaults())
+    qtbot.addWidget(dialog)
+    picker, note = dialog.language_picker, dialog.language_note
+    picker.setCurrentIndex(picker.findData("fr"))
+    assert "rated excellent" in note.text() and "github.com" not in note.text()
+    picker.setCurrentIndex(picker.findData("kab"))
+    assert "rated fragile" in note.text() and i18n.TRANSLATIONS_URL in note.text()
+    picker.setCurrentIndex(picker.findData("en"))
+    assert note.isHidden()

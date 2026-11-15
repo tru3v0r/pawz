@@ -1,0 +1,292 @@
+{
+ "ar": {
+  "OK": "موافق",
+  "Cancel": "إلغاء",
+  "&Yes": "&نعم",
+  "&No": "&لا",
+  "Save": "حفظ",
+  "Close": "إغلاق",
+  "Apply": "تطبيق",
+  "Open": "فتح"
+ },
+ "bn": {
+  "OK": "ঠিক আছে",
+  "Cancel": "বাতিল করুন",
+  "&Yes": "হ্যাঁ(&Y)",
+  "&No": "না(&N)",
+  "Save": "সংরক্ষণ করুন",
+  "Close": "বন্ধ করুন",
+  "Apply": "প্রয়োগ করুন",
+  "Open": "খুলুন"
+ },
+ "ckb": {
+  "OK": "باشە",
+  "Cancel": "هەڵوەشاندنەوە",
+  "&Yes": "&بەڵێ",
+  "&No": "&نەخێر",
+  "Save": "پاشەکەوتکردن",
+  "Close": "داخستن",
+  "Apply": "جێبەجێکردن",
+  "Open": "کردنەوە"
+ },
+ "de": {
+  "OK": "OK",
+  "Cancel": "Abbrechen",
+  "&Yes": "&Ja",
+  "&No": "&Nein",
+  "Save": "Speichern",
+  "Close": "Schließen",
+  "Apply": "Übernehmen",
+  "Open": "Öffnen"
+ },
+ "es_419": {
+  "OK": "Aceptar",
+  "Cancel": "Cancelar",
+  "&Yes": "&Sí",
+  "&No": "&No",
+  "Save": "Guardar",
+  "Close": "Cerrar",
+  "Apply": "Aplicar",
+  "Open": "Abrir"
+ },
+ "es_ES": {
+  "OK": "Aceptar",
+  "Cancel": "Cancelar",
+  "&Yes": "&Sí",
+  "&No": "&No",
+  "Save": "Guardar",
+  "Close": "Cerrar",
+  "Apply": "Aplicar",
+  "Open": "Abrir"
+ },
+ "fi": {
+  "OK": "OK",
+  "Cancel": "Peruuta",
+  "&Yes": "&Kyllä",
+  "&No": "&Ei",
+  "Save": "Tallenna",
+  "Close": "Sulje",
+  "Apply": "Käytä",
+  "Open": "Avaa"
+ },
+ "fil": {
+  "OK": "OK",
+  "Cancel": "Kanselahin",
+  "&Yes": "&Oo",
+  "&No": "&Hindi",
+  "Save": "I-save",
+  "Close": "Isara",
+  "Apply": "Ilapat",
+  "Open": "Buksan"
+ },
+ "fr": {
+  "OK": "OK",
+  "Cancel": "Annuler",
+  "&Yes": "&Oui",
+  "&No": "&Non",
+  "Save": "Enregistrer",
+  "Close": "Fermer",
+  "Apply": "Appliquer",
+  "Open": "Ouvrir"
+ },
+ "hi": {
+  "OK": "ठीक है",
+  "Cancel": "रद्द करें",
+  "&Yes": "हाँ(&Y)",
+  "&No": "नहीं(&N)",
+  "Save": "सहेजें",
+  "Close": "बंद करें",
+  "Apply": "लागू करें",
+  "Open": "खोलें"
+ },
+ "id": {
+  "OK": "OK",
+  "Cancel": "Batal",
+  "&Yes": "&Ya",
+  "&No": "&Tidak",
+  "Save": "Simpan",
+  "Close": "Tutup",
+  "Apply": "Terapkan",
+  "Open": "Buka"
+ },
+ "it": {
+  "OK": "OK",
+  "Cancel": "Annulla",
+  "&Yes": "&Sì",
+  "&No": "&No",
+  "Save": "Salva",
+  "Close": "Chiudi",
+  "Apply": "Applica",
+  "Open": "Apri"
+ },
+ "ja": {
+  "OK": "OK",
+  "Cancel": "キャンセル",
+  "&Yes": "はい(&Y)",
+  "&No": "いいえ(&N)",
+  "Save": "保存",
+  "Close": "閉じる",
+  "Apply": "適用",
+  "Open": "開く"
+ },
+ "kab": {
+  "OK": "IH",
+  "Cancel": "Sefsex",
+  "&Yes": "&Ih",
+  "&No": "&Uhu",
+  "Save": "Sekles",
+  "Close": "Mdel",
+  "Apply": "Snes",
+  "Open": "Ldi"
+ },
+ "kmr": {
+  "OK": "Baş e",
+  "Cancel": "Betal bike",
+  "&Yes": "&Erê",
+  "&No": "&Na",
+  "Save": "Tomar bike",
+  "Close": "Bigire",
+  "Apply": "Bisepîne",
+  "Open": "Veke"
+ },
+ "ko": {
+  "OK": "확인",
+  "Cancel": "취소",
+  "&Yes": "예(&Y)",
+  "&No": "아니요(&N)",
+  "Save": "저장",
+  "Close": "닫기",
+  "Apply": "적용",
+  "Open": "열기"
+ },
+ "nb": {
+  "OK": "OK",
+  "Cancel": "Avbryt",
+  "&Yes": "&Ja",
+  "&No": "&Nei",
+  "Save": "Lagre",
+  "Close": "Lukk",
+  "Apply": "Bruk",
+  "Open": "Åpne"
+ },
+ "pl": {
+  "OK": "OK",
+  "Cancel": "Anuluj",
+  "&Yes": "&Tak",
+  "&No": "&Nie",
+  "Save": "Zapisz",
+  "Close": "Zamknij",
+  "Apply": "Zastosuj",
+  "Open": "Otwórz"
+ },
+ "pt_BR": {
+  "OK": "OK",
+  "Cancel": "Cancelar",
+  "&Yes": "&Sim",
+  "&No": "&Não",
+  "Save": "Salvar",
+  "Close": "Fechar",
+  "Apply": "Aplicar",
+  "Open": "Abrir"
+ },
+ "pt_PT": {
+  "OK": "OK",
+  "Cancel": "Cancelar",
+  "&Yes": "&Sim",
+  "&No": "&Não",
+  "Save": "Guardar",
+  "Close": "Fechar",
+  "Apply": "Aplicar",
+  "Open": "Abrir"
+ },
+ "ru": {
+  "OK": "ОК",
+  "Cancel": "Отмена",
+  "&Yes": "&Да",
+  "&No": "&Нет",
+  "Save": "Сохранить",
+  "Close": "Закрыть",
+  "Apply": "Применить",
+  "Open": "Открыть"
+ },
+ "sv": {
+  "OK": "OK",
+  "Cancel": "Avbryt",
+  "&Yes": "&Ja",
+  "&No": "&Nej",
+  "Save": "Spara",
+  "Close": "Stäng",
+  "Apply": "Verkställ",
+  "Open": "Öppna"
+ },
+ "th": {
+  "OK": "ตกลง",
+  "Cancel": "ยกเลิก",
+  "&Yes": "&ใช่",
+  "&No": "&ไม่",
+  "Save": "บันทึก",
+  "Close": "ปิด",
+  "Apply": "นำไปใช้",
+  "Open": "เปิด"
+ },
+ "tr": {
+  "OK": "Tamam",
+  "Cancel": "İptal",
+  "&Yes": "&Evet",
+  "&No": "&Hayır",
+  "Save": "Kaydet",
+  "Close": "Kapat",
+  "Apply": "Uygula",
+  "Open": "Aç"
+ },
+ "uk": {
+  "OK": "OK",
+  "Cancel": "Скасувати",
+  "&Yes": "&Так",
+  "&No": "&Ні",
+  "Save": "Зберегти",
+  "Close": "Закрити",
+  "Apply": "Застосувати",
+  "Open": "Відкрити"
+ },
+ "vi": {
+  "OK": "OK",
+  "Cancel": "Hủy",
+  "&Yes": "&Có",
+  "&No": "&Không",
+  "Save": "Lưu",
+  "Close": "Đóng",
+  "Apply": "Áp dụng",
+  "Open": "Mở"
+ },
+ "zgh": {
+  "OK": "ⵡⴰⵅⵅⴰ",
+  "Cancel": "ⵙⵔ",
+  "&Yes": "&ⵢⴰⵀ",
+  "&No": "&ⵓⵀⵓ",
+  "Save": "ⵃⴹⵓ",
+  "Close": "ⵇⵇⵏ",
+  "Apply": "ⵙⵎⵔⵙ",
+  "Open": "ⵕⵥⵎ"
+ },
+ "zh_CN": {
+  "OK": "确定",
+  "Cancel": "取消",
+  "&Yes": "是(&Y)",
+  "&No": "否(&N)",
+  "Save": "保存",
+  "Close": "关闭",
+  "Apply": "应用",
+  "Open": "打开"
+ },
+ "zh_TW": {
+  "OK": "確定",
+  "Cancel": "取消",
+  "&Yes": "是(&Y)",
+  "&No": "否(&N)",
+  "Save": "儲存",
+  "Close": "關閉",
+  "Apply": "套用",
+  "Open": "開啟"
+ }
+}

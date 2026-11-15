@@ -1,0 +1,13 @@
+{
+  "extName": {"message": "pawz Browser Bridge"},
+  "extDescription": {"message": "يشارك نطاق علامة التبويب النشطة مع تطبيق pawz المحلي لسطح المكتب."},
+  "optionsTitle": {"message": "pawz · الملحق"},
+  "optionsHeading": {"message": "pawz · اتصال المتصفح"},
+  "tokenHelpBefore": {"message": "انسخ القيمة"},
+  "tokenHelpAfter": {"message": "من"},
+  "tokenPlaceholder": {"message": "رمز الاتصال المحلي"},
+  "portHelpBefore": {"message": "المنفذ (القيمة"},
+  "portHelpAfter": {"message": "في الملف نفسه، 8765 افتراضيًا)"},
+  "save": {"message": "حفظ"},
+  "saved": {"message": "تم حفظ الإعدادات."}
+}

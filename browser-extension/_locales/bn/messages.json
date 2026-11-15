@@ -1,0 +1,13 @@
+{
+  "extName": {"message": "pawz Browser Bridge"},
+  "extDescription": {"message": "সক্রিয় ট্যাবের ডোমেইন স্থানীয় pawz ডেস্কটপ অ্যাপের সাথে শেয়ার করে।"},
+  "optionsTitle": {"message": "pawz · এক্সটেনশন"},
+  "optionsHeading": {"message": "pawz · ব্রাউজার সংযোগ"},
+  "tokenHelpBefore": {"message": "এই মানটি কপি করুন:"},
+  "tokenHelpAfter": {"message": "— উৎস ফাইল:"},
+  "tokenPlaceholder": {"message": "স্থানীয় সংযোগ টোকেন"},
+  "portHelpBefore": {"message": "পোর্ট (একই ফাইলের"},
+  "portHelpAfter": {"message": "মান, ডিফল্টভাবে 8765)"},
+  "save": {"message": "সংরক্ষণ করুন"},
+  "saved": {"message": "সেটিংস সংরক্ষিত হয়েছে।"}
+}

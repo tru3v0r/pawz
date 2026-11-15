@@ -1,0 +1,13 @@
+{
+  "extName": {"message": "pawz Browser Bridge"},
+  "extDescription": {"message": "Partilha o domínio do separador ativo com a aplicação de ambiente de trabalho pawz local."},
+  "optionsTitle": {"message": "pawz · Extensão"},
+  "optionsHeading": {"message": "pawz · Ligação ao browser"},
+  "tokenHelpBefore": {"message": "Copie o valor"},
+  "tokenHelpAfter": {"message": "de"},
+  "tokenPlaceholder": {"message": "Token de ligação local"},
+  "portHelpBefore": {"message": "Porta (o valor"},
+  "portHelpAfter": {"message": "do mesmo ficheiro, 8765 por predefinição)"},
+  "save": {"message": "Guardar"},
+  "saved": {"message": "Definições guardadas."}
+}

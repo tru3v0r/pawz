@@ -1,0 +1,13 @@
+{
+  "extName": {"message": "pawz Browser Bridge"},
+  "extDescription": {"message": "Передає домен активної вкладки локальній програмі pawz."},
+  "optionsTitle": {"message": "pawz · Розширення"},
+  "optionsHeading": {"message": "pawz · Підключення браузера"},
+  "tokenHelpBefore": {"message": "Скопіюйте значення"},
+  "tokenHelpAfter": {"message": "з"},
+  "tokenPlaceholder": {"message": "Локальний токен підключення"},
+  "portHelpBefore": {"message": "Порт (значення"},
+  "portHelpAfter": {"message": "у тому самому файлі, за замовчуванням 8765)"},
+  "save": {"message": "Зберегти"},
+  "saved": {"message": "Параметри збережено."}
+}

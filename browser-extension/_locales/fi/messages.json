@@ -1,0 +1,13 @@
+{
+  "extName": {"message": "pawz Browser Bridge"},
+  "extDescription": {"message": "Jakaa aktiivisen välilehden verkkotunnuksen paikallisen pawz-työpöytäsovelluksen kanssa."},
+  "optionsTitle": {"message": "pawz · Laajennus"},
+  "optionsHeading": {"message": "pawz · Selainyhteys"},
+  "tokenHelpBefore": {"message": "Kopioi arvo"},
+  "tokenHelpAfter": {"message": "tiedostosta"},
+  "tokenPlaceholder": {"message": "Paikallisen yhteyden tunnus"},
+  "portHelpBefore": {"message": "Portti (arvo"},
+  "portHelpAfter": {"message": "samassa tiedostossa, oletuksena 8765)"},
+  "save": {"message": "Tallenna"},
+  "saved": {"message": "Asetukset tallennettu."}
+}

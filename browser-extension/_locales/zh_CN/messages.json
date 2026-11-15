@@ -1,0 +1,13 @@
+{
+  "extName": {"message": "pawz Browser Bridge"},
+  "extDescription": {"message": "将当前标签页的域名共享给本机的 pawz 桌面应用。"},
+  "optionsTitle": {"message": "pawz · 扩展"},
+  "optionsHeading": {"message": "pawz · 浏览器连接"},
+  "tokenHelpBefore": {"message": "复制"},
+  "tokenHelpAfter": {"message": "的值，来源文件："},
+  "tokenPlaceholder": {"message": "本地连接令牌"},
+  "portHelpBefore": {"message": "端口（同一文件中的"},
+  "portHelpAfter": {"message": "值，默认为 8765）"},
+  "save": {"message": "保存"},
+  "saved": {"message": "设置已保存。"}
+}

@@ -1,6 +1,6 @@
 # pawz — User guide
 
-The interface is available in English and French. This guide quotes the English labels.
+The interface is available in 30 languages: Bahasa Indonesia, Bengali, Chinese (Simplified and Traditional), English, Filipino, Finnish, French, German, Hindi, Italian, Japanese, Kabyle, Korean, Kurdish (Kurmanji and Sorani), Modern Standard Arabic, Norwegian Bokmål, Polish, Portuguese (Brazil and Portugal), Russian, Spanish (Spain and Latin America), Standard Moroccan Amazigh (Tifinagh), Swedish, Thai, Turkish, Ukrainian and Vietnamese. Arabic and Sorani Kurdish are laid out right to left. This guide quotes the English labels.
 
 ## Requirements
 - Windows 10 or 11 (64-bit). Python 3.12 is only needed to run from source or build the executable.
@@ -57,7 +57,7 @@ Settings have five tabs: **GENERAL**, **DISPLAY**, **PROFILES**, **CONTROLLERS**
 - **Debug**: the debug window lists input events from five independent sources (SetWindowsHookEx, SetWinEventHook, UI Automation, Raw Input, ETW). Sources are off by default and show event types only, never keystroke contents. ETW asks for UAC elevation; its temporary traces are deleted when the source stops.
 
 ### Display
-- **Interface language**: **Automatic (Windows language)** uses the Windows display language when pawz has a translation for it (English and French for now), and English otherwise.
+- **Interface language**: **Automatic (Windows language)** uses the Windows display language when pawz has a translation for it, and English otherwise. Regional varieties follow the Windows region: Spanish from Spain or Latin America, Portuguese from Brazil or Portugal, Simplified or Traditional Chinese, and Kurdish in Sorani for Iraq and Iran (Kurmanji otherwise). Apart from French, the translations are machine translations no native speaker has reviewed yet: the list shows each one's estimated quality (Excellent, Very good, Good, Fair or Fragile), and choosing a language says how its translation is rated, with a link to the GitHub repository for speakers who can improve it.
 - **Color scheme**: **Comfy Turquoise** (default), **Danger Red** (dark, with bright red outlines) or **Midnight Blue**, the original dark blue look.
 - **Controller style**, how controllers are drawn, in the theme's colours: **Eye Candy** (default: dark body, buttons in the button colour, outlined), **Dark**, **Light**, or **Original** (the artwork's own black and white). It applies at once, in the settings too.
 - The language and color scheme apply when pawz restarts: after saving a change, pawz offers to restart right away.
@@ -114,7 +114,7 @@ Per-website shortcuts need the extension in `browser-extension/`.
 4. In the extension options, paste the token (and the port if you changed it) and save.
 5. Keep pawz running. The extension only sends the active tab's address to `127.0.0.1` (port 8765 by default); only the domain is used.
 
-The extension's options page follows the browser's language (English or French).
+The extension's options page follows the browser's language. It is translated into every language of pawz that browsers support, all of them but Amazigh, Kabyle and Kurdish, which show it in English.
 
 After the rename from squidz, the extension must be loaded again and the token pasted again: its identifier and its header changed.
 

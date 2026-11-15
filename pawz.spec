@@ -15,7 +15,7 @@ excludes = [
     'PySide6.QtOpenGL', 'PySide6.QtOpenGLWidgets', 'numpy', 'setuptools', 'pip', '_ssl', 'ssl',
 ]
 # Languages the interface targets: Qt's own translations of standard dialogs are kept.
-QT_LANGUAGES = ('ar', 'de', 'es', 'fr', 'id', 'ja', 'ko', 'pt', 'ru', 'vi', 'zh_CN')
+QT_LANGUAGES = ('ar', 'de', 'es', 'fi', 'fr', 'it', 'ja', 'ko', 'pl', 'pt', 'ru', 'sv', 'tr', 'uk', 'zh_CN', 'zh_TW')
 UNUSED_FILES = re.compile(
     r'(opengl32sw|d3dcompiler_\d+|qt6(quick|qml|pdf|opengl|network|virtualkeyboard)\w*'
     r'|sdl2_(mixer|ttf|image)|freetype|libjpeg|libmodplug|libogg|libopus\w*|libpng\d*'

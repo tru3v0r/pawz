@@ -853,6 +853,50 @@ Choisissez manuellement le modèle en cas d’ambiguïté.</translation>
         <source>Nothing recognised in this drawing.</source>
         <translation>Rien de reconnu dans ce dessin.</translation>
     </message>
+    <message>
+        <source>Excellent</source>
+        <translation>Excellente</translation>
+    </message>
+    <message>
+        <source>Very good</source>
+        <translation>Très bonne</translation>
+    </message>
+    <message>
+        <source>Good</source>
+        <translation>Bonne</translation>
+    </message>
+    <message>
+        <source>Fair</source>
+        <translation>Correcte</translation>
+    </message>
+    <message>
+        <source>Fragile</source>
+        <translation>Fragile</translation>
+    </message>
+    <message>
+        <source>The translation into this language is rated excellent.</source>
+        <translation>La traduction dans cette langue a été jugée excellente.</translation>
+    </message>
+    <message>
+        <source>The translation into this language is rated very good.</source>
+        <translation>La traduction dans cette langue a été jugée très bonne.</translation>
+    </message>
+    <message>
+        <source>The translation into this language is rated good.</source>
+        <translation>La traduction dans cette langue a été jugée bonne.</translation>
+    </message>
+    <message>
+        <source>The translation into this language is rated fair.</source>
+        <translation>La traduction dans cette langue a été jugée correcte.</translation>
+    </message>
+    <message>
+        <source>The translation into this language is rated fragile.</source>
+        <translation>La traduction dans cette langue a été jugée fragile.</translation>
+    </message>
+    <message>
+        <source>If you speak this language, you can help improve its translation on the &lt;a href=&quot;{url}&quot;&gt;pawz GitHub repository&lt;/a&gt;.</source>
+        <translation>Si vous parlez cette langue, vous pouvez aider à améliorer sa traduction sur le &lt;a href=&quot;{url}&quot;&gt;dépôt GitHub de pawz&lt;/a&gt;.</translation>
+    </message>
 </context>
 <context>
     <name>i18n</name>

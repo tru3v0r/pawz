@@ -1,0 +1,13 @@
+{
+  "extName": {"message": "pawz Browser Bridge"},
+  "extDescription": {"message": "Membagikan domain tab aktif dengan aplikasi desktop pawz lokal."},
+  "optionsTitle": {"message": "pawz · Ekstensi"},
+  "optionsHeading": {"message": "pawz · Koneksi browser"},
+  "tokenHelpBefore": {"message": "Salin nilai"},
+  "tokenHelpAfter": {"message": "dari"},
+  "tokenPlaceholder": {"message": "Token koneksi lokal"},
+  "portHelpBefore": {"message": "Port (nilai"},
+  "portHelpAfter": {"message": "di file yang sama, default 8765)"},
+  "save": {"message": "Simpan"},
+  "saved": {"message": "Pengaturan disimpan."}
+}

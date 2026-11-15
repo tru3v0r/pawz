@@ -1,0 +1,13 @@
+{
+  "extName": {"message": "pawz Browser Bridge"},
+  "extDescription": {"message": "सक्रिय टैब का डोमेन स्थानीय pawz डेस्कटॉप ऐप के साथ साझा करता है।"},
+  "optionsTitle": {"message": "pawz · एक्सटेंशन"},
+  "optionsHeading": {"message": "pawz · ब्राउज़र कनेक्शन"},
+  "tokenHelpBefore": {"message": "यह मान कॉपी करें:"},
+  "tokenHelpAfter": {"message": "— स्रोत फ़ाइल:"},
+  "tokenPlaceholder": {"message": "स्थानीय कनेक्शन टोकन"},
+  "portHelpBefore": {"message": "पोर्ट (उसी फ़ाइल में"},
+  "portHelpAfter": {"message": "का मान, डिफ़ॉल्ट रूप से 8765)"},
+  "save": {"message": "सहेजें"},
+  "saved": {"message": "सेटिंग्स सहेजी गईं।"}
+}

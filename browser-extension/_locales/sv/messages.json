@@ -1,0 +1,13 @@
+{
+  "extName": {"message": "pawz Browser Bridge"},
+  "extDescription": {"message": "Delar den aktiva flikens domän med skrivbordsappen pawz på datorn."},
+  "optionsTitle": {"message": "pawz · Tillägg"},
+  "optionsHeading": {"message": "pawz · Anslutning till webbläsaren"},
+  "tokenHelpBefore": {"message": "Kopiera värdet"},
+  "tokenHelpAfter": {"message": "från"},
+  "tokenPlaceholder": {"message": "Lokal anslutningstoken"},
+  "portHelpBefore": {"message": "Port (värdet"},
+  "portHelpAfter": {"message": "i samma fil, 8765 som standard)"},
+  "save": {"message": "Spara"},
+  "saved": {"message": "Inställningarna har sparats."}
+}

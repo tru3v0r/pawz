@@ -24,6 +24,7 @@ from PySide6.QtCore import (
 )
 from PySide6.QtGui import (
     QColor,
+    QFont,
     QFontDatabase,
     QIcon,
     QImage,
@@ -55,6 +56,8 @@ from PySide6.QtWidgets import (
     QScrollArea,
     QSizePolicy,
     QSlider,
+    QStyle,
+    QStyledItemDelegate,
     QSystemTrayIcon,
     QTabWidget,
     QTextEdit,
@@ -77,7 +80,7 @@ from pawz.core.models import (
     vlc_bindings,
 )
 from pawz.engine import actions as action_catalogue
-from pawz.i18n import AUTO, LANGUAGES, tr
+from pawz.i18n import AUTO, LANGUAGES, QUALITY, QUALITY_NAMES, quality_note, resolve, tr
 from pawz.infra.debug_events import RawInputListener, WindowsEventSources
 from pawz.infra.startup import configure_startup
 from pawz.infra.storage import DATA_DIR, save
@@ -255,6 +258,7 @@ QScrollArea#controllersScroll, QWidget#controllersContent { background:#1b355b; 
 QTableWidget#controllerCorrespondences, QTableWidget#controllerIdentification { background:#1b355b; color:#ffffff; gridline-color:#4b83bd; border:1px solid #4b83bd; }
 QLabel#credits { color:#b9d5ff; }
 QLabel#credits a { color:#ffffff; }
+QLabel#languageNote { color:#b9d5ff; }
 QLabel#extensionNote { color:#b9d5ff; background:transparent; padding:0 22px; }
 QPushButton#copyGuid { background:transparent; border:0; padding:0; }
 QPushButton#copyGuid:hover { background:#28618e; border-radius:4px; }
@@ -1229,6 +1233,30 @@ class DebugWindow(QDialog):
         super().closeEvent(event)
 
 
+class LanguageQualityDelegate(QStyledItemDelegate):
+    """Language list items with the translation's estimated quality, smaller and
+    dimmer, on the trailing side."""
+
+    def paint(self, painter, option, index):
+        super().paint(painter, option, index)
+        quality = QUALITY.get(index.data(Qt.ItemDataRole.UserRole))
+        if quality is None:
+            return
+        painter.save()
+        font = QFont(option.font)
+        font.setPointSizeF(max(6.0, font.pointSizeF() * 0.8))
+        painter.setFont(font)
+        selected = option.state & QStyle.StateFlag.State_Selected
+        color = QColor(option.palette.highlightedText().color() if selected else option.palette.text().color())
+        color.setAlphaF(0.55)
+        painter.setPen(color)
+        area = option.rect.adjusted(8, 0, -10, 0)
+        # Trailing side: Qt mirrors non-absolute alignment in right-to-left layouts.
+        alignment = Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignTrailing
+        painter.drawText(area, int(alignment), tr(QUALITY_NAMES[quality]))
+        painter.restore()
+
+
 class SettingsDialog(QDialog):
     def __init__(self, settings, parent=None, debug_window: DebugWindow | None = None,
                  initial_tab: str | None = None, controller_manager=None):
@@ -1500,6 +1528,15 @@ class SettingsDialog(QDialog):
             self.language_picker.addItem(name, code)
         self.language_picker.setCurrentIndex(
             max(0, self.language_picker.findData(settings.language)))
+        self.language_picker.setItemDelegate(LanguageQualityDelegate(self.language_picker))
+        # The chosen language's estimated translation quality, in the interface language.
+        self.language_note = QLabel()
+        self.language_note.setObjectName("languageNote")
+        self.language_note.setWordWrap(True)
+        self.language_note.setTextFormat(Qt.TextFormat.RichText)
+        self.language_note.setOpenExternalLinks(True)
+        self.language_picker.currentIndexChanged.connect(self._update_language_note)
+        self._update_language_note()
         self.theme_picker = QComboBox()
         self.theme_picker.setObjectName("themePicker")
         for theme in THEMES.values():
@@ -1528,7 +1565,17 @@ class SettingsDialog(QDialog):
             for label, picker in rows:
                 picker_label = QLabel(label)
                 picker_label.setMinimumWidth(140)
-                form.addRow(picker_label, picker)
+                if picker is self.language_picker:  # the quality note sits right under it
+                    field = QWidget()
+                    stacked = QVBoxLayout(field)
+                    stacked.setContentsMargins(0, 0, 0, 0)
+                    stacked.setSpacing(8)
+                    stacked.addWidget(picker)
+                    stacked.addWidget(self.language_note)
+                    form.addRow(picker_label, field)
+                    picker_label.setFixedHeight(picker.sizeHint().height())
+                else:
+                    form.addRow(picker_label, picker)
             layout.addLayout(form)
         layout.addSpacing(20)
         self.display_note = QLabel(tr("Language and theme changes apply when pawz restarts."))
@@ -1552,6 +1599,12 @@ class SettingsDialog(QDialog):
         """Whether the chosen language or theme differs from the running one."""
         return (self.language_picker.currentData() != self.settings.language
                 or self.theme_picker.currentData() != self.settings.theme)
+
+    def _update_language_note(self, *_):
+        code = self.language_picker.currentData()
+        note = quality_note(resolve(code) if code == AUTO else code)
+        self.language_note.setText(note.replace("<a ", f'<a style="color:{themed("#ffffff")};" '))
+        self.language_note.setVisible(bool(note))
 
     def _update_display_note(self, *_):
         self.display_note.setVisible(self.display_changed())
@@ -2101,7 +2154,9 @@ class ControllerSlot(QWidget):
 
         self.forget_button = QPushButton(tr("Forget"))
         self.forget_button.setObjectName("forgetController")
-        self.forget_button.setFixedSize(59, 21)
+        self.forget_button.setMinimumWidth(59)  # translations may be longer, up to the slot
+        self.forget_button.setMaximumWidth(self.WIDTH)
+        self.forget_button.setFixedHeight(21)
         self.forget_button.clicked.connect(self._request_forget)
         layout.addWidget(self.forget_button, 0, Qt.AlignmentFlag.AlignHCenter)
 
@@ -2134,7 +2189,9 @@ class ControllerSlot(QWidget):
 
         self.set_primary = QPushButton(tr("SET PRIMARY"))
         self.set_primary.setObjectName("setPrimary")
-        self.set_primary.setFixedSize(95, 25)
+        self.set_primary.setMinimumWidth(95)  # translations may be longer, up to the slot
+        self.set_primary.setMaximumWidth(self.WIDTH)
+        self.set_primary.setFixedHeight(25)
         self.set_primary.clicked.connect(self._request_primary)
         layout.addWidget(self.set_primary, 0, Qt.AlignmentFlag.AlignHCenter)
 
@@ -2319,16 +2376,19 @@ class MainWindow(QMainWindow):
         footer_layout.addStretch()
         manage = QPushButton(tr("Manage profiles"))
         manage.setObjectName("primaryAction")
-        manage.setFixedSize(196, 36)
+        manage.setMinimumWidth(196)  # longer translations widen both
+        manage.setFixedHeight(36)
         manage.setIcon(action_icon("profiles"))
         manage.setIconSize(QSize(17, 17))
         manage.clicked.connect(self.manage_profiles)
         settings_button = QPushButton(tr("Settings"))
         settings_button.setObjectName("primaryAction")
-        settings_button.setFixedSize(196, 36)
+        settings_button.setFixedHeight(36)
         settings_button.setIcon(action_icon("settings"))
         settings_button.setIconSize(QSize(17, 17))
         settings_button.clicked.connect(lambda: self.open_settings())
+        settings_button.setMinimumWidth(max(196, manage.sizeHint().width(), settings_button.sizeHint().width()))
+        manage.setMinimumWidth(settings_button.minimumWidth())
         footer_layout.addWidget(manage)
         footer_layout.addWidget(settings_button)
         footer_layout.addStretch()

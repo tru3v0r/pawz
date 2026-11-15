@@ -26,6 +26,10 @@ ROOT = Path(__file__).resolve().parents[1]
 PACKAGE = ROOT / "src" / "pawz"
 TRANSLATIONS = PACKAGE / "data" / "i18n"
 TOOLS = Path(PySide6.__file__).parent
+# Languages lupdate's table lacks: it refuses to update their files, so it is given a
+# language it knows (used only for plural rules, and pawz has no plural strings) and
+# the real code is put back afterwards.
+LUPDATE_STAND_INS = {"ckb": "ku", "kmr": "ku", "kab": "fr", "zgh": "fr"}
 
 
 def tool(name: str) -> str:
@@ -35,6 +39,12 @@ def tool(name: str) -> str:
 
 def sources() -> list[str]:
     return sorted(str(path) for path in PACKAGE.rglob("*.py"))
+
+
+def set_language(ts: Path, old: str, new: str) -> None:
+    if old != new and ts.exists():
+        text = ts.read_text(encoding="utf-8")
+        ts.write_text(text.replace(f'language="{old}"', f'language="{new}"', 1), encoding="utf-8")
 
 
 def main() -> int:
@@ -49,9 +59,14 @@ def main() -> int:
             files.append(new)
     for ts in files:
         language = ts.stem.removeprefix("pawz_")
-        subprocess.run([tool("lupdate"), *sources(), "-no-obsolete", "-locations", "none",
-                        "-source-language", "en", "-target-language", language,
-                        "-ts", str(ts)], check=True)
+        stand_in = LUPDATE_STAND_INS.get(language, language)
+        set_language(ts, language, stand_in)
+        try:
+            subprocess.run([tool("lupdate"), *sources(), "-no-obsolete", "-locations", "none",
+                            "-source-language", "en", "-target-language", stand_in,
+                            "-ts", str(ts)], check=True)
+        finally:
+            set_language(ts, stand_in, language)
         subprocess.run([tool("lrelease"), str(ts), "-qm", str(ts.with_suffix(".qm"))], check=True)
     return 0
 

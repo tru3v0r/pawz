@@ -1,0 +1,13 @@
+{
+  "extName": {"message": "pawz Browser Bridge"},
+  "extDescription": {"message": "アクティブなタブのドメインを、ローカルの pawz デスクトップ アプリと共有します。"},
+  "optionsTitle": {"message": "pawz · 拡張機能"},
+  "optionsHeading": {"message": "pawz · ブラウザー接続"},
+  "tokenHelpBefore": {"message": "次の"},
+  "tokenHelpAfter": {"message": "の値をコピーしてください。コピー元:"},
+  "tokenPlaceholder": {"message": "ローカル接続トークン"},
+  "portHelpBefore": {"message": "ポート (同じファイルの"},
+  "portHelpAfter": {"message": "の値、既定は 8765)"},
+  "save": {"message": "保存"},
+  "saved": {"message": "設定を保存しました。"}
+}

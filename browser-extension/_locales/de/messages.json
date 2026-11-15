@@ -1,0 +1,13 @@
+{
+  "extName": {"message": "pawz Browser Bridge"},
+  "extDescription": {"message": "Teilt die Domain des aktiven Tabs mit der lokalen pawz-Desktop-App."},
+  "optionsTitle": {"message": "pawz · Erweiterung"},
+  "optionsHeading": {"message": "pawz · Browserverbindung"},
+  "tokenHelpBefore": {"message": "Kopieren Sie den Wert"},
+  "tokenHelpAfter": {"message": "aus"},
+  "tokenPlaceholder": {"message": "Lokales Verbindungstoken"},
+  "portHelpBefore": {"message": "Port (der Wert"},
+  "portHelpAfter": {"message": "in derselben Datei, standardmäßig 8765)"},
+  "save": {"message": "Speichern"},
+  "saved": {"message": "Einstellungen gespeichert."}
+}

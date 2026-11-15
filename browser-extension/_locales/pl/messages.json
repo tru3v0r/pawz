@@ -1,0 +1,13 @@
+{
+  "extName": {"message": "pawz Browser Bridge"},
+  "extDescription": {"message": "Przekazuje domenę aktywnej karty lokalnej aplikacji pawz."},
+  "optionsTitle": {"message": "pawz · Rozszerzenie"},
+  "optionsHeading": {"message": "pawz · Połączenie z przeglądarką"},
+  "tokenHelpBefore": {"message": "Skopiuj wartość"},
+  "tokenHelpAfter": {"message": "z pliku"},
+  "tokenPlaceholder": {"message": "Lokalny token połączenia"},
+  "portHelpBefore": {"message": "Port (wartość"},
+  "portHelpAfter": {"message": "w tym samym pliku, domyślnie 8765)"},
+  "save": {"message": "Zapisz"},
+  "saved": {"message": "Ustawienia zapisane."}
+}
