@@ -594,6 +594,10 @@ Valitse malli käsin, jos olet epävarma.</translation>
         <translation>{app} {version}, vapaa ohjelmisto GPL 3.0 -lisenssillä tai sitä uudemmalla.&lt;br&gt;Peliohjainten piirrokset ja painikekuvakkeet: &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Asset-Pack&quot;&gt;Gamepad Asset Pack&lt;/a&gt; ja &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Prompt-Asset-Pack&quot;&gt;Gamepad Prompt Asset Pack&lt;/a&gt;, tekijä Al. Lopez (AL2009man), MIT-lisenssi.&lt;br&gt;Fontit: Inter (SIL Open Font License) ja Matcha Style, tekijä Khurasan Studio.</translation>
     </message>
     <message>
+        <source>Restart {app} now to apply the new language?</source>
+        <translation>Käynnistetäänkö {app} nyt uudelleen uuden kielen käyttöönottamiseksi?</translation>
+    </message>
+    <message>
         <source>DISPLAY</source>
         <translation>NÄYTTÖ</translation>
     </message>
@@ -610,12 +614,12 @@ Valitse malli käsin, jos olet epävarma.</translation>
         <translation>Peliohjainten tyyli</translation>
     </message>
     <message>
-        <source>Restart {app}</source>
-        <translation>Käynnistä {app} uudelleen</translation>
+        <source>Language changes apply when pawz restarts.</source>
+        <translation>Kielen muutokset tulevat voimaan, kun pawz käynnistetään uudelleen.</translation>
     </message>
     <message>
-        <source>Restart {app} now to apply the new language and theme?</source>
-        <translation>Käynnistetäänkö {app} nyt uudelleen uuden kielen ja teeman käyttöönottamiseksi?</translation>
+        <source>Restart {app}</source>
+        <translation>Käynnistä {app} uudelleen</translation>
     </message>
     <message>
         <source>Automatic (Windows language)</source>
@@ -704,10 +708,6 @@ Valitse malli käsin, jos olet epävarma.</translation>
     <message>
         <source>Theme</source>
         <translation>Teema</translation>
-    </message>
-    <message>
-        <source>Language and theme changes apply when pawz restarts.</source>
-        <translation>Kielen ja teeman muutokset tulevat voimaan, kun pawz käynnistetään uudelleen.</translation>
     </message>
     <message>
         <source>Profile exists</source>

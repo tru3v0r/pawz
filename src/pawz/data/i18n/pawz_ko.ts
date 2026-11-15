@@ -594,6 +594,10 @@ Choose the model by hand if in doubt.</source>
         <translation>{app} {version}, GPL 3.0 이상 라이선스의 자유 소프트웨어입니다.&lt;br&gt;컨트롤러 그림 및 버튼 아이콘: Al. Lopez (AL2009man)의 &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Asset-Pack&quot;&gt;Gamepad Asset Pack&lt;/a&gt; 및 &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Prompt-Asset-Pack&quot;&gt;Gamepad Prompt Asset Pack&lt;/a&gt;, MIT 라이선스.&lt;br&gt;글꼴: Inter (SIL Open Font License) 및 Khurasan Studio의 Matcha Style.</translation>
     </message>
     <message>
+        <source>Restart {app} now to apply the new language?</source>
+        <translation>새 언어를 적용하기 위해 지금 {app}을(를) 다시 시작하시겠습니까?</translation>
+    </message>
+    <message>
         <source>DISPLAY</source>
         <translation>디스플레이</translation>
     </message>
@@ -610,12 +614,12 @@ Choose the model by hand if in doubt.</source>
         <translation>컨트롤러 스타일</translation>
     </message>
     <message>
-        <source>Restart {app}</source>
-        <translation>{app} 다시 시작</translation>
+        <source>Language changes apply when pawz restarts.</source>
+        <translation>언어 변경 사항은 pawz를 다시 시작하면 적용됩니다.</translation>
     </message>
     <message>
-        <source>Restart {app} now to apply the new language and theme?</source>
-        <translation>새 언어와 테마를 적용하기 위해 지금 {app}을(를) 다시 시작하시겠습니까?</translation>
+        <source>Restart {app}</source>
+        <translation>{app} 다시 시작</translation>
     </message>
     <message>
         <source>Automatic (Windows language)</source>
@@ -704,10 +708,6 @@ Choose the model by hand if in doubt.</source>
     <message>
         <source>Theme</source>
         <translation>테마</translation>
-    </message>
-    <message>
-        <source>Language and theme changes apply when pawz restarts.</source>
-        <translation>언어 및 테마 변경 사항은 pawz를 다시 시작하면 적용됩니다.</translation>
     </message>
     <message>
         <source>Profile exists</source>

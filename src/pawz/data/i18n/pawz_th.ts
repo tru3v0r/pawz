@@ -594,6 +594,10 @@ Choose the model by hand if in doubt.</source>
         <translation>{app} {version} ซอฟต์แวร์เสรีภายใต้สัญญาอนุญาต GPL 3.0 หรือใหม่กว่า&lt;br&gt;ภาพวาดคอนโทรลเลอร์และไอคอนปุ่ม: &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Asset-Pack&quot;&gt;Gamepad Asset Pack&lt;/a&gt; และ &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Prompt-Asset-Pack&quot;&gt;Gamepad Prompt Asset Pack&lt;/a&gt; โดย Al. Lopez (AL2009man) สัญญาอนุญาต MIT&lt;br&gt;ฟอนต์: Inter (SIL Open Font License) และ Matcha Style โดย Khurasan Studio</translation>
     </message>
     <message>
+        <source>Restart {app} now to apply the new language?</source>
+        <translation>รีสตาร์ท {app} ตอนนี้เพื่อใช้ภาษาใหม่หรือไม่</translation>
+    </message>
+    <message>
         <source>DISPLAY</source>
         <translation>การแสดงผล</translation>
     </message>
@@ -610,12 +614,12 @@ Choose the model by hand if in doubt.</source>
         <translation>สไตล์คอนโทรลเลอร์</translation>
     </message>
     <message>
-        <source>Restart {app}</source>
-        <translation>รีสตาร์ท {app}</translation>
+        <source>Language changes apply when pawz restarts.</source>
+        <translation>การเปลี่ยนภาษาจะมีผลเมื่อ pawz รีสตาร์ท</translation>
     </message>
     <message>
-        <source>Restart {app} now to apply the new language and theme?</source>
-        <translation>รีสตาร์ท {app} ตอนนี้เพื่อใช้ภาษาและธีมใหม่หรือไม่</translation>
+        <source>Restart {app}</source>
+        <translation>รีสตาร์ท {app}</translation>
     </message>
     <message>
         <source>Automatic (Windows language)</source>
@@ -704,10 +708,6 @@ Choose the model by hand if in doubt.</source>
     <message>
         <source>Theme</source>
         <translation>ธีม</translation>
-    </message>
-    <message>
-        <source>Language and theme changes apply when pawz restarts.</source>
-        <translation>การเปลี่ยนภาษาและธีมจะมีผลเมื่อ pawz รีสตาร์ท</translation>
     </message>
     <message>
         <source>Profile exists</source>

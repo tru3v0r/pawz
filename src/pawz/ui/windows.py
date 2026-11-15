@@ -88,7 +88,7 @@ from pawz.ui import artwork_styles, themes
 from pawz.ui.controller_assets import SvgView, controller_prompt_svg, renderer_for, resolve_artwork
 from pawz.ui.controllers_page import ControllersPage, model_name
 from pawz.ui.rendering import ScalableIconLabel, configure_text_rendering, vector_icon
-from pawz.ui.themes import THEMES, themed
+from pawz.ui.themes import THEMES, set_themed_style, themed
 
 ASSETS_DIR = Path(__file__).resolve().parent / "assets"
 APP_ICON = ASSETS_DIR / "logo.svg"
@@ -134,8 +134,8 @@ def profile_action_button(title: str, action: str, parent=None) -> QPushButton:
     button.setIcon(vector_icon(
         {"duplicate": "duplicate", "edit": "pencil", "delete": "cross", "add": "plus"}[action]))
     _style_profile_button(button, padding="0", radius=7)
-    button.setStyleSheet(button.styleSheet() + themed(
-        "QPushButton:disabled { background:#20385c; border-color:#405b7d; }"))
+    set_themed_style(button, "QPushButton:disabled { background:#20385c; border-color:#405b7d; }",
+                     append=True)
     return button
 
 
@@ -290,19 +290,25 @@ def stylesheet() -> str:
     return themed(CSS)
 
 
+def apply_theme(theme_id: str) -> None:
+    """Switch the running application to another theme, no restart needed."""
+    if theme_id != themes.current().id:
+        themes.apply(theme_id, CSS)
+
+
 def _set_separator_overlay(widget: QWidget) -> None:
-    widget.setStyleSheet(themed("background-color:#1b355b;"))
+    set_themed_style(widget, "background-color:#1b355b;")
 
 
 def _style_profile_button(button: QPushButton, *, padding: str = "0",
                           radius: int = 5, focus: bool = False) -> None:
     focus_rule = (
         "QPushButton:focus { border:2px solid #65baff; }" if focus else "")
-    button.setStyleSheet(themed(
+    set_themed_style(button,
         "QPushButton { color:#ffffff; background:#20527b; "
         f"border:1px solid #3187c7; border-radius:{radius}px; padding:{padding}; }}"
         "QPushButton:hover { background:#28618e; }"
-        + focus_rule))
+        + focus_rule)
 
 
 class ProfileDialog(QDialog):
@@ -510,7 +516,7 @@ class ProfileEditor(QWidget):
         column.setSpacing(8)
         magnet = QSlider(Qt.Orientation.Horizontal)
         magnet.setObjectName("magnetStrength")
-        magnet.setStyleSheet(themed("background:#1b355b; border:0;"))
+        set_themed_style(magnet, "background:#1b355b; border:0;")
         magnet.setRange(10, 100)
         magnet.setValue(round(self.profile.magnet_strength))
         magnet.setToolTip(tr("Pull strength, and the effort needed to break free of a target"))
@@ -640,7 +646,7 @@ class ProfileEditor(QWidget):
         row.setSpacing(12)
         slider = QSlider(Qt.Orientation.Horizontal)
         slider.setObjectName(name)
-        slider.setStyleSheet(themed("background:#1b355b; border:0;"))
+        set_themed_style(slider, "background:#1b355b; border:0;")
         slider.setRange(round(low * scale), round(high * scale))
         slider.setValue(round(current * scale))
         value_label = QLabel(QLocale().toString(float(current), "f", 2))
@@ -738,7 +744,7 @@ class ProfileEditor(QWidget):
         title = QLabel(name)
         title.setObjectName("profileSectionTitle")
         _set_separator_overlay(title)
-        title.setStyleSheet(themed("background-color:#1b355b; padding:0 2px;"))
+        set_themed_style(title, "background-color:#1b355b; padding:0 2px;")
         title.setSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Preferred)
         header_layout.addWidget(title, 0)
         header_layout.addStretch(1)
@@ -809,15 +815,15 @@ class ProfileEditor(QWidget):
             content_layout.addLayout(row, 0)
         actions = QFrame()
         actions.setObjectName("profileSectionActions")
-        actions.setStyleSheet(themed(
+        set_themed_style(actions,
             "background:#17345e; border-bottom-left-radius:15px; "
-            "border-bottom-right-radius:15px;"))
+            "border-bottom-right-radius:15px;")
         actions_layout = QVBoxLayout(actions)
         actions_layout.setContentsMargins(0, 0, 0, 14)
         actions_layout.setSpacing(10)
         separator = QFrame()
         separator.setObjectName("profileSectionActionsSeparator")
-        separator.setStyleSheet(themed("background:#4b83bd; border:0;"))
+        set_themed_style(separator, "background:#4b83bd; border:0;")
         separator.setFixedHeight(1)
         actions_layout.addWidget(separator)
         add = QPushButton(tr("Add a shortcut..."))
@@ -1486,7 +1492,7 @@ class SettingsDialog(QDialog):
         buttons.addStretch()
         body_layout.addWidget(footer_actions)
         root.addWidget(body, 1)
-        self.setStyleSheet(stylesheet())
+        set_themed_style(self, CSS)
         self.save_button.clicked.connect(self._accept_settings)
 
     def _about_tab(self) -> QWidget:
@@ -1515,7 +1521,7 @@ class SettingsDialog(QDialog):
         return tab
 
     def _display_tab(self, settings) -> QWidget:
-        """Language and theme: both apply when pawz restarts."""
+        """Language (applies when pawz restarts), theme and controller style (at once)."""
         tab = QWidget()
         tab.setObjectName("settingsPage")
         layout = QVBoxLayout(tab)
@@ -1542,6 +1548,8 @@ class SettingsDialog(QDialog):
         for theme in THEMES.values():
             self.theme_picker.addItem(tr(theme.name), theme.id)
         self.theme_picker.setCurrentIndex(max(0, self.theme_picker.findData(settings.theme)))
+        self._initial_theme = themes.current().id
+        self.theme_picker.currentIndexChanged.connect(self._preview_theme)
         self.controller_style_picker = QComboBox()
         self.controller_style_picker.setObjectName("controllerStylePicker")
         for style, name in artwork_styles.STYLES.items():
@@ -1578,13 +1586,12 @@ class SettingsDialog(QDialog):
                     form.addRow(picker_label, picker)
             layout.addLayout(form)
         layout.addSpacing(20)
-        self.display_note = QLabel(tr("Language and theme changes apply when pawz restarts."))
+        self.display_note = QLabel(tr("Language changes apply when pawz restarts."))
         self.display_note.setObjectName("displayNote")
         self.display_note.setWordWrap(True)
         self.display_note.setContentsMargins(8, 0, 0, 0)
         self.display_note.setVisible(False)
-        for picker in (self.language_picker, self.theme_picker):
-            picker.currentIndexChanged.connect(self._update_display_note)
+        self.language_picker.currentIndexChanged.connect(self._update_display_note)
         layout.addWidget(self.display_note)
         layout.addStretch()
         return tab
@@ -1595,10 +1602,14 @@ class SettingsDialog(QDialog):
         self._update_display_model_preview()
         self.controllers_page.refresh()
 
+    def _preview_theme(self, *_):
+        """The whole application takes the chosen theme at once (restored on cancel)."""
+        apply_theme(self.theme_picker.currentData())
+        self._update_language_note()
+
     def display_changed(self) -> bool:
-        """Whether the chosen language or theme differs from the running one."""
-        return (self.language_picker.currentData() != self.settings.language
-                or self.theme_picker.currentData() != self.settings.theme)
+        """Whether the chosen language differs from the running one (it needs a restart)."""
+        return self.language_picker.currentData() != self.settings.language
 
     def _update_language_note(self, *_):
         code = self.language_picker.currentData()
@@ -1743,6 +1754,7 @@ class SettingsDialog(QDialog):
     def reject(self):
         self._cancel_active_capture()
         artwork_styles.set_current(self._initial_controller_style)
+        apply_theme(self._initial_theme)
         super().reject()
 
     def closeEvent(self, event):
@@ -1802,9 +1814,17 @@ class ControllerArtwork(QWidget):
         self.live: tuple[frozenset[str], tuple[float, ...], tuple] = (frozenset(), (0.0, 0.0, 0.0, 0.0), ())
         self.named_elements: dict[str, str] = {}
         self._prompt_renderers: dict[tuple[str, str], QSvgRenderer] = {}
+        self.illustration = None
         self.setMouseTracking(True)
+        themes.signals.changed.connect(self._reload_illustration)
+
+    def _reload_illustration(self):
+        """The drawing is themed when loaded: load it again in the new theme."""
+        if self.illustration:
+            self.set_illustration(self.illustration)
 
     def set_illustration(self, path):
+        self.illustration = path
         if self.svg_renderer:
             self.svg_renderer.deleteLater()
         self.svg_renderer = renderer_for(path, self) if path else None
@@ -2181,9 +2201,9 @@ class ControllerSlot(QWidget):
         self.profile_picker = QComboBox()
         self.profile_picker.setObjectName("profilePicker")
         self.profile_picker.setFixedWidth(126)
-        self.profile_picker.view().setStyleSheet(themed(
+        set_themed_style(self.profile_picker.view(),
             "QListView { color:#f5f7fb; background:#1b355b; "
-            "selection-color:#ffffff; selection-background-color:#2765cc; }"))
+            "selection-color:#ffffff; selection-background-color:#2765cc; }")
         self.profile_picker.currentIndexChanged.connect(self._profile_selected)
         layout.addWidget(self.profile_picker, 0, Qt.AlignmentFlag.AlignHCenter)
 
@@ -2259,10 +2279,10 @@ class ControllerSlot(QWidget):
             color = "#7587a3"
         else:
             color = "#00c96b" if value >= 80 else "#ffc21c" if value >= 50 else "#f26945"
-        self.battery_bar.setStyleSheet(themed(
+        set_themed_style(self.battery_bar,
             # Radius half the height, on the track and the fill alike.
             f"QProgressBar {{ background:#17345e; border:0; border-radius:3px; }}"
-            f"QProgressBar::chunk {{ background:{color}; border-radius:3px; }}"))
+            f"QProgressBar::chunk {{ background:{color}; border-radius:3px; }}")
 
     def _profile_selected(self, index: int):
         if self.device_key and index >= 0:
@@ -2416,7 +2436,7 @@ class MainWindow(QMainWindow):
         self.tray = QSystemTrayIcon(QIcon(str(APP_ICON)), self)
         menu = QMenu()
         menu.setObjectName("trayMenu")
-        menu.setStyleSheet(stylesheet())
+        set_themed_style(menu, CSS)
         menu.addAction(tr("Configuration"), self.show_from_tray)
         menu.addAction(tr("Quit"), app.quit)
         self.tray.setContextMenu(menu)
@@ -2602,7 +2622,7 @@ class MainWindow(QMainWindow):
         if display_changed:
             answer = QMessageBox.question(
                 self, tr("Restart {app}").format(app=APP_NAME),
-                tr("Restart {app} now to apply the new language and theme?").format(app=APP_NAME),
+                tr("Restart {app} now to apply the new language?").format(app=APP_NAME),
                 QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
                 QMessageBox.StandardButton.Yes)
             if answer == QMessageBox.StandardButton.Yes:

@@ -594,6 +594,10 @@ Piliin nang manu-mano ang modelo kung hindi sigurado.</translation>
         <translation>{app} {version}, libreng software sa ilalim ng lisensyang GPL 3.0 o mas bago.&lt;br&gt;Mga drawing ng controller at icon ng button: &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Asset-Pack&quot;&gt;Gamepad Asset Pack&lt;/a&gt; at &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Prompt-Asset-Pack&quot;&gt;Gamepad Prompt Asset Pack&lt;/a&gt; ni Al. Lopez (AL2009man), lisensyang MIT.&lt;br&gt;Mga font: Inter (SIL Open Font License) at Matcha Style ng Khurasan Studio.</translation>
     </message>
     <message>
+        <source>Restart {app} now to apply the new language?</source>
+        <translation>I-restart ang {app} ngayon para ilapat ang bagong wika?</translation>
+    </message>
+    <message>
         <source>DISPLAY</source>
         <translation>DISPLAY</translation>
     </message>
@@ -610,12 +614,12 @@ Piliin nang manu-mano ang modelo kung hindi sigurado.</translation>
         <translation>Istilo ng controller</translation>
     </message>
     <message>
-        <source>Restart {app}</source>
-        <translation>I-restart ang {app}</translation>
+        <source>Language changes apply when pawz restarts.</source>
+        <translation>Malalapat ang mga pagbabago sa wika kapag nag-restart ang pawz.</translation>
     </message>
     <message>
-        <source>Restart {app} now to apply the new language and theme?</source>
-        <translation>I-restart ang {app} ngayon para ilapat ang bagong wika at tema?</translation>
+        <source>Restart {app}</source>
+        <translation>I-restart ang {app}</translation>
     </message>
     <message>
         <source>Automatic (Windows language)</source>
@@ -704,10 +708,6 @@ Piliin nang manu-mano ang modelo kung hindi sigurado.</translation>
     <message>
         <source>Theme</source>
         <translation>Tema</translation>
-    </message>
-    <message>
-        <source>Language and theme changes apply when pawz restarts.</source>
-        <translation>Malalapat ang mga pagbabago sa wika at tema kapag nag-restart ang pawz.</translation>
     </message>
     <message>
         <source>Profile exists</source>

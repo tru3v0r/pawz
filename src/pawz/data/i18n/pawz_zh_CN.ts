@@ -594,6 +594,10 @@ Choose the model by hand if in doubt.</source>
         <translation>{app} {version}，依据 GPL 3.0 或更高版本许可证发布的自由软件。&lt;br&gt;手柄图示和按键图标：Al. Lopez (AL2009man) 制作的 &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Asset-Pack&quot;&gt;Gamepad Asset Pack&lt;/a&gt; 和 &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Prompt-Asset-Pack&quot;&gt;Gamepad Prompt Asset Pack&lt;/a&gt;，MIT 许可证。&lt;br&gt;字体：Inter (SIL Open Font License) 和 Khurasan Studio 的 Matcha Style。</translation>
     </message>
     <message>
+        <source>Restart {app} now to apply the new language?</source>
+        <translation>立即重新启动 {app} 以应用新的语言吗？</translation>
+    </message>
+    <message>
         <source>DISPLAY</source>
         <translation>显示</translation>
     </message>
@@ -610,12 +614,12 @@ Choose the model by hand if in doubt.</source>
         <translation>手柄样式</translation>
     </message>
     <message>
-        <source>Restart {app}</source>
-        <translation>重新启动 {app}</translation>
+        <source>Language changes apply when pawz restarts.</source>
+        <translation>语言的更改将在 pawz 重新启动后生效。</translation>
     </message>
     <message>
-        <source>Restart {app} now to apply the new language and theme?</source>
-        <translation>立即重新启动 {app} 以应用新的语言和主题吗？</translation>
+        <source>Restart {app}</source>
+        <translation>重新启动 {app}</translation>
     </message>
     <message>
         <source>Automatic (Windows language)</source>
@@ -704,10 +708,6 @@ Choose the model by hand if in doubt.</source>
     <message>
         <source>Theme</source>
         <translation>主题</translation>
-    </message>
-    <message>
-        <source>Language and theme changes apply when pawz restarts.</source>
-        <translation>语言和主题的更改将在 pawz 重新启动后生效。</translation>
     </message>
     <message>
         <source>Profile exists</source>

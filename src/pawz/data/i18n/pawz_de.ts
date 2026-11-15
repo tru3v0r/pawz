@@ -594,6 +594,10 @@ Wählen Sie das Modell im Zweifel manuell aus.</translation>
         <translation>{app} {version}, freie Software unter der GPL 3.0 oder später.&lt;br&gt;Controller-Zeichnungen und Tastensymbole: &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Asset-Pack&quot;&gt;Gamepad Asset Pack&lt;/a&gt; und &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Prompt-Asset-Pack&quot;&gt;Gamepad Prompt Asset Pack&lt;/a&gt; von Al. Lopez (AL2009man), MIT-Lizenz.&lt;br&gt;Schriftarten: Inter (SIL Open Font License) und Matcha Style von Khurasan Studio.</translation>
     </message>
     <message>
+        <source>Restart {app} now to apply the new language?</source>
+        <translation>{app} jetzt neu starten, um die neue Sprache zu übernehmen?</translation>
+    </message>
+    <message>
         <source>DISPLAY</source>
         <translation>ANZEIGE</translation>
     </message>
@@ -610,12 +614,12 @@ Wählen Sie das Modell im Zweifel manuell aus.</translation>
         <translation>Controller-Stil</translation>
     </message>
     <message>
-        <source>Restart {app}</source>
-        <translation>{app} neu starten</translation>
+        <source>Language changes apply when pawz restarts.</source>
+        <translation>Änderungen der Sprache werden beim Neustart von pawz übernommen.</translation>
     </message>
     <message>
-        <source>Restart {app} now to apply the new language and theme?</source>
-        <translation>{app} jetzt neu starten, um die neue Sprache und das neue Design zu übernehmen?</translation>
+        <source>Restart {app}</source>
+        <translation>{app} neu starten</translation>
     </message>
     <message>
         <source>Automatic (Windows language)</source>
@@ -704,10 +708,6 @@ Wählen Sie das Modell im Zweifel manuell aus.</translation>
     <message>
         <source>Theme</source>
         <translation>Design</translation>
-    </message>
-    <message>
-        <source>Language and theme changes apply when pawz restarts.</source>
-        <translation>Änderungen an Sprache und Design werden beim Neustart von pawz übernommen.</translation>
     </message>
     <message>
         <source>Profile exists</source>

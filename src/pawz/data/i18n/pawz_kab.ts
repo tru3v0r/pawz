@@ -594,6 +594,10 @@ Fren tamudemt s ufus ma tella tmuɣli.</translation>
         <translation>{app} {version}, aseɣzan ilelli ddaw n turagt GPL 3.0 neɣ lqem d-iteddun.&lt;br&gt;Unuɣen n yimsefraken d tignitin n tqeffalin: &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Asset-Pack&quot;&gt;Gamepad Asset Pack&lt;/a&gt; d &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Prompt-Asset-Pack&quot;&gt;Gamepad Prompt Asset Pack&lt;/a&gt; sɣur Al. Lopez (AL2009man), turagt MIT.&lt;br&gt;Tisefsiyin: Inter (SIL Open Font License) d Matcha Style sɣur Khurasan Studio.</translation>
     </message>
     <message>
+        <source>Restart {app} now to apply the new language?</source>
+        <translation>Ad talseḍ asenker n {app} tura akken ad tesnaseḍ tutlayt tamaynut?</translation>
+    </message>
+    <message>
         <source>DISPLAY</source>
         <translation>ASKAN</translation>
     </message>
@@ -610,12 +614,12 @@ Fren tamudemt s ufus ma tella tmuɣli.</translation>
         <translation>Aɣanib n yimsefraken</translation>
     </message>
     <message>
-        <source>Restart {app}</source>
-        <translation>Ales asenker n {app}</translation>
+        <source>Language changes apply when pawz restarts.</source>
+        <translation>Ibeddilen n tutlayt ad ddun mi ara yales pawz asenker.</translation>
     </message>
     <message>
-        <source>Restart {app} now to apply the new language and theme?</source>
-        <translation>Ad talseḍ asenker n {app} tura akken ad tesnaseḍ tutlayt tamaynut d usentel amaynut?</translation>
+        <source>Restart {app}</source>
+        <translation>Ales asenker n {app}</translation>
     </message>
     <message>
         <source>Automatic (Windows language)</source>
@@ -704,10 +708,6 @@ Fren tamudemt s ufus ma tella tmuɣli.</translation>
     <message>
         <source>Theme</source>
         <translation>Asentel</translation>
-    </message>
-    <message>
-        <source>Language and theme changes apply when pawz restarts.</source>
-        <translation>Ibeddilen n tutlayt d usentel ad ddun mi ara yales pawz asenker.</translation>
     </message>
     <message>
         <source>Profile exists</source>

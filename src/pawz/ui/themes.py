@@ -11,7 +11,10 @@ Green, Juicy Orange and Squishy Purple are its twins, with #00ff00, #ff8c00 and
 #b026ff outlines and title. Neutral and status colours (battery, controller artwork,
 YouTube red) are not blue and stay as they are.
 
-The theme is chosen in Settings and applied at startup, like the language.
+The theme is chosen in Settings and applies at once. Everything themed follows a
+change: the application stylesheet is set again, widgets styled with
+``set_themed_style()`` are restyled, icons theme their SVG when painted, and widgets
+that load themed drawings reload them on ``signals.changed``.
 """
 from __future__ import annotations
 
@@ -20,9 +23,10 @@ import re
 from dataclasses import dataclass, field
 from functools import cache, lru_cache
 
-from PySide6.QtCore import QByteArray, QRect, QRectF, QSize, Qt
+from PySide6.QtCore import QByteArray, QObject, QRect, QRectF, QSize, Qt, Signal
 from PySide6.QtGui import QIcon, QIconEngine, QPainter, QPixmap
 from PySide6.QtSvg import QSvgRenderer
+from PySide6.QtWidgets import QApplication, QWidget
 
 from pawz.i18n import QT_TR_NOOP
 
@@ -82,12 +86,47 @@ THEMES = {theme.id: theme for theme in (
 _current = THEMES[CORPORATE_BLUE]
 
 
+class _Signals(QObject):
+    changed = Signal()  # after apply(): widgets holding themed drawings reload them
+
+
+signals = _Signals()
+_STYLE_PROPERTY = "pawzThemedStyle"  # a widget's style sheet in source colours
+
+
 def set_current(theme_id: str) -> Theme:
     """Select the theme used by ``themed()``, ``stylesheet()`` and icons."""
     global _current
     _current = THEMES.get(theme_id, THEMES[DEFAULT])
-    themed_icon.cache_clear()
     return _current
+
+
+def set_themed_style(widget: QWidget, css: str, *, append: bool = False) -> None:
+    """Give ``widget`` a style sheet written in source colours, in the current theme,
+    and keep the source so a theme change restyles it."""
+    if append:
+        css = (widget.property(_STYLE_PROPERTY) or "") + css
+    widget.setProperty(_STYLE_PROPERTY, css)
+    widget.setStyleSheet(themed(css))
+
+
+def apply(theme_id: str, application_css: str) -> Theme:
+    """Switch the running application to ``theme_id``: its stylesheet (written in
+    source colours), every widget styled with ``set_themed_style()``, icons and
+    drawings."""
+    theme = set_current(theme_id)
+    app = QApplication.instance()
+    if isinstance(app, QApplication):
+        app.setStyleSheet(themed(application_css))
+        for widget in app.allWidgets():
+            css = widget.property(_STYLE_PROPERTY)
+            if css is not None:
+                widget.setStyleSheet(themed(css))
+    signals.changed.emit()
+    if isinstance(app, QApplication):
+        for widget in app.allWidgets():
+            widget.update()
+    return theme
 
 
 def current() -> Theme:
@@ -189,15 +228,22 @@ def map_color(color: str, theme_id: str) -> str:
 
 # -- icons ----------------------------------------------------------------------------
 
-class _SvgIconEngine(QIconEngine):
-    """Paints recoloured SVG data at any size (QIcon(path) would use the file's colours)."""
+@lru_cache(maxsize=256)
+def _themed_svg(source: str, theme_id: str) -> QByteArray:
+    return QByteArray(themed(source, THEMES[theme_id]).encode("utf-8"))
 
-    def __init__(self, normal: bytes, disabled: bytes | None):
+
+class _SvgIconEngine(QIconEngine):
+    """Paints SVG written in source colours, recoloured into the theme current when it
+    paints, at any size (QIcon(path) would use the file's colours)."""
+
+    def __init__(self, normal: str, disabled: str | None):
         super().__init__()
         self._data = {QIcon.Mode.Normal: normal, QIcon.Mode.Disabled: disabled or normal}
 
     def _renderer(self, mode) -> QSvgRenderer:
-        return QSvgRenderer(QByteArray(self._data.get(mode, self._data[QIcon.Mode.Normal])))
+        source = self._data.get(mode, self._data[QIcon.Mode.Normal])
+        return QSvgRenderer(_themed_svg(source, _current.id))
 
     def paint(self, painter: QPainter, rect: QRect, mode, state) -> None:
         renderer = self._renderer(mode)
@@ -227,8 +273,8 @@ class _SvgIconEngine(QIconEngine):
 
 @lru_cache(maxsize=32)
 def themed_icon(normal_path: str, disabled_path: str | None = None) -> QIcon:
-    """An SVG icon in the current theme's colours."""
+    """An SVG icon in the colours of the theme current when it is painted."""
     def load(path):
         with open(path, encoding="utf-8") as file:
-            return themed(file.read()).encode("utf-8")
+            return file.read()
     return QIcon(_SvgIconEngine(load(normal_path), load(disabled_path) if disabled_path else None))

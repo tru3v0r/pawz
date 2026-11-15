@@ -594,6 +594,10 @@ Choose the model by hand if in doubt.</source>
         <translation>{app} {version} — свободное программное обеспечение под лицензией GPL 3.0 или более поздней версии.&lt;br&gt;Рисунки контроллеров и значки кнопок: &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Asset-Pack&quot;&gt;Gamepad Asset Pack&lt;/a&gt; и &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Prompt-Asset-Pack&quot;&gt;Gamepad Prompt Asset Pack&lt;/a&gt;, автор Al. Lopez (AL2009man), лицензия MIT.&lt;br&gt;Шрифты: Inter (SIL Open Font License) и Matcha Style от Khurasan Studio.</translation>
     </message>
     <message>
+        <source>Restart {app} now to apply the new language?</source>
+        <translation>Перезапустить {app} сейчас, чтобы применить новый язык?</translation>
+    </message>
+    <message>
         <source>DISPLAY</source>
         <translation>ОТОБРАЖЕНИЕ</translation>
     </message>
@@ -610,12 +614,12 @@ Choose the model by hand if in doubt.</source>
         <translation>Стиль контроллеров</translation>
     </message>
     <message>
-        <source>Restart {app}</source>
-        <translation>Перезапустить {app}</translation>
+        <source>Language changes apply when pawz restarts.</source>
+        <translation>Изменения языка вступят в силу после перезапуска pawz.</translation>
     </message>
     <message>
-        <source>Restart {app} now to apply the new language and theme?</source>
-        <translation>Перезапустить {app} сейчас, чтобы применить новый язык и тему?</translation>
+        <source>Restart {app}</source>
+        <translation>Перезапустить {app}</translation>
     </message>
     <message>
         <source>Automatic (Windows language)</source>
@@ -704,10 +708,6 @@ Choose the model by hand if in doubt.</source>
     <message>
         <source>Theme</source>
         <translation>Тема</translation>
-    </message>
-    <message>
-        <source>Language and theme changes apply when pawz restarts.</source>
-        <translation>Изменения языка и темы вступят в силу после перезапуска pawz.</translation>
     </message>
     <message>
         <source>Profile exists</source>

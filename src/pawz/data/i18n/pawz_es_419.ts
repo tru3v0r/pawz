@@ -594,6 +594,10 @@ Si tiene dudas, elija el modelo manualmente.</translation>
         <translation>{app} {version}, software libre bajo la licencia GPL 3.0 o posterior.&lt;br&gt;Dibujos de controles e íconos de botones: &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Asset-Pack&quot;&gt;Gamepad Asset Pack&lt;/a&gt; y &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Prompt-Asset-Pack&quot;&gt;Gamepad Prompt Asset Pack&lt;/a&gt; de Al. Lopez (AL2009man), licencia MIT.&lt;br&gt;Fuentes: Inter (SIL Open Font License) y Matcha Style de Khurasan Studio.</translation>
     </message>
     <message>
+        <source>Restart {app} now to apply the new language?</source>
+        <translation>¿Reiniciar {app} ahora para aplicar el nuevo idioma?</translation>
+    </message>
+    <message>
         <source>DISPLAY</source>
         <translation>PANTALLA</translation>
     </message>
@@ -610,12 +614,12 @@ Si tiene dudas, elija el modelo manualmente.</translation>
         <translation>Estilo de los controles</translation>
     </message>
     <message>
-        <source>Restart {app}</source>
-        <translation>Reiniciar {app}</translation>
+        <source>Language changes apply when pawz restarts.</source>
+        <translation>Los cambios de idioma se aplican al reiniciar pawz.</translation>
     </message>
     <message>
-        <source>Restart {app} now to apply the new language and theme?</source>
-        <translation>¿Reiniciar {app} ahora para aplicar el nuevo idioma y el nuevo tema?</translation>
+        <source>Restart {app}</source>
+        <translation>Reiniciar {app}</translation>
     </message>
     <message>
         <source>Automatic (Windows language)</source>
@@ -704,10 +708,6 @@ Si tiene dudas, elija el modelo manualmente.</translation>
     <message>
         <source>Theme</source>
         <translation>Tema</translation>
-    </message>
-    <message>
-        <source>Language and theme changes apply when pawz restarts.</source>
-        <translation>Los cambios de idioma y de tema se aplican al reiniciar pawz.</translation>
     </message>
     <message>
         <source>Profile exists</source>

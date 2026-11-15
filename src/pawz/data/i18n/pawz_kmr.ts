@@ -594,6 +594,10 @@ Heke tu ne bawer î, modelê bi destan hilbijêre.</translation>
         <translation>{app} {version}, nermalaveke azad di bin lîsansa GPL 3.0 an nûtir de.&lt;br&gt;Xêzkirinên kontroleran û îkonên bişkokan: &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Asset-Pack&quot;&gt;Gamepad Asset Pack&lt;/a&gt; û &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Prompt-Asset-Pack&quot;&gt;Gamepad Prompt Asset Pack&lt;/a&gt; ji aliyê Al. Lopez (AL2009man) ve, lîsansa MIT.&lt;br&gt;Font: Inter (SIL Open Font License) û Matcha Style ji aliyê Khurasan Studio ve.</translation>
     </message>
     <message>
+        <source>Restart {app} now to apply the new language?</source>
+        <translation>{app} niha ji nû ve bide destpêkirin da ku zimanê nû were sepandin?</translation>
+    </message>
+    <message>
         <source>DISPLAY</source>
         <translation>NÎŞANDAN</translation>
     </message>
@@ -610,12 +614,12 @@ Heke tu ne bawer î, modelê bi destan hilbijêre.</translation>
         <translation>Şêwaza kontroleran</translation>
     </message>
     <message>
-        <source>Restart {app}</source>
-        <translation>{app} ji nû ve bide destpêkirin</translation>
+        <source>Language changes apply when pawz restarts.</source>
+        <translation>Guhertinên ziman dema pawz ji nû ve dest pê dike têne sepandin.</translation>
     </message>
     <message>
-        <source>Restart {app} now to apply the new language and theme?</source>
-        <translation>{app} niha ji nû ve bide destpêkirin da ku ziman û tema ya nû werin sepandin?</translation>
+        <source>Restart {app}</source>
+        <translation>{app} ji nû ve bide destpêkirin</translation>
     </message>
     <message>
         <source>Automatic (Windows language)</source>
@@ -704,10 +708,6 @@ Heke tu ne bawer î, modelê bi destan hilbijêre.</translation>
     <message>
         <source>Theme</source>
         <translation>Tema</translation>
-    </message>
-    <message>
-        <source>Language and theme changes apply when pawz restarts.</source>
-        <translation>Guhertinên ziman û temayê dema pawz ji nû ve dest pê dike têne sepandin.</translation>
     </message>
     <message>
         <source>Profile exists</source>

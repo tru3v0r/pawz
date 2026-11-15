@@ -594,6 +594,10 @@ Choose the model by hand if in doubt.</source>
         <translation>{app} {version}、GPL 3.0 以降のライセンスで提供されるフリー ソフトウェアです。&lt;br&gt;コントローラーの図とボタン アイコン: Al. Lopez (AL2009man) による &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Asset-Pack&quot;&gt;Gamepad Asset Pack&lt;/a&gt; と &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Prompt-Asset-Pack&quot;&gt;Gamepad Prompt Asset Pack&lt;/a&gt;、MIT ライセンス。&lt;br&gt;フォント: Inter (SIL Open Font License)、Khurasan Studio による Matcha Style。</translation>
     </message>
     <message>
+        <source>Restart {app} now to apply the new language?</source>
+        <translation>新しい言語を適用するため、今すぐ {app} を再起動しますか?</translation>
+    </message>
+    <message>
         <source>DISPLAY</source>
         <translation>表示</translation>
     </message>
@@ -610,12 +614,12 @@ Choose the model by hand if in doubt.</source>
         <translation>コントローラーのスタイル</translation>
     </message>
     <message>
-        <source>Restart {app}</source>
-        <translation>{app} を再起動</translation>
+        <source>Language changes apply when pawz restarts.</source>
+        <translation>言語の変更は pawz の再起動後に適用されます。</translation>
     </message>
     <message>
-        <source>Restart {app} now to apply the new language and theme?</source>
-        <translation>新しい言語とテーマを適用するため、今すぐ {app} を再起動しますか?</translation>
+        <source>Restart {app}</source>
+        <translation>{app} を再起動</translation>
     </message>
     <message>
         <source>Automatic (Windows language)</source>
@@ -704,10 +708,6 @@ Choose the model by hand if in doubt.</source>
     <message>
         <source>Theme</source>
         <translation>テーマ</translation>
-    </message>
-    <message>
-        <source>Language and theme changes apply when pawz restarts.</source>
-        <translation>言語とテーマの変更は pawz の再起動後に適用されます。</translation>
     </message>
     <message>
         <source>Profile exists</source>

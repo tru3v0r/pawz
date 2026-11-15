@@ -1,5 +1,6 @@
 """Colour themes: derived colours, settings, Display tab and restart."""
 import re
+from types import SimpleNamespace
 from unittest.mock import Mock
 
 import pytest
@@ -75,7 +76,8 @@ def test_theme_setting_defaults_to_comfy_turquoise_and_round_trips():
     themes.set_current(themes.CORPORATE_BLUE)
 
 
-def test_display_tab_lists_themes_and_flags_a_change(qtbot):
+def test_display_tab_lists_themes_and_previews_them_at_once(qtbot, qapp):
+    qapp.setStyleSheet(windows.stylesheet())
     dialog = windows.SettingsDialog(Settings.defaults())
     qtbot.addWidget(dialog)
     picker = dialog.theme_picker
@@ -83,8 +85,77 @@ def test_display_tab_lists_themes_and_flags_a_change(qtbot):
         "Cheeky Green", "Comfy Turquoise", "Corporate Blue", "Danger Red", "Juicy Orange",
         "Squishy Purple"]
     assert picker.currentData() == themes.COMFY_TURQUOISE
-    picker.setCurrentIndex(picker.findData(themes.CORPORATE_BLUE))
-    assert dialog.display_changed() and not dialog.display_note.isHidden()
+    try:
+        picker.setCurrentIndex(picker.findData(themes.DANGER_RED))
+        assert themes.current().id == themes.DANGER_RED
+        assert "#9b1c1c" in qapp.styleSheet() and "#9b1c1c" in dialog.styleSheet()
+        assert not dialog.display_changed() and dialog.display_note.isHidden()  # no restart
+        dialog.reject()  # Close without saving: back to the theme in use
+        assert themes.current().id == themes.CORPORATE_BLUE
+        assert qapp.styleSheet() == windows.CSS
+    finally:
+        qapp.setStyleSheet("")
+
+
+def _scene(monkeypatch):
+    monkeypatch.setattr(windows, "save", lambda _settings: None)
+    settings = Settings.defaults()
+    settings.primary_device = "pad#0"
+    settings.known_devices = {"pad#0": "Nintendo Switch Pro Controller", "old#0": "Xbox Controller"}
+
+    class Signal:
+        def connect(self, _callback):
+            pass
+
+    manager = SimpleNamespace(
+        controllers={"pad#0": SimpleNamespace(name="Nintendo Switch Pro Controller")},
+        power_levels={"pad#0": "full"}, devices_changed=Signal(), controller_button_event=Signal(),
+        live_state={})
+    return settings, manager
+
+
+def _screens(qapp, settings, manager, switch_to=None):
+    """Main window and every Settings tab, built in the current theme, then switched
+    live to ``switch_to`` when given."""
+    window = windows.MainWindow(settings, manager)
+    dialog = windows.SettingsDialog(settings)
+    dialog.resize(708, 720)
+    window.show()
+    dialog.show()
+    qapp.processEvents()
+    for slot in window.findChildren(windows.ControllerSlot):  # battery fill at its end value
+        animation = slot.battery_animation
+        if animation.state() == windows.QPropertyAnimation.State.Running:
+            animation.setCurrentTime(animation.duration())
+    if switch_to:
+        windows.apply_theme(switch_to)
+    images = []
+    for tab in range(dialog.tabs.count()):
+        dialog.tabs.setCurrentIndex(tab)
+        qapp.processEvents()
+        images.append(dialog.grab().toImage())
+    images.append(window.grab().toImage())
+    window.tray.hide()
+    dialog.close()
+    window.close()
+    return images
+
+
+@pytest.mark.parametrize("theme_id", [themes.SQUISHY_PURPLE, themes.COMFY_TURQUOISE])
+def test_a_live_theme_switch_looks_exactly_like_starting_in_that_theme(qapp, monkeypatch, theme_id):
+    settings, manager = _scene(monkeypatch)
+    try:
+        qapp.setStyleSheet(windows.stylesheet())
+        switched = _screens(qapp, settings, manager, switch_to=theme_id)
+        themes.set_current(theme_id)
+        qapp.setStyleSheet(windows.stylesheet())
+        started = _screens(qapp, settings, manager)
+    finally:
+        themes.set_current(themes.CORPORATE_BLUE)
+        qapp.setStyleSheet("")
+    names = [f"settings tab {index}" for index in range(len(started) - 1)] + ["main window"]
+    for name, live, fresh in zip(names, switched, started, strict=True):
+        assert live == fresh, f"{name} keeps colours of the previous theme"
 
 
 def test_restart_starts_a_new_instance_that_waits_for_this_one(monkeypatch):

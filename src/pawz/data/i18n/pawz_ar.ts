@@ -594,6 +594,10 @@ Choose the model by hand if in doubt.</source>
         <translation>{app} {version}، برنامج حر بموجب ترخيص GPL 3.0 أو أحدث.&lt;br&gt;رسومات أذرع التحكم وأيقونات الأزرار: &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Asset-Pack&quot;&gt;Gamepad Asset Pack&lt;/a&gt; و&lt;a href=&quot;https://github.com/AL2009man/Gamepad-Prompt-Asset-Pack&quot;&gt;Gamepad Prompt Asset Pack&lt;/a&gt; من Al. Lopez (AL2009man)، بترخيص MIT.&lt;br&gt;الخطوط: Inter (SIL Open Font License) وMatcha Style من Khurasan Studio.</translation>
     </message>
     <message>
+        <source>Restart {app} now to apply the new language?</source>
+        <translation>هل تريد إعادة تشغيل {app} الآن لتطبيق اللغة الجديدة؟</translation>
+    </message>
+    <message>
         <source>DISPLAY</source>
         <translation>العرض</translation>
     </message>
@@ -610,12 +614,12 @@ Choose the model by hand if in doubt.</source>
         <translation>نمط أذرع التحكم</translation>
     </message>
     <message>
-        <source>Restart {app}</source>
-        <translation>إعادة تشغيل {app}</translation>
+        <source>Language changes apply when pawz restarts.</source>
+        <translation>تُطبَّق تغييرات اللغة عند إعادة تشغيل pawz.</translation>
     </message>
     <message>
-        <source>Restart {app} now to apply the new language and theme?</source>
-        <translation>هل تريد إعادة تشغيل {app} الآن لتطبيق اللغة والسمة الجديدتين؟</translation>
+        <source>Restart {app}</source>
+        <translation>إعادة تشغيل {app}</translation>
     </message>
     <message>
         <source>Automatic (Windows language)</source>
@@ -704,10 +708,6 @@ Choose the model by hand if in doubt.</source>
     <message>
         <source>Theme</source>
         <translation>السمة</translation>
-    </message>
-    <message>
-        <source>Language and theme changes apply when pawz restarts.</source>
-        <translation>تُطبَّق تغييرات اللغة والسمة عند إعادة تشغيل pawz.</translation>
     </message>
     <message>
         <source>Profile exists</source>

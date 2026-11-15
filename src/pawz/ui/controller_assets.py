@@ -241,8 +241,16 @@ class SvgView(QWidget):
         self.render_scale = 1.0
         self.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
         self.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        # Drawings are themed when loaded: the last load, repeated when the theme changes.
+        self._reload = None
+        themes.signals.changed.connect(self._retheme)
+
+    def _retheme(self):
+        if self._reload is not None:
+            self._reload()
 
     def set_path(self, path: Path | None):
+        self._reload = lambda: self.set_path(path)
         self.renderer.load(QByteArray(artwork_bytes(path)) if path else QByteArray())
         self.update()
 
@@ -253,6 +261,7 @@ class SvgView(QWidget):
         self.update()
 
     def set_prompt(self, labels: list[str]):
+        self._reload = lambda: self.set_prompt(labels)
         width = max(44, sum(max(44, len(label) * 9 + 16) for label in labels))
         text = escape(" + ".join(labels))
         data = (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} 36">'
@@ -264,6 +273,7 @@ class SvgView(QWidget):
         self.update()
 
     def set_controller_prompt(self, trigger: str, model: ControllerDefinition | None):
+        self._reload = lambda: self.set_controller_prompt(trigger, model)
         data, sources = controller_prompt_svg(trigger, model)
         self.setProperty("svgSources", sources)
         self.renderer.load(QByteArray(data))

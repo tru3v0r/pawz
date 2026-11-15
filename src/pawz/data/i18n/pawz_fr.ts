@@ -594,6 +594,10 @@ Choisissez manuellement le modèle en cas d’ambiguïté.</translation>
         <translation>{app} {version}, logiciel libre sous licence GPL 3.0 ou ultérieure.&lt;br&gt;Dessins de manettes et icônes de boutons : &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Asset-Pack&quot;&gt;Gamepad Asset Pack&lt;/a&gt; et &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Prompt-Asset-Pack&quot;&gt;Gamepad Prompt Asset Pack&lt;/a&gt; par Al. Lopez (AL2009man), licence MIT.&lt;br&gt;Polices : Inter (SIL Open Font License) et Matcha Style par Khurasan Studio.</translation>
     </message>
     <message>
+        <source>Restart {app} now to apply the new language?</source>
+        <translation>Redémarrer {app} maintenant pour appliquer la nouvelle langue ?</translation>
+    </message>
+    <message>
         <source>DISPLAY</source>
         <translation>AFFICHAGE</translation>
     </message>
@@ -610,12 +614,12 @@ Choisissez manuellement le modèle en cas d’ambiguïté.</translation>
         <translation>Style des manettes</translation>
     </message>
     <message>
-        <source>Restart {app}</source>
-        <translation>Redémarrer {app}</translation>
+        <source>Language changes apply when pawz restarts.</source>
+        <translation>Les changements de langue s&apos;appliquent au redémarrage de pawz.</translation>
     </message>
     <message>
-        <source>Restart {app} now to apply the new language and theme?</source>
-        <translation>Redémarrer {app} maintenant pour appliquer la nouvelle langue et le nouveau thème ?</translation>
+        <source>Restart {app}</source>
+        <translation>Redémarrer {app}</translation>
     </message>
     <message>
         <source>Automatic (Windows language)</source>
@@ -704,10 +708,6 @@ Choisissez manuellement le modèle en cas d’ambiguïté.</translation>
     <message>
         <source>Theme</source>
         <translation>Thème</translation>
-    </message>
-    <message>
-        <source>Language and theme changes apply when pawz restarts.</source>
-        <translation>Les changements de langue et de thème s&apos;appliquent au redémarrage de pawz.</translation>
     </message>
     <message>
         <source>Profile exists</source>

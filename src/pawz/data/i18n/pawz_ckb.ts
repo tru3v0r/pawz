@@ -594,6 +594,10 @@ Choose the model by hand if in doubt.</source>
         <translation>{app} {version}، نەرمەکاڵای ئازاد لەژێر مۆڵەتی GPL 3.0 یان نوێتر.&lt;br&gt;وێنەی کۆنترۆڵەرەکان و ئایکۆنی دوگمەکان: &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Asset-Pack&quot;&gt;Gamepad Asset Pack&lt;/a&gt; و &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Prompt-Asset-Pack&quot;&gt;Gamepad Prompt Asset Pack&lt;/a&gt; لەلایەن Al. Lopez (AL2009man)، مۆڵەتی MIT.&lt;br&gt;فۆنتەکان: Inter (SIL Open Font License) و Matcha Style لەلایەن Khurasan Studio.</translation>
     </message>
     <message>
+        <source>Restart {app} now to apply the new language?</source>
+        <translation>ئێستا {app} دەستپێبکەیتەوە بۆ جێبەجێکردنی زمانی نوێ؟</translation>
+    </message>
+    <message>
         <source>DISPLAY</source>
         <translation>پیشاندان</translation>
     </message>
@@ -610,12 +614,12 @@ Choose the model by hand if in doubt.</source>
         <translation>شێوازی کۆنترۆڵەر</translation>
     </message>
     <message>
-        <source>Restart {app}</source>
-        <translation>دەستپێکردنەوەی {app}</translation>
+        <source>Language changes apply when pawz restarts.</source>
+        <translation>گۆڕانکارییەکانی زمان کاتێک pawz دەستپێدەکاتەوە جێبەجێ دەبن.</translation>
     </message>
     <message>
-        <source>Restart {app} now to apply the new language and theme?</source>
-        <translation>ئێستا {app} دەستپێبکەیتەوە بۆ جێبەجێکردنی زمان و ڕووکاری نوێ؟</translation>
+        <source>Restart {app}</source>
+        <translation>دەستپێکردنەوەی {app}</translation>
     </message>
     <message>
         <source>Automatic (Windows language)</source>
@@ -704,10 +708,6 @@ Choose the model by hand if in doubt.</source>
     <message>
         <source>Theme</source>
         <translation>ڕووکار</translation>
-    </message>
-    <message>
-        <source>Language and theme changes apply when pawz restarts.</source>
-        <translation>گۆڕانکارییەکانی زمان و ڕووکار کاتێک pawz دەستپێدەکاتەوە جێبەجێ دەبن.</translation>
     </message>
     <message>
         <source>Profile exists</source>

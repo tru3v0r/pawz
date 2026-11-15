@@ -594,6 +594,10 @@ Choose the model by hand if in doubt.</source>
         <translation>{app} {version} — вільне програмне забезпечення за ліцензією GPL 3.0 або новішої версії.&lt;br&gt;Малюнки контролерів і значки кнопок: &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Asset-Pack&quot;&gt;Gamepad Asset Pack&lt;/a&gt; і &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Prompt-Asset-Pack&quot;&gt;Gamepad Prompt Asset Pack&lt;/a&gt;, автор Al. Lopez (AL2009man), ліцензія MIT.&lt;br&gt;Шрифти: Inter (SIL Open Font License) і Matcha Style від Khurasan Studio.</translation>
     </message>
     <message>
+        <source>Restart {app} now to apply the new language?</source>
+        <translation>Перезапустити {app} зараз, щоб застосувати нову мову?</translation>
+    </message>
+    <message>
         <source>DISPLAY</source>
         <translation>ВІДОБРАЖЕННЯ</translation>
     </message>
@@ -610,12 +614,12 @@ Choose the model by hand if in doubt.</source>
         <translation>Стиль контролерів</translation>
     </message>
     <message>
-        <source>Restart {app}</source>
-        <translation>Перезапустити {app}</translation>
+        <source>Language changes apply when pawz restarts.</source>
+        <translation>Зміни мови наберуть чинності після перезапуску pawz.</translation>
     </message>
     <message>
-        <source>Restart {app} now to apply the new language and theme?</source>
-        <translation>Перезапустити {app} зараз, щоб застосувати нову мову й тему?</translation>
+        <source>Restart {app}</source>
+        <translation>Перезапустити {app}</translation>
     </message>
     <message>
         <source>Automatic (Windows language)</source>
@@ -704,10 +708,6 @@ Choose the model by hand if in doubt.</source>
     <message>
         <source>Theme</source>
         <translation>Тема</translation>
-    </message>
-    <message>
-        <source>Language and theme changes apply when pawz restarts.</source>
-        <translation>Зміни мови й теми наберуть чинності після перезапуску pawz.</translation>
     </message>
     <message>
         <source>Profile exists</source>

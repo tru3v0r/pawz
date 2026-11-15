@@ -594,6 +594,10 @@ Hãy chọn mẫu thủ công nếu không chắc chắn.</translation>
         <translation>{app} {version}, phần mềm tự do theo giấy phép GPL 3.0 trở lên.&lt;br&gt;Hình vẽ tay cầm và biểu tượng nút: &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Asset-Pack&quot;&gt;Gamepad Asset Pack&lt;/a&gt; và &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Prompt-Asset-Pack&quot;&gt;Gamepad Prompt Asset Pack&lt;/a&gt; của Al. Lopez (AL2009man), giấy phép MIT.&lt;br&gt;Phông chữ: Inter (SIL Open Font License) và Matcha Style của Khurasan Studio.</translation>
     </message>
     <message>
+        <source>Restart {app} now to apply the new language?</source>
+        <translation>Khởi động lại {app} ngay để áp dụng ngôn ngữ mới?</translation>
+    </message>
+    <message>
         <source>DISPLAY</source>
         <translation>HIỂN THỊ</translation>
     </message>
@@ -610,12 +614,12 @@ Hãy chọn mẫu thủ công nếu không chắc chắn.</translation>
         <translation>Kiểu tay cầm</translation>
     </message>
     <message>
-        <source>Restart {app}</source>
-        <translation>Khởi động lại {app}</translation>
+        <source>Language changes apply when pawz restarts.</source>
+        <translation>Thay đổi ngôn ngữ sẽ được áp dụng khi pawz khởi động lại.</translation>
     </message>
     <message>
-        <source>Restart {app} now to apply the new language and theme?</source>
-        <translation>Khởi động lại {app} ngay để áp dụng ngôn ngữ và chủ đề mới?</translation>
+        <source>Restart {app}</source>
+        <translation>Khởi động lại {app}</translation>
     </message>
     <message>
         <source>Automatic (Windows language)</source>
@@ -704,10 +708,6 @@ Hãy chọn mẫu thủ công nếu không chắc chắn.</translation>
     <message>
         <source>Theme</source>
         <translation>Chủ đề</translation>
-    </message>
-    <message>
-        <source>Language and theme changes apply when pawz restarts.</source>
-        <translation>Thay đổi ngôn ngữ và chủ đề sẽ được áp dụng khi pawz khởi động lại.</translation>
     </message>
     <message>
         <source>Profile exists</source>

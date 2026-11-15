@@ -594,6 +594,10 @@ Choose the model by hand if in doubt.</source>
         <translation>{app} {version}, GPL 3.0 বা পরবর্তী লাইসেন্সের অধীনে মুক্ত সফটওয়্যার।&lt;br&gt;কন্ট্রোলারের অঙ্কন ও বোতামের আইকন: Al. Lopez (AL2009man)-এর &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Asset-Pack&quot;&gt;Gamepad Asset Pack&lt;/a&gt; ও &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Prompt-Asset-Pack&quot;&gt;Gamepad Prompt Asset Pack&lt;/a&gt;, MIT লাইসেন্স।&lt;br&gt;ফন্ট: Inter (SIL Open Font License) ও Khurasan Studio-এর Matcha Style।</translation>
     </message>
     <message>
+        <source>Restart {app} now to apply the new language?</source>
+        <translation>নতুন ভাষা প্রয়োগ করতে এখনই {app} পুনরায় চালু করবেন?</translation>
+    </message>
+    <message>
         <source>DISPLAY</source>
         <translation>প্রদর্শন</translation>
     </message>
@@ -610,12 +614,12 @@ Choose the model by hand if in doubt.</source>
         <translation>কন্ট্রোলারের শৈলী</translation>
     </message>
     <message>
-        <source>Restart {app}</source>
-        <translation>{app} পুনরায় চালু করুন</translation>
+        <source>Language changes apply when pawz restarts.</source>
+        <translation>ভাষার পরিবর্তন pawz পুনরায় চালু হলে প্রয়োগ হবে।</translation>
     </message>
     <message>
-        <source>Restart {app} now to apply the new language and theme?</source>
-        <translation>নতুন ভাষা ও থিম প্রয়োগ করতে এখনই {app} পুনরায় চালু করবেন?</translation>
+        <source>Restart {app}</source>
+        <translation>{app} পুনরায় চালু করুন</translation>
     </message>
     <message>
         <source>Automatic (Windows language)</source>
@@ -704,10 +708,6 @@ Choose the model by hand if in doubt.</source>
     <message>
         <source>Theme</source>
         <translation>থিম</translation>
-    </message>
-    <message>
-        <source>Language and theme changes apply when pawz restarts.</source>
-        <translation>ভাষা ও থিমের পরিবর্তন pawz পুনরায় চালু হলে প্রয়োগ হবে।</translation>
     </message>
     <message>
         <source>Profile exists</source>

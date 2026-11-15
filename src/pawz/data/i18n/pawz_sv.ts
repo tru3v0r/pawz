@@ -594,6 +594,10 @@ Välj modellen manuellt om du är osäker.</translation>
         <translation>{app} {version}, fri programvara under licensen GPL 3.0 eller senare.&lt;br&gt;Teckningar av handkontroller och knappikoner: &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Asset-Pack&quot;&gt;Gamepad Asset Pack&lt;/a&gt; och &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Prompt-Asset-Pack&quot;&gt;Gamepad Prompt Asset Pack&lt;/a&gt; av Al. Lopez (AL2009man), MIT-licens.&lt;br&gt;Teckensnitt: Inter (SIL Open Font License) och Matcha Style av Khurasan Studio.</translation>
     </message>
     <message>
+        <source>Restart {app} now to apply the new language?</source>
+        <translation>Vill du starta om {app} nu för att tillämpa det nya språket?</translation>
+    </message>
+    <message>
         <source>DISPLAY</source>
         <translation>VISNING</translation>
     </message>
@@ -610,12 +614,12 @@ Välj modellen manuellt om du är osäker.</translation>
         <translation>Stil för handkontroller</translation>
     </message>
     <message>
-        <source>Restart {app}</source>
-        <translation>Starta om {app}</translation>
+        <source>Language changes apply when pawz restarts.</source>
+        <translation>Ändringar av språk tillämpas när pawz startas om.</translation>
     </message>
     <message>
-        <source>Restart {app} now to apply the new language and theme?</source>
-        <translation>Vill du starta om {app} nu för att tillämpa det nya språket och temat?</translation>
+        <source>Restart {app}</source>
+        <translation>Starta om {app}</translation>
     </message>
     <message>
         <source>Automatic (Windows language)</source>
@@ -704,10 +708,6 @@ Välj modellen manuellt om du är osäker.</translation>
     <message>
         <source>Theme</source>
         <translation>Tema</translation>
-    </message>
-    <message>
-        <source>Language and theme changes apply when pawz restarts.</source>
-        <translation>Ändringar av språk och tema tillämpas när pawz startas om.</translation>
     </message>
     <message>
         <source>Profile exists</source>

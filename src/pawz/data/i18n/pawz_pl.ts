@@ -594,6 +594,10 @@ W razie wątpliwości wybierz model ręcznie.</translation>
         <translation>{app} {version}, wolne oprogramowanie na licencji GPL 3.0 lub nowszej.&lt;br&gt;Rysunki kontrolerów i ikony przycisków: &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Asset-Pack&quot;&gt;Gamepad Asset Pack&lt;/a&gt; i &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Prompt-Asset-Pack&quot;&gt;Gamepad Prompt Asset Pack&lt;/a&gt; autorstwa Al. Lopez (AL2009man), licencja MIT.&lt;br&gt;Czcionki: Inter (SIL Open Font License) i Matcha Style autorstwa Khurasan Studio.</translation>
     </message>
     <message>
+        <source>Restart {app} now to apply the new language?</source>
+        <translation>Uruchomić ponownie {app} teraz, aby zastosować nowy język?</translation>
+    </message>
+    <message>
         <source>DISPLAY</source>
         <translation>WYŚWIETLANIE</translation>
     </message>
@@ -610,12 +614,12 @@ W razie wątpliwości wybierz model ręcznie.</translation>
         <translation>Styl kontrolerów</translation>
     </message>
     <message>
-        <source>Restart {app}</source>
-        <translation>Uruchom ponownie {app}</translation>
+        <source>Language changes apply when pawz restarts.</source>
+        <translation>Zmiany języka zostaną zastosowane po ponownym uruchomieniu pawz.</translation>
     </message>
     <message>
-        <source>Restart {app} now to apply the new language and theme?</source>
-        <translation>Uruchomić ponownie {app} teraz, aby zastosować nowy język i motyw?</translation>
+        <source>Restart {app}</source>
+        <translation>Uruchom ponownie {app}</translation>
     </message>
     <message>
         <source>Automatic (Windows language)</source>
@@ -704,10 +708,6 @@ W razie wątpliwości wybierz model ręcznie.</translation>
     <message>
         <source>Theme</source>
         <translation>Motyw</translation>
-    </message>
-    <message>
-        <source>Language and theme changes apply when pawz restarts.</source>
-        <translation>Zmiany języka i motywu zostaną zastosowane po ponownym uruchomieniu pawz.</translation>
     </message>
     <message>
         <source>Profile exists</source>

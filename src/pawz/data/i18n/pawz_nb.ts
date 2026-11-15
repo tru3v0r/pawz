@@ -594,6 +594,10 @@ Velg modellen manuelt hvis du er i tvil.</translation>
         <translation>{app} {version}, fri programvare under lisensen GPL 3.0 eller senere.&lt;br&gt;Kontrollertegninger og knappeikoner: &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Asset-Pack&quot;&gt;Gamepad Asset Pack&lt;/a&gt; og &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Prompt-Asset-Pack&quot;&gt;Gamepad Prompt Asset Pack&lt;/a&gt; av Al. Lopez (AL2009man), MIT-lisens.&lt;br&gt;Skrifter: Inter (SIL Open Font License) og Matcha Style av Khurasan Studio.</translation>
     </message>
     <message>
+        <source>Restart {app} now to apply the new language?</source>
+        <translation>Vil du starte {app} på nytt nå for å ta i bruk det nye språket?</translation>
+    </message>
+    <message>
         <source>DISPLAY</source>
         <translation>VISNING</translation>
     </message>
@@ -610,12 +614,12 @@ Velg modellen manuelt hvis du er i tvil.</translation>
         <translation>Kontrollerstil</translation>
     </message>
     <message>
-        <source>Restart {app}</source>
-        <translation>Start {app} på nytt</translation>
+        <source>Language changes apply when pawz restarts.</source>
+        <translation>Endringer av språk trer i kraft når pawz startes på nytt.</translation>
     </message>
     <message>
-        <source>Restart {app} now to apply the new language and theme?</source>
-        <translation>Vil du starte {app} på nytt nå for å ta i bruk det nye språket og temaet?</translation>
+        <source>Restart {app}</source>
+        <translation>Start {app} på nytt</translation>
     </message>
     <message>
         <source>Automatic (Windows language)</source>
@@ -704,10 +708,6 @@ Velg modellen manuelt hvis du er i tvil.</translation>
     <message>
         <source>Theme</source>
         <translation>Tema</translation>
-    </message>
-    <message>
-        <source>Language and theme changes apply when pawz restarts.</source>
-        <translation>Endringer av språk og tema trer i kraft når pawz startes på nytt.</translation>
     </message>
     <message>
         <source>Profile exists</source>

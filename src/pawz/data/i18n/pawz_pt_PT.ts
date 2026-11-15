@@ -594,6 +594,10 @@ Em caso de dúvida, escolha o modelo manualmente.</translation>
         <translation>{app} {version}, software livre sob a licença GPL 3.0 ou posterior.&lt;br&gt;Desenhos de comandos e ícones de botões: &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Asset-Pack&quot;&gt;Gamepad Asset Pack&lt;/a&gt; e &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Prompt-Asset-Pack&quot;&gt;Gamepad Prompt Asset Pack&lt;/a&gt; de Al. Lopez (AL2009man), licença MIT.&lt;br&gt;Tipos de letra: Inter (SIL Open Font License) e Matcha Style de Khurasan Studio.</translation>
     </message>
     <message>
+        <source>Restart {app} now to apply the new language?</source>
+        <translation>Reiniciar o {app} agora para aplicar o novo idioma?</translation>
+    </message>
+    <message>
         <source>DISPLAY</source>
         <translation>APRESENTAÇÃO</translation>
     </message>
@@ -610,12 +614,12 @@ Em caso de dúvida, escolha o modelo manualmente.</translation>
         <translation>Estilo dos comandos</translation>
     </message>
     <message>
-        <source>Restart {app}</source>
-        <translation>Reiniciar o {app}</translation>
+        <source>Language changes apply when pawz restarts.</source>
+        <translation>As alterações de idioma são aplicadas quando o pawz reiniciar.</translation>
     </message>
     <message>
-        <source>Restart {app} now to apply the new language and theme?</source>
-        <translation>Reiniciar o {app} agora para aplicar o novo idioma e o novo tema?</translation>
+        <source>Restart {app}</source>
+        <translation>Reiniciar o {app}</translation>
     </message>
     <message>
         <source>Automatic (Windows language)</source>
@@ -704,10 +708,6 @@ Em caso de dúvida, escolha o modelo manualmente.</translation>
     <message>
         <source>Theme</source>
         <translation>Tema</translation>
-    </message>
-    <message>
-        <source>Language and theme changes apply when pawz restarts.</source>
-        <translation>As alterações de idioma e de tema são aplicadas quando o pawz reiniciar.</translation>
     </message>
     <message>
         <source>Profile exists</source>

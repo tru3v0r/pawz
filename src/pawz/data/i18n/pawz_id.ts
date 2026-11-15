@@ -594,6 +594,10 @@ Pilih model secara manual jika ragu.</translation>
         <translation>{app} {version}, perangkat lunak bebas di bawah lisensi GPL 3.0 atau yang lebih baru.&lt;br&gt;Gambar kontroler dan ikon tombol: &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Asset-Pack&quot;&gt;Gamepad Asset Pack&lt;/a&gt; dan &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Prompt-Asset-Pack&quot;&gt;Gamepad Prompt Asset Pack&lt;/a&gt; oleh Al. Lopez (AL2009man), lisensi MIT.&lt;br&gt;Font: Inter (SIL Open Font License) dan Matcha Style oleh Khurasan Studio.</translation>
     </message>
     <message>
+        <source>Restart {app} now to apply the new language?</source>
+        <translation>Mulai ulang {app} sekarang untuk menerapkan bahasa baru?</translation>
+    </message>
+    <message>
         <source>DISPLAY</source>
         <translation>TAMPILAN</translation>
     </message>
@@ -610,12 +614,12 @@ Pilih model secara manual jika ragu.</translation>
         <translation>Gaya kontroler</translation>
     </message>
     <message>
-        <source>Restart {app}</source>
-        <translation>Mulai ulang {app}</translation>
+        <source>Language changes apply when pawz restarts.</source>
+        <translation>Perubahan bahasa berlaku saat pawz dimulai ulang.</translation>
     </message>
     <message>
-        <source>Restart {app} now to apply the new language and theme?</source>
-        <translation>Mulai ulang {app} sekarang untuk menerapkan bahasa dan tema baru?</translation>
+        <source>Restart {app}</source>
+        <translation>Mulai ulang {app}</translation>
     </message>
     <message>
         <source>Automatic (Windows language)</source>
@@ -704,10 +708,6 @@ Pilih model secara manual jika ragu.</translation>
     <message>
         <source>Theme</source>
         <translation>Tema</translation>
-    </message>
-    <message>
-        <source>Language and theme changes apply when pawz restarts.</source>
-        <translation>Perubahan bahasa dan tema berlaku saat pawz dimulai ulang.</translation>
     </message>
     <message>
         <source>Profile exists</source>

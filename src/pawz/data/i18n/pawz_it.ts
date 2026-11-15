@@ -594,6 +594,10 @@ In caso di dubbio, scegli il modello manualmente.</translation>
         <translation>{app} {version}, software libero con licenza GPL 3.0 o successiva.&lt;br&gt;Disegni dei controller e icone dei pulsanti: &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Asset-Pack&quot;&gt;Gamepad Asset Pack&lt;/a&gt; e &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Prompt-Asset-Pack&quot;&gt;Gamepad Prompt Asset Pack&lt;/a&gt; di Al. Lopez (AL2009man), licenza MIT.&lt;br&gt;Caratteri: Inter (SIL Open Font License) e Matcha Style di Khurasan Studio.</translation>
     </message>
     <message>
+        <source>Restart {app} now to apply the new language?</source>
+        <translation>Riavviare {app} ora per applicare la nuova lingua?</translation>
+    </message>
+    <message>
         <source>DISPLAY</source>
         <translation>VISUALIZZAZIONE</translation>
     </message>
@@ -610,12 +614,12 @@ In caso di dubbio, scegli il modello manualmente.</translation>
         <translation>Stile dei controller</translation>
     </message>
     <message>
-        <source>Restart {app}</source>
-        <translation>Riavvia {app}</translation>
+        <source>Language changes apply when pawz restarts.</source>
+        <translation>Le modifiche alla lingua si applicano al riavvio di pawz.</translation>
     </message>
     <message>
-        <source>Restart {app} now to apply the new language and theme?</source>
-        <translation>Riavviare {app} ora per applicare la nuova lingua e il nuovo tema?</translation>
+        <source>Restart {app}</source>
+        <translation>Riavvia {app}</translation>
     </message>
     <message>
         <source>Automatic (Windows language)</source>
@@ -704,10 +708,6 @@ In caso di dubbio, scegli il modello manualmente.</translation>
     <message>
         <source>Theme</source>
         <translation>Tema</translation>
-    </message>
-    <message>
-        <source>Language and theme changes apply when pawz restarts.</source>
-        <translation>Le modifiche a lingua e tema si applicano al riavvio di pawz.</translation>
     </message>
     <message>
         <source>Profile exists</source>

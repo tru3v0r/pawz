@@ -594,6 +594,10 @@ Emin değilseniz modeli elle seçin.</translation>
         <translation>{app} {version}, GPL 3.0 veya sonraki sürüm lisansı altında özgür yazılım.&lt;br&gt;Kumanda çizimleri ve düğme simgeleri: Al. Lopez (AL2009man) tarafından hazırlanan &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Asset-Pack&quot;&gt;Gamepad Asset Pack&lt;/a&gt; ve &lt;a href=&quot;https://github.com/AL2009man/Gamepad-Prompt-Asset-Pack&quot;&gt;Gamepad Prompt Asset Pack&lt;/a&gt;, MIT lisansı.&lt;br&gt;Yazı tipleri: Inter (SIL Open Font License) ve Khurasan Studio tarafından hazırlanan Matcha Style.</translation>
     </message>
     <message>
+        <source>Restart {app} now to apply the new language?</source>
+        <translation>Yeni dili uygulamak için {app} şimdi yeniden başlatılsın mı?</translation>
+    </message>
+    <message>
         <source>DISPLAY</source>
         <translation>GÖRÜNÜM</translation>
     </message>
@@ -610,12 +614,12 @@ Emin değilseniz modeli elle seçin.</translation>
         <translation>Kumanda stili</translation>
     </message>
     <message>
-        <source>Restart {app}</source>
-        <translation>{app} uygulamasını yeniden başlat</translation>
+        <source>Language changes apply when pawz restarts.</source>
+        <translation>Dil değişiklikleri pawz yeniden başlatıldığında uygulanır.</translation>
     </message>
     <message>
-        <source>Restart {app} now to apply the new language and theme?</source>
-        <translation>Yeni dili ve temayı uygulamak için {app} şimdi yeniden başlatılsın mı?</translation>
+        <source>Restart {app}</source>
+        <translation>{app} uygulamasını yeniden başlat</translation>
     </message>
     <message>
         <source>Automatic (Windows language)</source>
@@ -704,10 +708,6 @@ Emin değilseniz modeli elle seçin.</translation>
     <message>
         <source>Theme</source>
         <translation>Tema</translation>
-    </message>
-    <message>
-        <source>Language and theme changes apply when pawz restarts.</source>
-        <translation>Dil ve tema değişiklikleri pawz yeniden başlatıldığında uygulanır.</translation>
     </message>
     <message>
         <source>Profile exists</source>
