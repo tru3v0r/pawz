@@ -774,6 +774,10 @@ Choose the model by hand if in doubt.</source>
         <translation>{app} — স্টার্টআপ</translation>
     </message>
     <message>
+        <source>Cheeky Green</source>
+        <translation>Cheeky Green</translation>
+    </message>
+    <message>
         <source>Comfy Turquoise</source>
         <translation>Comfy Turquoise</translation>
     </message>
@@ -782,8 +786,16 @@ Choose the model by hand if in doubt.</source>
         <translation>Danger Red</translation>
     </message>
     <message>
+        <source>Juicy Orange</source>
+        <translation>Juicy Orange</translation>
+    </message>
+    <message>
         <source>Midnight Blue</source>
         <translation>Midnight Blue</translation>
+    </message>
+    <message>
+        <source>Squeeshy Purple</source>
+        <translation>Squeeshy Purple</translation>
     </message>
     <message>
         <source>Eye Candy</source>

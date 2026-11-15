@@ -774,6 +774,10 @@ Piliin nang manu-mano ang modelo kung hindi sigurado.</translation>
         <translation>{app} — Startup</translation>
     </message>
     <message>
+        <source>Cheeky Green</source>
+        <translation>Cheeky Green</translation>
+    </message>
+    <message>
         <source>Comfy Turquoise</source>
         <translation>Comfy Turquoise</translation>
     </message>
@@ -782,8 +786,16 @@ Piliin nang manu-mano ang modelo kung hindi sigurado.</translation>
         <translation>Danger Red</translation>
     </message>
     <message>
+        <source>Juicy Orange</source>
+        <translation>Juicy Orange</translation>
+    </message>
+    <message>
         <source>Midnight Blue</source>
         <translation>Midnight Blue</translation>
+    </message>
+    <message>
+        <source>Squeeshy Purple</source>
+        <translation>Squeeshy Purple</translation>
     </message>
     <message>
         <source>Eye Candy</source>

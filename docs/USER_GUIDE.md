@@ -58,7 +58,7 @@ Settings have five tabs: **GENERAL**, **DISPLAY**, **PROFILES**, **CONTROLLERS**
 
 ### Display
 - **Interface language**: **Automatic (Windows language)** uses the Windows display language when pawz has a translation for it, and English otherwise. Regional varieties follow the Windows region: Spanish from Spain or Latin America, Portuguese from Brazil or Portugal, Simplified or Traditional Chinese, and Kurdish in Sorani for Iraq and Iran (Kurmanji otherwise). Apart from French, the translations are machine translations no native speaker has reviewed yet: the list shows each one's estimated quality (Excellent, Very good, Good, Fair or Fragile), and choosing a language says how its translation is rated, with a link to the GitHub repository for speakers who can improve it.
-- **Color scheme**: **Comfy Turquoise** (default), **Danger Red** (dark, with bright red outlines) or **Midnight Blue**, the original dark blue look.
+- **Color scheme**: **Comfy Turquoise** (default), **Danger Red** (dark, with bright red outlines), **Cheeky Green**, **Juicy Orange** and **Squeeshy Purple** (dark, with bright green, orange and purple outlines) or **Midnight Blue**, the original dark blue look.
 - **Controller style**, how controllers are drawn, in the theme's colours: **Eye Candy** (default: dark body, buttons in the button colour, outlined), **Dark**, **Light**, or **Original** (the artwork's own black and white). It applies at once, in the settings too.
 - The language and color scheme apply when pawz restarts: after saving a change, pawz offers to restart right away.
 

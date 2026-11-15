@@ -6,7 +6,9 @@ button fill its accent #00a8b0 and keeps the luminance ratios between colours:
 every blue's luminance is multiplied by the same factor (accent / button fill,
 about 4, capped at white) and its hue turned towards the accent's. The app name
 also takes the accent. Danger Red does the same with a dark red fill, every colour
-taking exactly the accent's hue, and bright red button outlines and title. Neutral and status colours (battery, controller artwork,
+taking exactly the accent's hue, and bright red button outlines and title; Cheeky
+Green, Juicy Orange and Squeeshy Purple are its twins, with #00ff00, #ff8c00 and
+#b026ff outlines and title. Neutral and status colours (battery, controller artwork,
 YouTube red) are not blue and stay as they are.
 
 The theme is chosen in Settings and applied at startup, like the language.
@@ -27,6 +29,9 @@ from pawz.i18n import QT_TR_NOOP
 MIDNIGHT_BLUE = "midnight_blue"
 COMFY_TURQUOISE = "comfy_turquoise"
 DANGER_RED = "danger_red"
+CHEEKY_GREEN = "cheeky_green"
+JUICY_ORANGE = "juicy_orange"
+SQUEESHY_PURPLE = "squeeshy_purple"
 DEFAULT = COMFY_TURQUOISE
 BRAND = "#3989cf"  # application name in window headers
 BUTTON_FILL = "#20527b"  # button background
@@ -52,6 +57,11 @@ class Theme:
 
 
 THEMES = {theme.id: theme for theme in (
+    # Danger Red's green twin: a dark green fill with the original fill's luminance
+    # and exactly the hue of its #00ff00 button outlines and title.
+    Theme(CHEEKY_GREEN, QT_TR_NOOP("Cheeky Green"), "#005d00", BUTTON_FILL,
+          {BRAND: "#00ff00", BUTTON_FILL: "#005d00", BUTTON_OUTLINE: "#00ff00"},
+          keep_hue_offsets=False),
     Theme(COMFY_TURQUOISE, QT_TR_NOOP("Comfy Turquoise"), "#00a8b0", BUTTON_FILL,
           {BRAND: "#00a8b0", BUTTON_FILL: "#00a8b0"}),
     # Dark like Midnight Blue (the fill has about its luminance), with bright red
@@ -59,7 +69,15 @@ THEMES = {theme.id: theme for theme in (
     Theme(DANGER_RED, QT_TR_NOOP("Danger Red"), "#9b1c1c", BUTTON_FILL,
           {BRAND: "#ff2d2d", BUTTON_FILL: "#9b1c1c", BUTTON_OUTLINE: "#ff2d2d"},
           keep_hue_offsets=False),
+    # Same recipe; an orange that dark is a brown.
+    Theme(JUICY_ORANGE, QT_TR_NOOP("Juicy Orange"), "#7b4000", BUTTON_FILL,
+          {BRAND: "#ff8c00", BUTTON_FILL: "#7b4000", BUTTON_OUTLINE: "#ff8c00"},
+          keep_hue_offsets=False),
     Theme(MIDNIGHT_BLUE, QT_TR_NOOP("Midnight Blue")),
+    # Same recipe, the fill about as saturated as Danger Red's.
+    Theme(SQUEESHY_PURPLE, QT_TR_NOOP("Squeeshy Purple"), "#6d329a", BUTTON_FILL,
+          {BRAND: "#b026ff", BUTTON_FILL: "#6d329a", BUTTON_OUTLINE: "#b026ff"},
+          keep_hue_offsets=False),
 )}
 _current = THEMES[MIDNIGHT_BLUE]
 
