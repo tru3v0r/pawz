@@ -36,6 +36,7 @@ from PySide6.QtWidgets import (
 )
 
 from pawz.core.models import BUTTONS
+from pawz.engine.auto_detect import detect, load_rules
 from pawz.i18n import tr
 from pawz.infra.storage import DATA_DIR
 from pawz.ui.controller_assets import ASSET_DIR, OVERRIDES_DIR
@@ -57,7 +58,10 @@ ASSET_PACK_FILES = {
     "library/steam-controller.svg": "VSCView Steam Controller.svg",
     "library/steam-deck.svg": "VSCView Steam Deck.svg",
 }
-INPUTS = (*BUTTONS, "LEFT_STICK", "RIGHT_STICK")
+# DPAD names a whole cross drawn as one shape; each arm lights up within it.
+INPUTS = (*BUTTONS, "LEFT_STICK", "RIGHT_STICK", "DPAD")
+BUNDLED_RULES = Path(__file__).resolve().parents[1] / "data" / "controllers" / "auto-detect.json"
+USER_RULES = DATA_DIR / "auto-detect.json"  # takes precedence when present
 SELECTABLE = {"path", "circle", "ellipse", "rect", "polygon", "polyline", "g"}
 
 
@@ -65,6 +69,7 @@ SELECTABLE = {"path", "circle", "ellipse", "rect", "polygon", "polyline", "g"}
 class Element:
     id: str
     bounds: QRectF  # in the drawing's user units
+    kind: str = ""  # SVG tag
 
 
 def bundled_relative(path: Path) -> str | None:
@@ -116,7 +121,7 @@ def elements_of(text: str) -> list[Element]:
         if not hidden and tag in SELECTABLE and element_id and renderer.elementExists(element_id):
             bounds = renderer.transformForElement(element_id).mapRect(renderer.boundsOnElement(element_id))
             if bounds.width() > 0 and bounds.height() > 0:
-                found.append(Element(element_id, bounds))
+                found.append(Element(element_id, bounds, tag))
         for child in node:
             visit(child, hidden)
 
@@ -222,6 +227,7 @@ class InputNamesDialog(QDialog):
         # Current names: elements already called after an input.
         self.names = {element.id: logical_name(element.id) for element in self.elements
                       if logical_name(element.id)}
+        self.confidence: dict[str, int] = {}  # element id -> % from Auto-detect
         root = QVBoxLayout(self)
         intro = QLabel(tr("Click a button, stick or trigger in the drawing, then choose the input it is. "
                           "The element gets that name as its id and Inkscape layer name."))
@@ -248,6 +254,16 @@ class InputNamesDialog(QDialog):
         self.input_picker.currentIndexChanged.connect(self._assign)
         form.addRow(tr("Input"), self.input_picker)
         side.addLayout(form)
+        detect_button = QPushButton(tr("Auto-detect"))
+        detect_button.setObjectName("autoDetect")
+        detect_button.setToolTip(tr("Guess the inputs from the positions and sizes of the elements. "
+                                    "The rules are in auto-detect.json."))
+        detect_button.clicked.connect(self.auto_detect)
+        side.addWidget(detect_button)
+        self.detect_summary = QLabel()
+        self.detect_summary.setObjectName("detectSummary")
+        self.detect_summary.setWordWrap(True)
+        side.addWidget(self.detect_summary)
         self.assigned = QListWidget()
         self.assigned.setObjectName("assignedInputs")
         self.assigned.currentItemChanged.connect(
@@ -293,11 +309,37 @@ class InputNamesDialog(QDialog):
         self.input_picker.setCurrentIndex(max(0, self.input_picker.findData(self.names.get(element_id))))
         self.input_picker.blockSignals(False)
 
+    def auto_detect(self):
+        """Name the elements the rules recognise; names chosen by hand are kept."""
+        try:
+            rules = load_rules(USER_RULES, BUNDLED_RULES)
+        except (OSError, ValueError) as exc:
+            QMessageBox.warning(self, tr("Auto-detect"), str(exc))
+            return
+        found = detect([(element.id, element.kind, element.bounds.x(), element.bounds.y(),
+                         element.bounds.width(), element.bounds.height()) for element in self.elements], rules)
+        manual = set(self.names.values()) - {self.names[element] for element in self.confidence
+                                              if element in self.names}
+        for element_id, (logical, percent) in found.items():
+            if logical in manual or (element_id in self.names and element_id not in self.confidence):
+                continue
+            for other, name in list(self.names.items()):
+                if name == logical:
+                    del self.names[other]
+                    self.confidence.pop(other, None)
+            self.names[element_id] = logical
+            self.confidence[element_id] = percent
+        self._refresh_list()
+        self.picker.update()
+        self.detect_summary.setText(tr("{count} inputs detected.").format(count=len(found)) if found
+                                    else tr("Nothing recognised in this drawing."))
+
     def _assign(self, *_):
         element_id = self.picker.selected
         if not element_id:
             return
         logical = self.input_picker.currentData()
+        self.confidence.pop(element_id, None)  # chosen by hand now
         for other, name in list(self.names.items()):
             if name == logical or other == element_id:
                 del self.names[other]  # one element per input, one input per element
@@ -310,7 +352,9 @@ class InputNamesDialog(QDialog):
         self.assigned.blockSignals(True)
         self.assigned.clear()
         for element_id, logical in sorted(self.names.items(), key=lambda item: INPUTS.index(item[1])):
-            item = QListWidgetItem(f"{logical}  ←  {element_id}")
+            percent = self.confidence.get(element_id)
+            item = QListWidgetItem(f"{logical}  ←  {element_id}"
+                                   + (f"  ·  {percent} %" if percent is not None else ""))
             item.setData(Qt.ItemDataRole.UserRole, element_id)
             self.assigned.addItem(item)
         self.assigned.blockSignals(False)

@@ -1706,6 +1706,27 @@ class DraggableHeader(QWidget):
         super().mousePressEvent(event)
 
 
+DPAD_ARMS = {"DPAD_UP": (0, -1), "DPAD_DOWN": (0, 1), "DPAD_LEFT": (-1, 0), "DPAD_RIGHT": (1, 0)}
+DPAD_ARM_WIDTH = 0.36  # a cross's arm is about a third of its width
+
+
+def dpad_arm(cross: QRectF, direction: str) -> QRectF:
+    """The arm of a d-pad cross drawn in ``cross`` for ``direction``.
+
+    The cross is split in thirds: an arm is the middle third across, and runs from the
+    centre square to the edge along its direction.
+    """
+    dx, dy = DPAD_ARMS[direction]
+    arm_w, arm_h = cross.width() * DPAD_ARM_WIDTH, cross.height() * DPAD_ARM_WIDTH
+    length_w, length_h = (cross.width() - arm_w) / 2, (cross.height() - arm_h) / 2
+    centre = cross.center()
+    if dx:
+        return QRectF(centre.x() + (arm_w / 2 if dx > 0 else -arm_w / 2 - length_w),
+                      centre.y() - arm_h / 2, length_w, arm_h)
+    return QRectF(centre.x() - arm_w / 2,
+                  centre.y() + (arm_h / 2 if dy > 0 else -arm_h / 2 - length_h), arm_w, length_h)
+
+
 class ControllerArtwork(QWidget):
     CROWN_SPACE = 12  # reserved above the drawing so the crown stays inside the widget
     # Crown outline around (0, 0) = middle of its base, in pixels.
@@ -1744,7 +1765,7 @@ class ControllerArtwork(QWidget):
         if not (self.svg_renderer and self.svg_renderer.isValid()):
             return {}
         found = {}
-        for logical in (*BUTTONS, "LEFT_STICK", "RIGHT_STICK"):
+        for logical in (*BUTTONS, "LEFT_STICK", "RIGHT_STICK", "DPAD"):
             for candidate in (logical, logical.lower(), "pawz-" + logical.lower()):
                 if self.svg_renderer.elementExists(candidate):
                     found[logical] = candidate
@@ -1786,14 +1807,19 @@ class ControllerArtwork(QWidget):
         painter.save()
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         loose_buttons = []
+        glow = QColor(accent)
+        glow.setAlpha(150)
         for logical in sorted(pressed, key=lambda name: BUTTONS.index(name) if name in BUTTONS else 99):
             if logical in self.named_elements:  # light up the button where it is drawn
                 area = self._element_rect(self.named_elements[logical], rect)
-                glow = QColor(accent)
-                glow.setAlpha(150)
                 painter.setPen(QPen(accent, 1.5))
                 painter.setBrush(glow)
                 painter.drawEllipse(area.adjusted(-1, -1, 1, 1))
+            elif logical in DPAD_ARMS and "DPAD" in self.named_elements:  # its arm of the cross
+                arm = dpad_arm(self._element_rect(self.named_elements["DPAD"], rect), logical)
+                painter.setPen(QPen(accent, 1.5))
+                painter.setBrush(glow)
+                painter.drawRoundedRect(arm, arm.width() / 4, arm.width() / 4)
             else:
                 loose_buttons.append(logical)
         loose_sticks = []

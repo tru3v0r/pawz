@@ -818,6 +818,14 @@ Choisissez manuellement le modèle en cas d’ambiguïté.</translation>
         <translation>Entrée</translation>
     </message>
     <message>
+        <source>Auto-detect</source>
+        <translation>Détection auto</translation>
+    </message>
+    <message>
+        <source>Guess the inputs from the positions and sizes of the elements. The rules are in auto-detect.json.</source>
+        <translation>Devine les entrées d’après la position et la taille des éléments. Les règles sont dans auto-detect.json.</translation>
+    </message>
+    <message>
         <source>Open the asset-pack folder</source>
         <translation>Ouvrir le dossier du pack d’assets</translation>
     </message>
@@ -832,6 +840,14 @@ Choisissez manuellement le modèle en cas d’ambiguïté.</translation>
     <message>
         <source>A copy at its Gamepad Asset Pack path is also saved in {folder}, ready for a pull request.</source>
         <translation>Une copie à son chemin dans le Gamepad Asset Pack est aussi enregistrée dans {folder}, prête pour une pull request.</translation>
+    </message>
+    <message>
+        <source>{count} inputs detected.</source>
+        <translation>{count} entrées détectées.</translation>
+    </message>
+    <message>
+        <source>Nothing recognised in this drawing.</source>
+        <translation>Rien de reconnu dans ce dessin.</translation>
     </message>
 </context>
 <context>

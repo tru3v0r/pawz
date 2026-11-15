@@ -9,6 +9,7 @@
   - `gestures.py`: gesture rules (held clicks, combinations, layers, long press, capture), table-tested.
   - `magnet.py`: sticky magnetism and spatial navigation.
   - `game_mode.py`: when pawz steps aside for a game.
+  - `auto_detect.py`: guesses the inputs of a drawing from its geometry. Rule types (`diamond`, `sticks`, `mirror`, `centre_pairs`, `centre_single`) are implemented here; the rules themselves, their order, thresholds and confidences are data in `data/controllers/auto-detect.json`.
 - `infra/windows.py`: Windows layer (SendInput keyboard/mouse injection, `WindowsOutput`, foreground process and full-screen detection).
 - `infra/window_targets.py`: magnetic targets read from Windows (resize lines and caption buttons by hit-testing, desktop icons), probed on a worker thread.
 - `infra/browser.py`: token-protected loopback HTTP server receiving the active tab.

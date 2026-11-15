@@ -1,0 +1,99 @@
+{
+  "_comment": [
+    "Rules used by 'Auto-detect' in the Name inputs window. They run in this order; each",
+    "one only sees elements not taken by an earlier rule. Positions are fractions of the",
+    "controller body (x: 0 left .. 1 right, y: 0 top .. 1 bottom); sizes are fractions of",
+    "the body width. 'face' sizes refer to the face buttons found by the first rule.",
+    "Confidence: each rule scores how well the geometry fits (0-1), multiplies it by its",
+    "'confidence' (the best it can claim) and keeps results at or above 'min_confidence'.",
+    "A copy in %APPDATA%\\pawz\\auto-detect.json, if present, is used instead of this file."
+  ],
+  "version": 1,
+  "min_confidence": 40,
+  "body": {"comment": "the body is the largest shape; others must be smaller than max_size",
+           "max_size": 0.6, "min_size": 0.02},
+  "rules": [
+    {
+      "id": "face-buttons",
+      "type": "diamond",
+      "comment": "Four same-size buttons in a diamond on the right half.",
+      "region": {"x_min": 0.5},
+      "shape": "round",
+      "max_size": 0.12,
+      "size_tolerance": 0.15,
+      "alignment_tolerance": 0.25,
+      "inputs": {"right": "EAST", "left": "WEST", "top": "NORTH", "bottom": "SOUTH"},
+      "confidence": 0.95
+    },
+    {
+      "id": "dpad-arrows",
+      "type": "diamond",
+      "comment": "Four separate arrows in a diamond on the left half, mirroring the face buttons.",
+      "region": {"x_max": 0.5},
+      "shape": "any",
+      "max_size": 0.12,
+      "size_tolerance": 0.3,
+      "alignment_tolerance": 0.3,
+      "mirror_of": "face-buttons",
+      "mirror_tolerance": 0.08,
+      "mirror_y_tolerance": 0.35,
+      "inputs": {"right": "DPAD_RIGHT", "left": "DPAD_LEFT", "top": "DPAD_UP", "bottom": "DPAD_DOWN"},
+      "confidence": 0.9
+    },
+    {
+      "id": "sticks",
+      "type": "sticks",
+      "comment": "Round, 1.3 to 2.4 times a face button. Right: right half, nearest the face buttons. Left: left half, same size; mirror symmetry raises confidence.",
+      "shape": "round",
+      "face_ratio": [1.3, 2.4],
+      "size_tolerance": 0.12,
+      "mirror_tolerance": 0.06,
+      "inputs": {"right": "RIGHT_STICK", "left": "LEFT_STICK"},
+      "confidence": 0.9
+    },
+    {
+      "id": "dpad-block",
+      "type": "mirror",
+      "comment": "One d-pad block on the left half, where the right stick or the face buttons would be mirrored.",
+      "region": {"x_max": 0.5},
+      "face_ratio": [1.2, 4.0],
+      "mirror_of": ["RIGHT_STICK", "face-buttons"],
+      "tolerance": 0.12,
+      "prefer_shape": "not-round",
+      "input": "DPAD",
+      "confidence": 0.85
+    },
+    {
+      "id": "centre-pairs",
+      "type": "centre_pairs",
+      "comment": "Small buttons mirrored around the centre: the widest pair is Back/Start (minus/plus, share/options), the next Misc/Guide (capture/home).",
+      "region": {"x_min": 0.2, "x_max": 0.8, "y_max": 0.6},
+      "face_ratio": [0.0, 1.05],
+      "tolerance": 0.04,
+      "pairs": [["BACK", "START"], ["MISC1", "GUIDE"]],
+      "confidence": 0.8
+    },
+    {
+      "id": "guide",
+      "type": "centre_single",
+      "comment": "A small button alone on the centre line.",
+      "region": {"y_max": 0.7},
+      "face_ratio": [0.0, 1.3],
+      "tolerance": 0.03,
+      "input": "GUIDE",
+      "confidence": 0.7
+    },
+    {
+      "id": "touchpad",
+      "type": "centre_single",
+      "comment": "A wide rectangle centred near the top: a touchpad.",
+      "region": {"y_max": 0.45},
+      "min_width": 0.2,
+      "max_width": 0.6,
+      "shape": "not-round",
+      "tolerance": 0.05,
+      "input": "TOUCHPAD",
+      "confidence": 0.75
+    }
+  ]
+}
