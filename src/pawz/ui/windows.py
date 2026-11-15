@@ -1360,23 +1360,6 @@ class SettingsDialog(QDialog):
         self.debug_button.clicked.connect(self.open_debug_window)
         general_layout.addSpacing(CONTROL_ROW_GAP)
         general_layout.addWidget(self.debug_button)
-        general_layout.addSpacing(20)
-        general_layout.addWidget(ProfileSectionHeading(tr("About")))
-        general_layout.addSpacing(SECTION_CONTENT_GAP)
-        credits = QLabel(tr(
-            "{app} {version}, free software under the GPL 3.0 or later licence.<br>"
-            "Controller drawings and button icons: "
-            "<a href=\"https://github.com/AL2009man/Gamepad-Asset-Pack\">Gamepad Asset Pack</a> and "
-            "<a href=\"https://github.com/AL2009man/Gamepad-Prompt-Asset-Pack\">Gamepad Prompt Asset Pack</a> "
-            "by Al. Lopez (AL2009man), MIT licence.<br>"
-            "Fonts: Inter (SIL Open Font License) and Matcha Style by Khurasan Studio."
-        ).format(app=APP_NAME, version=APP_VERSION))
-        credits.setObjectName("credits")
-        credits.setWordWrap(True)
-        credits.setTextFormat(Qt.TextFormat.RichText)
-        credits.setOpenExternalLinks(True)
-        credits.setContentsMargins(8, 0, 0, 0)
-        general_layout.addWidget(credits)
         general_layout.addStretch()
         self.tabs.addTab(general_tab, tr("GENERAL"))
         self.tabs.addTab(self._display_tab(settings), tr("DISPLAY"))
@@ -1452,6 +1435,7 @@ class SettingsDialog(QDialog):
         self.controllers_page = ControllersPage(settings, self.catalog, controller_manager)
         self.controllers_page.catalog_changed.connect(self._reload_display_models)
         self.tabs.addTab(self.controllers_page, tr("CONTROLLERS"))
+        self.tabs.addTab(self._about_tab(), tr("ABOUT"))
         self._select_profile(self.profile_picker.currentIndex())
         if initial_tab is not None:
             tab_index = self.tabs.indexOf(
@@ -1476,6 +1460,31 @@ class SettingsDialog(QDialog):
         root.addWidget(body, 1)
         self.setStyleSheet(stylesheet())
         self.save_button.clicked.connect(self._accept_settings)
+
+    def _about_tab(self) -> QWidget:
+        tab = QWidget()
+        tab.setObjectName("settingsPage")
+        layout = QVBoxLayout(tab)
+        layout.setContentsMargins(22, 18, 22, 18)
+        layout.setSpacing(0)
+        layout.addWidget(ProfileSectionHeading(tr("About")))
+        layout.addSpacing(SECTION_CONTENT_GAP)
+        credits = QLabel(tr(
+            "{app} {version}, free software under the GPL 3.0 or later licence.<br>"
+            "Controller drawings and button icons: "
+            "<a href=\"https://github.com/AL2009man/Gamepad-Asset-Pack\">Gamepad Asset Pack</a> and "
+            "<a href=\"https://github.com/AL2009man/Gamepad-Prompt-Asset-Pack\">Gamepad Prompt Asset Pack</a> "
+            "by Al. Lopez (AL2009man), MIT licence.<br>"
+            "Fonts: Inter (SIL Open Font License) and Matcha Style by Khurasan Studio."
+        ).format(app=APP_NAME, version=APP_VERSION))
+        credits.setObjectName("credits")
+        credits.setWordWrap(True)
+        credits.setTextFormat(Qt.TextFormat.RichText)
+        credits.setOpenExternalLinks(True)
+        credits.setContentsMargins(8, 0, 0, 0)
+        layout.addWidget(credits)
+        layout.addStretch()
+        return tab
 
     def _display_tab(self, settings) -> QWidget:
         """Language and theme: both apply when pawz restarts."""

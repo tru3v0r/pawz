@@ -331,7 +331,7 @@ def test_profile_sections_navigation_order_and_visual_controls():
     app.processEvents()
     general_headings = settings_dialog.tabs.widget(0).findChildren(ProfileSectionHeading)
     assert [heading.label.text() for heading in general_headings] == [
-        "STARTUP", "PROFILES", "GAME MODE", "DEBUG", "ABOUT"]
+        "STARTUP", "PROFILES", "GAME MODE", "DEBUG"]
     assert not settings_dialog.findChildren(QFrame, "generalSection")
     assert not settings_dialog.findChildren(QGroupBox)
     for heading in general_headings:
@@ -585,7 +585,7 @@ def test_settings_dialog_separates_general_and_profile_options():
     minimized = dialog.findChild(QCheckBox, "startMinimized")
     default_profile = dialog.findChild(QComboBox, "defaultAssignedProfile")
 
-    assert [dialog.tabs.tabText(i) for i in range(dialog.tabs.count())] == ["GENERAL", "DISPLAY", "PROFILES", "CONTROLLERS"]
+    assert [dialog.tabs.tabText(i) for i in range(dialog.tabs.count())] == ["GENERAL", "DISPLAY", "PROFILES", "CONTROLLERS", "ABOUT"]
     assert dialog.width() == 708
     assert dialog.height() == 720
     assert startup is not None

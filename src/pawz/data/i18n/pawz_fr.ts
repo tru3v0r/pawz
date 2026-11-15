@@ -578,6 +578,10 @@ Choisissez manuellement le modèle en cas d’ambiguïté.</translation>
         <translation>Réduit dans la barre des tâches</translation>
     </message>
     <message>
+        <source>ABOUT</source>
+        <translation>À PROPOS</translation>
+    </message>
+    <message>
         <source>About</source>
         <translation>À propos</translation>
     </message>
