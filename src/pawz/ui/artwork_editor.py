@@ -39,7 +39,7 @@ from pawz.core.models import BUTTONS
 from pawz.engine.auto_detect import detect, load_rules
 from pawz.i18n import tr
 from pawz.infra.storage import DATA_DIR
-from pawz.ui.controller_assets import ASSET_DIR, OVERRIDES_DIR
+from pawz.ui.controller_assets import ASSET_DIR, NAMED_DIR, OVERRIDES_DIR
 from pawz.ui.themes import BUTTON_OUTLINE, themed
 
 ASSET_PACK_EXPORT_DIR = DATA_DIR / "asset-pack-names"
@@ -74,7 +74,7 @@ class Element:
 
 def bundled_relative(path: Path) -> str | None:
     """``"library/switch-pro.svg"`` for a bundled drawing or its renamed copy."""
-    for root in (ASSET_DIR, OVERRIDES_DIR):
+    for root in (NAMED_DIR, OVERRIDES_DIR, ASSET_DIR):  # the named copies live inside ASSET_DIR
         try:
             return path.resolve().relative_to(root.resolve()).as_posix()
         except ValueError:

@@ -11,6 +11,7 @@ from pawz.ui.controller_assets import (
     SvgView,
     prompt_path,
     resolve_artwork,
+    with_override,
 )
 from pawz.ui.controllers_page import SOURCES_ROLE
 from pawz.ui.windows import CSS, SettingsDialog, load_fonts
@@ -87,7 +88,7 @@ def test_all_named_models_have_packaged_svg_illustrations(qapp):
         path = ASSET_DIR / model.svg
         assert path.parent.name == ("models" if model.id in original else "library")
         assert path.is_file() and QSvgRenderer(str(path)).isValid()
-        assert resolve_artwork(model) == path
+        assert resolve_artwork(model) == with_override(path)
         assert not model.verified
 
 
@@ -96,7 +97,7 @@ def test_custom_illustration_overrides_model_and_missing_custom_falls_back(qapp,
     custom = tmp_path / "custom.svg"
     custom.write_text('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4"/></svg>')
     assert resolve_artwork(model, str(custom)) == custom
-    assert resolve_artwork(model, str(tmp_path / "missing.svg")) == ASSET_DIR / model.svg
+    assert resolve_artwork(model, str(tmp_path / "missing.svg")) == with_override(ASSET_DIR / model.svg)
 
 
 def test_axes_have_distinct_vector_icons_and_correspondence_controls_survive_scroll(qtbot):
@@ -119,7 +120,7 @@ def test_custom_models_fall_back_to_their_family_silhouette(qapp):
     from dataclasses import replace
     model = next(model for model in load_builtin_catalog() if model.id == "sony.dualshock-4")
     copy = replace(model, id="custom.copy", svg="")
-    assert resolve_artwork(copy) == ASSET_DIR / "library" / "dualsense.svg"
+    assert resolve_artwork(copy) == with_override(ASSET_DIR / "library" / "dualsense.svg")
 
 
 def test_profiles_tab_shows_the_controller_whose_buttons_are_drawn(qtbot):
@@ -278,3 +279,21 @@ def test_credits_name_the_asset_pack_author(qtbot):
     credits = dialog.findChild(QLabel, "credits")
     assert "AL2009man" in credits.text() and "Gamepad Asset Pack" in credits.text()
     assert credits.openExternalLinks()
+
+
+def test_named_drawings_ship_and_differ_from_the_originals_only_by_names():
+    import re
+
+    from pawz.ui.controller_assets import NAMED_DIR
+    named = sorted((NAMED_DIR / "library").glob("*.svg"))
+    assert len(named) >= 8
+    def without_names(text):
+        text = re.sub(r'inkscape:label="[^"]*" ', "", text)
+        return re.sub(r'\b(id|inkscape:label)="[^"]*"', "", text).splitlines()
+    for path in named:
+        original = (ASSET_DIR / "library" / path.name).read_text(encoding="utf-8")
+        text = path.read_text(encoding="utf-8")
+        assert without_names(text) == without_names(original), path.name
+        assert re.search(r'\bid="(SOUTH|EAST|LEFT_STICK)"', text), path.name
+    model = next(model for model in load_builtin_catalog() if model.id == "nintendo.switch-pro")
+    assert resolve_artwork(model) == NAMED_DIR / "library" / "switch-pro.svg"

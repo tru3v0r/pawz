@@ -122,18 +122,22 @@ def renderer_for(path: Path, parent=None) -> QSvgRenderer:
 
 
 ARTWORK_FOLDERS = ("library", "models")  # controller drawings; prompts are not artwork
-# Bundled drawings whose inputs were named in pawz: same relative paths, used instead.
+# Drawings with named inputs, at the same relative paths as the originals, used
+# instead of them: the user's own (Name inputs) first, then those shipped with pawz.
 OVERRIDES_DIR = DATA_DIR / "artwork"
+NAMED_DIR = ASSET_DIR / "named"
 
 
 def with_override(path: Path) -> Path:
-    """The renamed copy of a bundled drawing when there is one, else ``path``."""
+    """The named copy of a bundled drawing when there is one, else ``path``."""
     try:
         relative = path.resolve().relative_to(ASSET_DIR.resolve())
     except ValueError:
         return path
-    override = OVERRIDES_DIR / relative
-    return override if override.is_file() else path
+    for root in (OVERRIDES_DIR, NAMED_DIR):
+        if (root / relative).is_file():
+            return root / relative
+    return path
 
 
 def bundled_artwork(relative: str) -> Path:
