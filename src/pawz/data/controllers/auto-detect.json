@@ -18,6 +18,8 @@
       "type": "labels",
       "comment": "Layers the artist named, matched whole and case-insensitively. Face-button letters depend on the family; a drawing without a family leaves them to the geometric rules.",
       "patterns": {
+        "LEFT_TOUCHPAD": "^left (touch ?pad|trackpad)$",
+        "RIGHT_TOUCHPAD": "^right (touch ?pad|trackpad)$",
         "LEFT_TRIGGER": "^(zl|lt|l2)( trigger)?$|^left trigger$",
         "RIGHT_TRIGGER": "^(zr|rt|r2)( trigger)?$|^right trigger$",
         "LEFT_SHOULDER": "^(l|lb|l1)( bumper| button)?$|^left (bumper|shoulder)$",
@@ -76,6 +78,17 @@
       "mirror_tolerance": 0.06,
       "inputs": {"right": "RIGHT_STICK", "left": "LEFT_STICK"},
       "confidence": 0.9
+    },
+    {
+      "id": "trackpads",
+      "type": "centre_pairs",
+      "comment": "Two big round pads mirrored left and right, larger than any stick: Steam Controller trackpads.",
+      "region": {"y_max": 0.7},
+      "face_ratio": [2.5, 6.0],
+      "shape": "round",
+      "tolerance": 0.06,
+      "pairs": [["LEFT_TOUCHPAD", "RIGHT_TOUCHPAD"]],
+      "confidence": 0.8
     },
     {
       "id": "dpad-block",

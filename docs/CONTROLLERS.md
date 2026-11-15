@@ -28,7 +28,7 @@ Under the drawing, **Calibrate…** opens the calibration (above) and **Name inp
 
 ## Naming inputs
 
-The main window lights up held buttons where they are drawn when the drawing names them: an element (or Inkscape layer) whose `id` is the logical input, such as `SOUTH`, `LEFT_TRIGGER`, `LEFT_STICK` or `DPAD` (any case, `pawz-` prefix allowed). Inputs it cannot place appear, translucent, between the grips.
+The main window lights up held buttons where they are drawn when the drawing names them: an element (or Inkscape layer) whose `id` is the logical input, such as `SOUTH`, `LEFT_TRIGGER`, `LEFT_STICK` or `DPAD` (any case, `pawz-` prefix allowed). Fingers on a touchpad are drawn on `TOUCHPAD` (a click lights it up too); a controller with two pads (Steam Controller, Steam Deck) uses `LEFT_TOUCHPAD` and `RIGHT_TOUCHPAD`. Inputs it cannot place appear, translucent, between the grips, touchpad contacts as a small pad with its fingers.
 
 **Name inputs…** shows the drawing in its own colours: click a button, stick or trigger, then pick its input. The element gets that name as its `id` and as its Inkscape layer name; only those attributes change in the file. A cross drawn as one shape can be named `DPAD`: each direction then lights up its arm, the cross being split in thirds (an arm is 36 % of its width).
 
@@ -56,7 +56,7 @@ Positions are fractions of the box around all shapes (`x` 0 left to 1 right, `y`
 | `sticks` | the right stick (right half, nearest the face buttons) and the left one (left half, same size; mirror symmetry is a bonus) | `face_ratio` (size range in face-button sizes), `shape`, `size_tolerance`, `mirror_tolerance`, `inputs` by `right`/`left` |
 | `mirror` | one shape where a reference would be, mirrored left-right: a one-piece d-pad | `mirror_of` (inputs or rule ids, tried in order), `region`, `face_ratio`, `tolerance`, `prefer_shape`, `input` |
 | `top_pairs` | wide shapes mirrored at the top of the drawing, topmost first: triggers (behind), then bumpers; a single pair is taken for the bumpers | `region`, `min_aspect` (width / height), `tolerance`, `pairs` |
-| `centre_pairs` | small shapes mirrored around the centre line, widest pair first | `region`, `face_ratio`, `tolerance`, `pairs` (a list of `[left, right]` inputs) |
+| `centre_pairs` | shapes mirrored around the centre line, widest pair first: Back/Start, Misc/Guide, and the two trackpads of a Steam Controller | `region`, `face_ratio`, `shape`, `tolerance`, `pairs` (a list of `[left, right]` inputs) |
 | `centre_single` | one shape on the centre line: Guide, a touchpad | `region`, `face_ratio` or `min_width`/`max_width`, `max_aspect`, `shape`, `tolerance`, `input` |
 
 `face_ratio` sizes are relative to the face buttons the first `diamond` rule found (the `face-buttons` rule). Name inputs passes the model's family, so the `labels` rule can read printed letters. A new kind of pattern needs a new rule type in `src/pawz/engine/auto_detect.py`; new rules of the existing types only need the JSON. `tests/test_auto_detect.py` runs the rules on the bundled silhouettes: the Switch Pro result must match the names given by hand.

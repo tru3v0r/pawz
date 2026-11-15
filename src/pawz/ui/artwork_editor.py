@@ -59,7 +59,8 @@ ASSET_PACK_FILES = {
     "library/steam-deck.svg": "VSCView Steam Deck.svg",
 }
 # DPAD names a whole cross drawn as one shape; each arm lights up within it.
-INPUTS = (*BUTTONS, "LEFT_STICK", "RIGHT_STICK", "DPAD")
+# LEFT_/RIGHT_TOUCHPAD name the two pads of a Steam Controller or Steam Deck.
+INPUTS = (*BUTTONS, "LEFT_STICK", "RIGHT_STICK", "DPAD", "LEFT_TOUCHPAD", "RIGHT_TOUCHPAD")
 BUNDLED_RULES = Path(__file__).resolve().parents[1] / "data" / "controllers" / "auto-detect.json"
 USER_RULES = DATA_DIR / "auto-detect.json"  # takes precedence when present
 SELECTABLE = {"path", "circle", "ellipse", "rect", "polygon", "polyline", "g"}

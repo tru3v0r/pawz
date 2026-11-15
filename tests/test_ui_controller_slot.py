@@ -1191,3 +1191,17 @@ def test_unnamed_drawings_show_inputs_between_the_grips_only_while_active(qtbot)
     y = round(rect.y() + rect.height() * 0.78)
     row = range(round(rect.left()), round(rect.right()))
     assert any(idle.pixelColor(x, y) != active.pixelColor(x, y) for x in row)
+
+
+def test_touchpad_contacts_appear_on_the_named_touchpad(qtbot, tmp_path):
+    svg = tmp_path / "pad.svg"
+    svg.write_text('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 60">'
+                   '<rect width="100" height="60" fill="#000000"/>'
+                   '<rect id="TOUCHPAD" x="30" y="5" width="40" height="20" fill="#333333"/></svg>')
+    idle = _live_artwork(qtbot, svg, set(), (0.0, 0.0, 0.0, 0.0)).grab().toImage()
+    widget = _live_artwork(qtbot, svg, set(), (0.0, 0.0, 0.0, 0.0))
+    assert widget.touch_surface(0) == "TOUCHPAD" and widget.touch_surface(1) is None
+    widget.set_live(frozenset(), (0.0, 0.0, 0.0, 0.0), ((0, 1.0, 0.0),))  # top-right corner of the pad
+    image = widget.grab().toImage()
+    corner = widget._element_rect("TOUCHPAD", widget.artwork_rect()).topRight().toPoint()
+    assert image.pixelColor(corner.x() - 1, corner.y() + 1) != idle.pixelColor(corner.x() - 1, corner.y() + 1)

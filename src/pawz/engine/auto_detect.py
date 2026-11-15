@@ -265,7 +265,8 @@ class Detector:
 
     def _centre_pairs(self, rule: dict, shapes: list[Shape]):
         low, high = self._face_range(rule)
-        pool = [shape for shape in shapes if _in_region(shape, rule.get("region", {})) and low <= shape.size <= high]
+        pool = [shape for shape in shapes if _in_region(shape, rule.get("region", {})) and low <= shape.size <= high
+                and _shape_ok(shape, rule.get("shape")) > 0]
         tolerance = rule.get("tolerance", 0.04)
         pairs = []
         for a, b in itertools.combinations(pool, 2):

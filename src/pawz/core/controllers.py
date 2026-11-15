@@ -133,9 +133,12 @@ class ControllerManager(QObject):
         self.scroll_acc: dict[str, float] = {}
         # (device, stick) pairs seen at rest since the device connected; see _stick().
         self._sticks_at_rest: set[tuple[str, str]] = set()
-        # Read by the main window: held buttons and raw stick axes (LX, LY, RX, RY) per
-        # device. Whole values are replaced, never mutated, as the Qt thread reads them.
-        self.live_state: dict[str, tuple[frozenset[str], tuple[float, float, float, float]]] = {}
+        # Read by the main window: held buttons, raw stick axes (LX, LY, RX, RY) and
+        # touchpad contacts (touchpad, x, y in 0..1) per device. Whole values are
+        # replaced, never mutated, as the Qt thread reads them.
+        self.live_state: dict[str, tuple[frozenset[str], tuple[float, float, float, float],
+                                         tuple[tuple[int, float, float], ...]]] = {}
+        self._touches: dict[str, dict[tuple[int, int], tuple[float, float]]] = {}
         # perf_counter: time.monotonic() only advances in ~15.6 ms steps on Windows,
         # which gave 3 ticks out of 4 a zero dt (zero movement) at 250 Hz.
         self.last_poll = time.perf_counter()
@@ -235,6 +238,7 @@ class ControllerManager(QObject):
             self._apply(self.gestures.remove_device(device))
         self.scroll_acc = {key: value for key, value in self.scroll_acc.items() if key in discovered}
         self.live_state = {key: value for key, value in self.live_state.items() if key in discovered}
+        self._touches = {key: value for key, value in self._touches.items() if key in discovered}
         kept = set(discovered) & previous  # a newly connected device starts unarmed
         self._sticks_at_rest = {pair for pair in self._sticks_at_rest if pair[0] in kept}
         self._device_info = info
@@ -390,9 +394,29 @@ class ControllerManager(QObject):
             self._sticks_at_rest.add((key, stick))
         return radial_deadzone(x, y, deadzone)
 
+    def _read_touches(self) -> None:
+        """Fingers on touchpads (DualShock 4, DualSense...), from SDL's touchpad events."""
+        kinds = (pygame.CONTROLLERTOUCHPADDOWN, pygame.CONTROLLERTOUCHPADMOTION, pygame.CONTROLLERTOUCHPADUP)
+        try:
+            events = pygame.event.get(kinds)
+        except pygame.error:
+            return
+        for event in events:
+            key = self.identities.instances.get(getattr(event, "instance_id", None))
+            if key is None:
+                continue
+            fingers = dict(self._touches.get(key, {}))
+            spot = (event.touchpad, event.finger)
+            if event.type == pygame.CONTROLLERTOUCHPADUP:
+                fingers.pop(spot, None)
+            else:
+                fingers[spot] = (min(1.0, max(0.0, event.x)), min(1.0, max(0.0, event.y)))
+            self._touches[key] = fingers
+
     def poll(self):
         try:
             pygame.event.pump()
+            self._read_touches()
             instances = {pygame.joystick.Joystick(i).get_instance_id()
                          for i in range(pygame.joystick.get_count())}
             if instances != set(self.identities.instances):
@@ -434,8 +458,10 @@ class ControllerManager(QObject):
                     return (read_raw(joystick, source) if source else
                             joy.get_axis(n) / 32767.0 if joy is not None else 0.0)
                 state = self.gestures.devices.get(key)
+                touches = tuple(sorted((touchpad, x, y) for (touchpad, _), (x, y)
+                                       in self._touches.get(key, {}).items()))
                 self.live_state[key] = (frozenset(state.pressed) if state else frozenset(),
-                                        (axis(0), axis(1), axis(2), axis(3)))
+                                        (axis(0), axis(1), axis(2), axis(3)), touches)
                 if self.game_active:
                     continue  # no pointer or wheel: the game reads the sticks
                 p = self._profile(key)

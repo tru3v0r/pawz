@@ -10,7 +10,7 @@
 
 ## Threads
 
-`InputThread` (a `QThread`) owns SDL/pygame, polls controllers at 250 Hz (20 Hz with none connected) and injects input, so pointer smoothness does not depend on the Qt event loop. It only reads a copy of the settings (`ControllerManager.config`), republished by the Qt thread every 250 ms and after each hardware change. Device discoveries come back through a queued signal and are written to `settings` by the Qt thread only. A lock serializes polling and input capture. `stop()` releases every held mouse button. Time steps use `time.perf_counter()`: `time.monotonic()` only advances in ~15.6 ms steps on Windows. Each poll also publishes `live_state` per device (held buttons, raw stick axes) by replacing whole values, which the main window reads about 30 times a second while it is visible.
+`InputThread` (a `QThread`) owns SDL/pygame, polls controllers at 250 Hz (20 Hz with none connected) and injects input, so pointer smoothness does not depend on the Qt event loop. It only reads a copy of the settings (`ControllerManager.config`), republished by the Qt thread every 250 ms and after each hardware change. Device discoveries come back through a queued signal and are written to `settings` by the Qt thread only. A lock serializes polling and input capture. `stop()` releases every held mouse button. Time steps use `time.perf_counter()`: `time.monotonic()` only advances in ~15.6 ms steps on Windows. Each poll also publishes `live_state` per device (held buttons, raw stick axes, touchpad contacts read from SDL's `CONTROLLERTOUCHPAD*` events) by replacing whole values, which the main window reads about 30 times a second while it is visible.
 
 ## Actions and output
 

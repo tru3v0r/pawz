@@ -1706,6 +1706,9 @@ class DraggableHeader(QWidget):
         super().mousePressEvent(event)
 
 
+# Named elements touchpad contacts are drawn on: touchpad 0 on TOUCHPAD (or
+# LEFT_TOUCHPAD), touchpad 1 on RIGHT_TOUCHPAD (Steam Controller, Steam Deck).
+TOUCH_SURFACES = ("LEFT_TOUCHPAD", "RIGHT_TOUCHPAD")
 DPAD_ARMS = {"DPAD_UP": (0, -1), "DPAD_DOWN": (0, 1), "DPAD_LEFT": (-1, 0), "DPAD_RIGHT": (1, 0)}
 DPAD_ARM_WIDTH = 0.36  # a cross's arm is about a third of its width
 
@@ -1743,7 +1746,7 @@ class ControllerArtwork(QWidget):
         self._top_edge: tuple[tuple, tuple[float, QColor]] | None = None
         self.crown_rect = QRectF()
         self.model = None
-        self.live: tuple[frozenset[str], tuple[float, ...]] = (frozenset(), (0.0, 0.0, 0.0, 0.0))
+        self.live: tuple[frozenset[str], tuple[float, ...], tuple] = (frozenset(), (0.0, 0.0, 0.0, 0.0), ())
         self.named_elements: dict[str, str] = {}
         self._prompt_renderers: dict[tuple[str, str], QSvgRenderer] = {}
         self.setMouseTracking(True)
@@ -1765,20 +1768,26 @@ class ControllerArtwork(QWidget):
         if not (self.svg_renderer and self.svg_renderer.isValid()):
             return {}
         found = {}
-        for logical in (*BUTTONS, "LEFT_STICK", "RIGHT_STICK", "DPAD"):
+        for logical in (*BUTTONS, "LEFT_STICK", "RIGHT_STICK", "DPAD", *TOUCH_SURFACES):
             for candidate in (logical, logical.lower(), "pawz-" + logical.lower()):
                 if self.svg_renderer.elementExists(candidate):
                     found[logical] = candidate
                     break
         return found
 
-    def set_live(self, pressed: frozenset[str], sticks: tuple[float, ...]):
-        """Show held buttons and moved sticks; repaints only when that changes."""
-        moved = tuple(round(value, 2) if abs(value) > self.STICK_THRESHOLD else 0.0 for value in sticks)
-        if (pressed, moved) != (self.live[0], tuple(round(v, 2) if abs(v) > self.STICK_THRESHOLD else 0.0
-                                                    for v in self.live[1])):
-            self.live = (pressed, sticks)
+    def set_live(self, pressed: frozenset[str], sticks: tuple[float, ...], touches: tuple = ()):
+        """Show held buttons, moved sticks and touchpad contacts; repaints only on change."""
+        def visible(state):
+            moved = tuple(round(v, 2) if abs(v) > self.STICK_THRESHOLD else 0.0 for v in state[1])
+            return state[0], moved, tuple((pad, round(x, 3), round(y, 3)) for pad, x, y in state[2])
+        if visible((pressed, sticks, touches)) != visible(self.live):
+            self.live = (pressed, sticks, touches)
             self.update()
+
+    def touch_surface(self, touchpad: int) -> str | None:
+        """The named element a touchpad's contacts are drawn on, if the drawing has one."""
+        names = ("TOUCHPAD", "LEFT_TOUCHPAD") if touchpad == 0 else ("RIGHT_TOUCHPAD",)
+        return next((self.named_elements[name] for name in names if name in self.named_elements), None)
 
     def _element_rect(self, element: str, rect: QRectF) -> QRectF:
         """Where an SVG element is drawn inside ``rect`` (the rendered drawing)."""
@@ -1816,10 +1825,10 @@ class ControllerArtwork(QWidget):
         return self._prompt_renderers[key]
 
     def paint_live(self, painter: QPainter, rect: QRectF):
-        pressed, axes = self.live
+        pressed, axes, touches = self.live
         sticks = [(name, axes[index], axes[index + 1]) for name, index in (("LEFT_STICK", 0), ("RIGHT_STICK", 2))
                   if max(abs(axes[index]), abs(axes[index + 1])) > self.STICK_THRESHOLD]
-        if not pressed and not sticks:
+        if not pressed and not sticks and not touches:
             return
         accent = QColor(themed(themes.BUTTON_OUTLINE))
         painter.save()
@@ -1851,15 +1860,27 @@ class ControllerArtwork(QWidget):
                 painter.drawEllipse(dot, radius, radius)
             else:
                 loose_sticks.append((x, y))
-        if loose_buttons or loose_sticks:
-            self._paint_between_grips(painter, rect, loose_buttons, loose_sticks, accent)
+        loose_touches = []
+        for touchpad, x, y in touches:
+            surface = self.touch_surface(touchpad)
+            if surface:  # the finger, where it is on the drawn touchpad
+                area = self._element_rect(surface, rect)
+                radius = max(2.5, min(area.width(), area.height()) / 7)
+                painter.setPen(QPen(QColor("#ffffff"), 1))
+                painter.setBrush(accent)
+                painter.drawEllipse(QPointF(area.x() + x * area.width(), area.y() + y * area.height()),
+                                    radius, radius)
+            else:
+                loose_touches.append((x, y))
+        if loose_buttons or loose_sticks or loose_touches:
+            self._paint_between_grips(painter, rect, loose_buttons, loose_sticks, accent, loose_touches)
         painter.restore()
 
-    def _paint_between_grips(self, painter, rect, buttons, sticks, accent):
+    def _paint_between_grips(self, painter, rect, buttons, sticks, accent, touches=()):
         """Unplaceable inputs, translucent, centred low on the drawing between the grips."""
         size = self.LIVE_ICON
         gap = 3
-        count = len(buttons) + len(sticks)
+        count = len(buttons) + len(sticks) + (1 if touches else 0)
         width = count * size + (count - 1) * gap
         x = rect.center().x() - width / 2
         y = rect.y() + rect.height() * 0.78 - size / 2
@@ -1882,6 +1903,16 @@ class ControllerArtwork(QWidget):
             painter.drawEllipse(QPointF(centre.x() + stick_x * (size / 2 - 4),
                                         centre.y() + stick_y * (size / 2 - 4)), 2.5, 2.5)
             x += size + gap
+        if touches:  # a small touchpad with its fingers
+            pad = QRectF(x, y + size * 0.2, size * 1.0, size * 0.6)
+            painter.setPen(QPen(accent, 1.2))
+            painter.setBrush(Qt.BrushStyle.NoBrush)
+            painter.drawRoundedRect(pad, 2, 2)
+            painter.setPen(Qt.PenStyle.NoPen)
+            painter.setBrush(QColor("#ffffff"))
+            for touch_x, touch_y in touches:
+                painter.drawEllipse(QPointF(pad.x() + 2 + touch_x * (pad.width() - 4),
+                                            pad.y() + 2 + touch_y * (pad.height() - 4)), 2, 2)
 
     def artwork_rect(self) -> QRectF:
         size = self.svg_renderer.defaultSize()

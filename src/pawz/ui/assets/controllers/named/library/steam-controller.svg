@@ -66,13 +66,13 @@
        style="fill:#ffffff;fill-opacity:1">
       <circle
          style="display:inline;fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.00001;stroke-miterlimit:9.53846;paint-order:stroke fill markers"
-         id="path3836"
+         inkscape:label="RIGHT_TOUCHPAD" id="RIGHT_TOUCHPAD"
          cx="52.826466"
          cy="206.52286"
          r="13.914794" />
       <circle
          style="display:inline;fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:2.00001;stroke-miterlimit:9.53846;paint-order:stroke fill markers"
-         id="circle3918"
+         inkscape:label="LEFT_TOUCHPAD" id="LEFT_TOUCHPAD"
          cx="-11.487915"
          cy="206.52286"
          r="13.914794" />

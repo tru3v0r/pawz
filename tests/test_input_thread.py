@@ -243,7 +243,28 @@ def test_live_state_publishes_held_buttons_and_raw_sticks(qapp, fake_sdl, monkey
     monkeypatch.setattr(controllers.windows, "move", lambda *_args: None)
     manager = ControllerManager(Settings.defaults(), bridge(), threaded=False)
     manager.poll()
-    pressed, sticks = manager.live_state[next(iter(manager.controllers))]
+    pressed, sticks, _touches = manager.live_state[next(iter(manager.controllers))]
     assert "SOUTH" in pressed
     assert sticks[0] == pytest.approx(0.5, abs=0.01) and sticks[3] == pytest.approx(-1.0, abs=0.01)
+    manager.stop()
+
+
+def test_touchpad_contacts_are_published_until_the_finger_lifts(qapp, fake_sdl, monkeypatch):
+    pad = joystick(5)
+    fake_sdl.append(pad)
+    queue = []
+    monkeypatch.setattr(controllers.pygame.event, "get", lambda kinds: [queue.pop(0)] if queue else [])
+    manager = ControllerManager(Settings.defaults(), bridge(), threaded=False)
+    key = next(iter(manager.controllers))
+    def touch(kind, x, y):
+        return SimpleNamespace(type=kind, instance_id=5, touchpad=0, finger=0, x=x, y=y)
+    queue.append(touch(controllers.pygame.CONTROLLERTOUCHPADDOWN, 0.25, 0.5))
+    manager.poll()
+    assert manager.live_state[key][2] == ((0, 0.25, 0.5),)
+    queue.append(touch(controllers.pygame.CONTROLLERTOUCHPADMOTION, 0.75, 1.2))  # clamped
+    manager.poll()
+    assert manager.live_state[key][2] == ((0, 0.75, 1.0),)
+    queue.append(touch(controllers.pygame.CONTROLLERTOUCHPADUP, 0.75, 1.0))
+    manager.poll()
+    assert manager.live_state[key][2] == ()
     manager.stop()
