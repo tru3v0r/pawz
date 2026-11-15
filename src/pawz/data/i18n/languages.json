@@ -1,0 +1,51 @@
+{
+  "description": "Interface languages, each named in its own language (Settings sorts them by that name). source: the language the code is written in. quality: the estimated quality of the translation (machine translations no native speaker has reviewed, French excepted), shown in Settings with an invitation to improve the others. right_to_left: the interface is mirrored. qt_locale: Qt's locale for numbers and dates when Qt does not know the code. lupdate_language: a language pyside6-lupdate knows, for codes its table lacks (only its plural rules use it). aliases: other codes a system may report. varieties: how a system language picks a variety: by script, then region, else the default (\"\" is no region).",
+  "source": "en",
+  "translations_url": "https://github.com/tru3v0r/pawz/tree/main/src/pawz/data/i18n",
+  "languages": {
+    "ar": {"name": "العربية", "quality": "good", "right_to_left": true},
+    "bn": {"name": "বাংলা", "quality": "good"},
+    "ckb": {"name": "کوردی (سۆرانی)", "quality": "fair", "right_to_left": true, "lupdate_language": "ku"},
+    "de": {"name": "Deutsch", "quality": "very_good"},
+    "en": {"name": "English"},
+    "es_419": {"name": "Español (Latinoamérica)", "quality": "very_good"},
+    "es_ES": {"name": "Español (España)", "quality": "very_good"},
+    "fi": {"name": "Suomi", "quality": "good"},
+    "fil": {"name": "Filipino", "quality": "good"},
+    "fr": {"name": "Français", "quality": "excellent"},
+    "hi": {"name": "हिन्दी", "quality": "good"},
+    "id": {"name": "Bahasa Indonesia", "quality": "very_good"},
+    "it": {"name": "Italiano", "quality": "very_good"},
+    "ja": {"name": "日本語", "quality": "very_good"},
+    "kab": {"name": "Taqbaylit", "quality": "fragile", "lupdate_language": "fr"},
+    "kmr": {"name": "Kurdî (Kurmancî)", "quality": "fair", "qt_locale": "ku_TR", "lupdate_language": "ku"},
+    "ko": {"name": "한국어", "quality": "very_good"},
+    "nb": {"name": "Norsk bokmål", "quality": "very_good"},
+    "pl": {"name": "Polski", "quality": "very_good"},
+    "pt_BR": {"name": "Português (Brasil)", "quality": "very_good"},
+    "pt_PT": {"name": "Português (Portugal)", "quality": "good"},
+    "ru": {"name": "Русский", "quality": "very_good"},
+    "sv": {"name": "Svenska", "quality": "very_good"},
+    "th": {"name": "ไทย", "quality": "good"},
+    "tr": {"name": "Türkçe", "quality": "very_good"},
+    "uk": {"name": "Українська", "quality": "very_good"},
+    "vi": {"name": "Tiếng Việt", "quality": "very_good"},
+    "zgh": {"name": "ⵜⴰⵎⴰⵣⵉⵖⵜ", "quality": "fragile", "lupdate_language": "fr"},
+    "zh_CN": {"name": "简体中文", "quality": "very_good"},
+    "zh_TW": {"name": "繁體中文（台灣）", "quality": "very_good"}
+  },
+  "aliases": {"no": "nb", "nn": "nb", "tl": "fil", "tzm": "zgh", "shi": "zgh", "ber": "zgh"},
+  "varieties": {
+    "es": {"default": "es_419", "regions": {"ES": "es_ES"}},
+    "pt": {"default": "pt_PT", "regions": {"": "pt_BR", "BR": "pt_BR"}},
+    "zh": {"default": "zh_CN", "scripts": {"Hans": "zh_CN", "Hant": "zh_TW"}, "regions": {"TW": "zh_TW", "HK": "zh_TW", "MO": "zh_TW"}},
+    "ku": {"default": "kmr", "scripts": {"Arab": "ckb", "Latn": "kmr"}, "regions": {"IQ": "ckb", "IR": "ckb"}}
+  },
+  "qualities": {
+    "excellent": {"label": "Excellent", "sentence": "The translation into this language is rated excellent."},
+    "very_good": {"label": "Very good", "sentence": "The translation into this language is rated very good."},
+    "good": {"label": "Good", "sentence": "The translation into this language is rated good."},
+    "fair": {"label": "Fair", "sentence": "The translation into this language is rated fair."},
+    "fragile": {"label": "Fragile", "sentence": "The translation into this language is rated fragile."}
+  }
+}

@@ -18,6 +18,7 @@ the code to ``LANGUAGES`` in ``src/pawz/i18n.py``.
 from __future__ import annotations
 
 import argparse
+import json
 import shutil
 import subprocess
 import sys
@@ -30,10 +31,13 @@ ROOT = Path(__file__).resolve().parents[1]
 PACKAGE = ROOT / "src" / "pawz"
 TRANSLATIONS = PACKAGE / "data" / "i18n"
 TOOLS = Path(PySide6.__file__).parent
-# Languages lupdate's table lacks: it refuses to update their files, so it is given a
-# language it knows (used only for plural rules, and pawz has no plural strings) and
-# the real code is put back afterwards.
-LUPDATE_STAND_INS = {"ckb": "ku", "kmr": "ku", "kab": "fr", "zgh": "fr"}
+# Languages lupdate's table lacks ("lupdate_language" in data/i18n/languages.json): it
+# refuses to update their files, so it is given a language it knows (used only for
+# plural rules, and pawz has no plural strings) and the real code is put back afterwards.
+LUPDATE_STAND_INS = {
+    code: info["lupdate_language"]
+    for code, info in json.loads((TRANSLATIONS / "languages.json").read_text(encoding="utf-8"))["languages"].items()
+    if "lupdate_language" in info}
 
 
 def tool(name: str) -> str:

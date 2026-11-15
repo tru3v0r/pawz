@@ -18,54 +18,24 @@ from pathlib import Path
 
 from PySide6.QtCore import QCoreApplication, QLibraryInfo, QLocale, Qt, QTranslator
 
+from pawz import data_files
+
 TRANSLATIONS_DIR = Path(__file__).resolve().parent / "data" / "i18n"
 # Qt's own dialog buttons (OK, Cancel, Yes, No, Save) for the languages Qt ships no
 # qtbase translation for: {code: {English text: translation}}.
 BUTTONS_FILE = TRANSLATIONS_DIR / "qt_buttons.json"
 AUTO = "auto"
-SOURCE_LANGUAGE = "en"
+# Languages, qualities, varieties: data/i18n/languages.json.
+_DATA = data_files.load("i18n/languages.json")
+SOURCE_LANGUAGE: str = _DATA["source"]
 # Languages offered in Settings, each named in its own language, sorted by that name.
-LANGUAGES = {
-    "id": "Bahasa Indonesia",
-    "de": "Deutsch",
-    "en": "English",
-    "es_ES": "Español (España)",
-    "es_419": "Español (Latinoamérica)",
-    "fil": "Filipino",
-    "fr": "Français",
-    "it": "Italiano",
-    "kmr": "Kurdî (Kurmancî)",
-    "nb": "Norsk bokmål",
-    "pl": "Polski",
-    "pt_BR": "Português (Brasil)",
-    "pt_PT": "Português (Portugal)",
-    "fi": "Suomi",
-    "sv": "Svenska",
-    "kab": "Taqbaylit",
-    "vi": "Tiếng Việt",
-    "tr": "Türkçe",
-    "ru": "Русский",
-    "uk": "Українська",
-    "ar": "العربية",
-    "ckb": "کوردی (سۆرانی)",
-    "hi": "हिन्दी",
-    "bn": "বাংলা",
-    "th": "ไทย",
-    "zgh": "ⵜⴰⵎⴰⵣⵉⵖⵜ",
-    "ja": "日本語",
-    "zh_CN": "简体中文",
-    "zh_TW": "繁體中文（台灣）",
-    "ko": "한국어",
-}
-RIGHT_TO_LEFT = {"ar", "ckb"}
+LANGUAGES = dict(sorted(((code, info["name"]) for code, info in _DATA["languages"].items()),
+                        key=lambda item: item[1].casefold()))
+RIGHT_TO_LEFT = {code for code, info in _DATA["languages"].items() if info.get("right_to_left")}
 # Qt locale (number and date formats) for codes Qt does not know.
-_QT_LOCALES = {"kmr": "ku_TR"}
-# Lusophone countries other than Brazil follow the European norm.
-_BRAZIL = {"", "BR"}
-_TRADITIONAL_CHINESE = {"TW", "HK", "MO"}
-_KURDISH_SORANI_REGIONS = {"IQ", "IR"}
-# Other codes a system may report for an offered language.
-_ALIASES = {"no": "nb", "nn": "nb", "tl": "fil", "tzm": "zgh", "shi": "zgh", "ber": "zgh"}
+_QT_LOCALES = {code: info["qt_locale"] for code, info in _DATA["languages"].items() if "qt_locale" in info}
+_ALIASES: dict[str, str] = _DATA["aliases"]  # other codes a system may report
+_VARIETIES: dict[str, dict] = _DATA["varieties"]
 _installed: list[QTranslator] = []
 
 
@@ -79,28 +49,13 @@ def QT_TR_NOOP(text: str) -> str:  # name pyside6-lupdate looks for
     return text
 
 
-# Estimated quality of each translation. They are machine translations no native
-# speaker has reviewed yet (French excepted); Settings shows the estimate and invites
-# speakers to improve the others.
-EXCELLENT, VERY_GOOD, GOOD, FAIR, FRAGILE = "excellent", "very good", "good", "fair", "fragile"
-QUALITY = {
-    "fr": EXCELLENT,
-    **dict.fromkeys(("de", "es_ES", "es_419", "it", "pt_BR", "ru", "pl", "uk", "sv", "nb", "tr",
-                     "zh_CN", "zh_TW", "ja", "ko", "id", "vi"), VERY_GOOD),
-    **dict.fromkeys(("pt_PT", "ar", "fi", "th", "hi", "bn", "fil"), GOOD),
-    **dict.fromkeys(("kmr", "ckb"), FAIR),
-    **dict.fromkeys(("kab", "zgh"), FRAGILE),
-}
-QUALITY_NAMES = {EXCELLENT: QT_TR_NOOP("Excellent"), VERY_GOOD: QT_TR_NOOP("Very good"),
-                 GOOD: QT_TR_NOOP("Good"), FAIR: QT_TR_NOOP("Fair"), FRAGILE: QT_TR_NOOP("Fragile")}
-QUALITY_SENTENCES = {
-    EXCELLENT: QT_TR_NOOP("The translation into this language is rated excellent."),
-    VERY_GOOD: QT_TR_NOOP("The translation into this language is rated very good."),
-    GOOD: QT_TR_NOOP("The translation into this language is rated good."),
-    FAIR: QT_TR_NOOP("The translation into this language is rated fair."),
-    FRAGILE: QT_TR_NOOP("The translation into this language is rated fragile."),
-}
-TRANSLATIONS_URL = "https://github.com/tru3v0r/pawz/tree/main/src/pawz/data/i18n"
+# Estimated quality of each translation (machine translations no native speaker has
+# reviewed yet, French excepted): Settings shows it and invites speakers to improve them.
+EXCELLENT = "excellent"
+QUALITY = {code: info["quality"] for code, info in _DATA["languages"].items() if "quality" in info}
+QUALITY_NAMES = {level: info["label"] for level, info in _DATA["qualities"].items()}
+QUALITY_SENTENCES = {level: info["sentence"] for level, info in _DATA["qualities"].items()}
+TRANSLATIONS_URL: str = _DATA["translations_url"]
 
 
 def quality_note(code: str) -> str:
@@ -123,16 +78,10 @@ def match(name: str) -> str | None:
     language = _ALIASES.get(parts[0].lower(), parts[0].lower())
     script = next((part.title() for part in parts[1:] if len(part) == 4), "")
     region = next((part.upper() for part in parts[1:] if len(part) in (2, 3) and part != parts[0]), "")
-    if language == "es":
-        return "es_ES" if region == "ES" else "es_419"
-    if language == "pt":
-        return "pt_BR" if region in _BRAZIL else "pt_PT"
-    if language == "zh":
-        traditional = script == "Hant" or (region in _TRADITIONAL_CHINESE and script != "Hans")
-        return "zh_TW" if traditional else "zh_CN"
-    if language == "ku":
-        sorani = script == "Arab" or (region in _KURDISH_SORANI_REGIONS and script != "Latn")
-        return "ckb" if sorani else "kmr"
+    variety = _VARIETIES.get(language)
+    if variety is not None:
+        return (variety.get("scripts", {}).get(script) or variety.get("regions", {}).get(region)
+                or variety["default"])
     return language if language in LANGUAGES else None
 
 

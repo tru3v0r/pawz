@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Interface languages",
+  "type": "object",
+  "required": ["description", "source", "translations_url", "languages", "aliases", "varieties", "qualities"],
+  "additionalProperties": false,
+  "$defs": {
+    "code": {"type": "string", "pattern": "^[a-z]{2,3}(_([A-Z]{2}|[0-9]{3}))?$"},
+    "codes": {"type": "object", "additionalProperties": {"$ref": "#/$defs/code"}}
+  },
+  "properties": {
+    "description": {"type": "string"},
+    "source": {"$ref": "#/$defs/code"},
+    "translations_url": {"type": "string", "pattern": "^https://"},
+    "languages": {
+      "type": "object",
+      "propertyNames": {"$ref": "#/$defs/code"},
+      "additionalProperties": {
+        "type": "object",
+        "required": ["name"],
+        "additionalProperties": false,
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "quality": {"enum": ["excellent", "very_good", "good", "fair", "fragile"]},
+          "right_to_left": {"const": true},
+          "qt_locale": {"type": "string"},
+          "lupdate_language": {"type": "string"}
+        }
+      }
+    },
+    "aliases": {"$ref": "#/$defs/codes"},
+    "varieties": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["default"],
+        "additionalProperties": false,
+        "properties": {
+          "default": {"$ref": "#/$defs/code"},
+          "scripts": {"$ref": "#/$defs/codes"},
+          "regions": {"$ref": "#/$defs/codes"}
+        }
+      }
+    },
+    "qualities": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["label", "sentence"],
+        "additionalProperties": false,
+        "properties": {"label": {"type": "string"}, "sentence": {"type": "string"}}
+      }
+    }
+  }
+}

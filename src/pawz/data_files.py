@@ -5,8 +5,8 @@ default shortcuts, known applications, actions, controller identification and
 prompts, themes, languages. A folder may hold a ``<folder>.schema.json`` (JSON
 Schema 2020-12) that every other file in it, subfolders included, must follow.
 
-Strings shown to the user are in English under ``label`` keys; the translation
-script extracts them (see ``scripts/update-translations.py``).
+Strings shown to the user are in English under ``label`` (or ``sentence``) keys; the
+translation script extracts them (see ``scripts/update-translations.py``).
 """
 from __future__ import annotations
 
@@ -18,7 +18,7 @@ from typing import Any
 from jsonschema import Draft202012Validator
 
 BUNDLED_DATA = Path(__file__).resolve().parent / "data"
-TRANSLATABLE_KEYS = ("label",)  # their string values are user-facing English
+TRANSLATABLE_KEYS = ("label", "sentence")  # their string values are user-facing English
 
 
 class DataError(ValueError):
@@ -71,7 +71,7 @@ def load_folder(relative: str) -> tuple[tuple[str, Any], ...]:
 
 
 def translatable_strings() -> list[str]:
-    """Every ``label`` in the data files, for the translation files."""
+    """Every ``label`` and ``sentence`` in the data files, for the translation files."""
     found: list[str] = []
 
     def walk(value: Any) -> None:
