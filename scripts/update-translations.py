@@ -4,8 +4,10 @@
     python scripts/update-translations.py --new de   # also start a German file
 
 1. ``pyside6-lupdate`` scans every ``tr()`` / ``QT_TR_NOOP()`` call under
-   ``src/pawz`` and updates ``src/pawz/data/i18n/pawz_<lang>.ts``: new strings
-   are added as unfinished, removed ones are marked obsolete and dropped.
+   ``src/pawz``, and the ``label`` strings of the data files (through a temporary
+   stub, see ``pawz.data_files``), and updates
+   ``src/pawz/data/i18n/pawz_<lang>.ts``: new strings are added as unfinished,
+   removed ones are marked obsolete and dropped.
 2. Translate the unfinished entries (Qt Linguist, or any text editor).
 3. Run the script again: ``pyside6-lrelease`` compiles each ``.ts`` to the
    ``.qm`` file the application loads.
@@ -16,8 +18,10 @@ the code to ``LANGUAGES`` in ``src/pawz/i18n.py``.
 from __future__ import annotations
 
 import argparse
+import shutil
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 import PySide6
@@ -37,8 +41,12 @@ def tool(name: str) -> str:
     return str(path if path.exists() else name)
 
 
-def sources() -> list[str]:
-    return sorted(str(path) for path in PACKAGE.rglob("*.py"))
+def sources(stub_folder: Path) -> list[str]:
+    """The package's code and a stub marking the data files' labels."""
+    sys.path.insert(0, str(PACKAGE.parent))
+    from pawz import data_files
+    stub = data_files.write_translation_stub(stub_folder / "data_labels.py")
+    return [*sorted(str(path) for path in PACKAGE.rglob("*.py")), str(stub)]
 
 
 def set_language(ts: Path, old: str, new: str) -> None:
@@ -57,17 +65,20 @@ def main() -> int:
         new = TRANSLATIONS / f"pawz_{args.new}.ts"
         if new not in files:
             files.append(new)
+    stub_folder = Path(tempfile.mkdtemp())
+    code = sources(stub_folder)
     for ts in files:
         language = ts.stem.removeprefix("pawz_")
         stand_in = LUPDATE_STAND_INS.get(language, language)
         set_language(ts, language, stand_in)
         try:
-            subprocess.run([tool("lupdate"), *sources(), "-no-obsolete", "-locations", "none",
+            subprocess.run([tool("lupdate"), *code, "-no-obsolete", "-locations", "none",
                             "-source-language", "en", "-target-language", stand_in,
                             "-ts", str(ts)], check=True)
         finally:
             set_language(ts, stand_in, language)
         subprocess.run([tool("lrelease"), str(ts), "-qm", str(ts.with_suffix(".qm"))], check=True)
+    shutil.rmtree(stub_folder, ignore_errors=True)
     return 0
 
 

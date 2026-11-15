@@ -37,3 +37,20 @@ def test_known_applications():
     assert applications.display_name("VLC.exe") == "VLC"
     assert applications.display_name("C:/Games/some-game.exe") == "some-game"
     assert applications.install_paths("vlc.exe") == ("VideoLAN/VLC/vlc.exe",)
+
+
+def test_every_key_named_in_the_data_exists():
+    from pawz.core.models import default_shortcuts
+    from pawz.engine.actions import CATALOGUE
+    from pawz.infra.windows import key_code
+    combos = [action.keys for action in CATALOGUE if action.keys]
+    combos += [binding.keys for group in default_shortcuts() for binding in group.bindings.values()
+               if binding.keys]
+    for combo in combos:
+        for token in combo.split("+"):
+            key_code(token)  # raises on an unknown key
+
+
+def test_data_labels_are_marked_for_translation(tmp_path):
+    stub = data_files.write_translation_stub(tmp_path / "labels.py").read_text(encoding="utf-8")
+    assert 'QT_TR_NOOP("Left click")' in stub and 'QT_TR_NOOP("Toggle game mode")' in stub

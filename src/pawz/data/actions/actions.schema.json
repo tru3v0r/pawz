@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Actions a controller button can trigger",
+  "type": "object",
+  "required": ["description", "actions"],
+  "additionalProperties": false,
+  "properties": {
+    "description": {"type": "string"},
+    "actions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "label"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z_]+$"},
+          "label": {"type": "string", "minLength": 1},
+          "mouse": {"enum": ["left", "right", "middle"]},
+          "keys": {"type": "string", "minLength": 1},
+          "custom_keys": {"const": true},
+          "internal": {"const": true}
+        },
+        "maxProperties": 3
+      }
+    }
+  }
+}

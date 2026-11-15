@@ -36,7 +36,9 @@ def test_translation_files_list_exactly_the_strings_in_the_code(tmp_path):
     lupdate = Path(PySide6.__file__).parent / "lupdate.exe"
     if not lupdate.exists():
         pytest.skip("pyside6-lupdate not available")
+    from pawz import data_files
     sources = sorted(str(path) for path in (ROOT / "src" / "pawz").rglob("*.py"))
+    sources.append(str(data_files.write_translation_stub(tmp_path / "data_labels.py")))
     fresh = tmp_path / "fresh.ts"
     subprocess.run([str(lupdate), *sources, "-ts", str(fresh)], check=True, capture_output=True)
     expected = set(messages(fresh))

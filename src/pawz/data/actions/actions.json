@@ -1,0 +1,22 @@
+{
+  "description": "Actions a controller button can trigger, in the order Settings lists them. id: stored in the settings, never change it. label: shown in Settings (English, translated). mouse: a mouse button held as long as the controller button. keys: a fixed key combination (site and app hotkeys such as YouTube's, not system media keys). custom_keys: the key combination comes from the shortcut. internal: handled by pawz itself.",
+  "actions": [
+    {"id": "none", "label": "No action"},
+    {"id": "left_click", "label": "Left click", "mouse": "left"},
+    {"id": "right_click", "label": "Right click", "mouse": "right"},
+    {"id": "middle_click", "label": "Middle click", "mouse": "middle"},
+    {"id": "win", "label": "Start menu", "keys": "win"},
+    {"id": "volume_up", "label": "Volume up", "keys": "volume_up"},
+    {"id": "volume_down", "label": "Volume down", "keys": "volume_down"},
+    {"id": "previous", "label": "Previous page", "keys": "browser_back"},
+    {"id": "next", "label": "Next page", "keys": "browser_forward"},
+    {"id": "tab_previous", "label": "Previous tab", "keys": "ctrl+shift+tab"},
+    {"id": "tab_next", "label": "Next tab", "keys": "ctrl+tab"},
+    {"id": "play_pause", "label": "Play / pause", "keys": "space"},
+    {"id": "fullscreen", "label": "Full screen", "keys": "f"},
+    {"id": "subtitles", "label": "Subtitles", "keys": "c"},
+    {"id": "key_combo", "label": "Keyboard shortcut", "custom_keys": true},
+    {"id": "open_settings", "label": "Open settings", "internal": true},
+    {"id": "game_mode", "label": "Toggle game mode", "internal": true}
+  ]
+}
