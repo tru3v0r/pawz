@@ -1,0 +1,134 @@
+{
+  "description": "What scripts/vendor-controller-assets.py fetches from AL2009man's asset packs, at pinned revisions. prompts: every SVG of these folders of the Gamepad Prompt Asset Pack, except paths containing an excluded word (Guide buttons are platform marks). files: other files to copy as they are. silhouettes: Connection Icon Pack controller types, stored as library/<name>.svg. detailed: Controller Asset Pack drawings stored as library/<name>.svg with these changes: label:<Inkscape layer> or id:<element id> is removed (manufacturer logos and platform marks are trademarks and are not redistributed), show:label:<layer> makes a hidden layer visible; note says why.",
+  "repositories": {
+    "Gamepad-Prompt-Asset-Pack": "552d6448ffc4a6f84d488454878357ea375a59bd",
+    "Gamepad-Asset-Pack": "a6d1113b0b3b2438bbbcb08a33f9a25eb2391d7c"
+  },
+  "prompts": {
+    "repository": "Gamepad-Prompt-Asset-Pack",
+    "folders": [
+      "Shared",
+      "Nintendo",
+      "PlayStation",
+      "Xbox"
+    ],
+    "excluded_words": [
+      "guide"
+    ],
+    "target": "prompts/"
+  },
+  "files": [
+    {
+      "repository": "Gamepad-Prompt-Asset-Pack",
+      "source": "LICENSE",
+      "target": "prompts/LICENSE.txt"
+    },
+    {
+      "repository": "Gamepad-Prompt-Asset-Pack",
+      "source": "README.md",
+      "target": "prompts/UPSTREAM_README.md"
+    },
+    {
+      "repository": "Gamepad-Asset-Pack",
+      "source": "Connection Icon Pack/Controller Type/SVG/VSCView Generic Controller.svg",
+      "target": "library-generic.svg"
+    },
+    {
+      "repository": "Gamepad-Asset-Pack",
+      "source": "LICENSE",
+      "target": "Gamepad-Asset-Pack-LICENSE.txt"
+    }
+  ],
+  "silhouettes": {
+    "repository": "Gamepad-Asset-Pack",
+    "folder": "Connection Icon Pack/Controller Type/SVG/VSCView ",
+    "drawings": {
+      "xbox-360": "Xbox 360 Controller",
+      "xbox-wireless": "Xbox Wireless Controller",
+      "dualshock-3": "DualShock 3 Controller",
+      "dualshock-4": "DualShock 4 Controller",
+      "dualsense": "DualSense Controller",
+      "switch-pro": "Switch Pro Controller",
+      "joycon": "Switch Joy-Con",
+      "joycon-grip": "Switch Joy-Con Grip",
+      "steam-controller": "Steam Controller",
+      "steam-deck": "Steam Deck"
+    }
+  },
+  "detailed": {
+    "repository": "Gamepad-Asset-Pack",
+    "folder": "Controller Asset Pack/",
+    "drawings": {
+      "switch-pro-detailed": {
+        "source": "Nintendo Switch Controller Images/Switch Pro Controller/Default Theme/Theme SVG/Switch Pro Controller VSCView.svg",
+        "changes": [
+          "label:Nintendo Switch Logo"
+        ]
+      },
+      "joycon-detailed": {
+        "source": "Nintendo Switch Controller Images/Switch Joycons/Theme SVG/VSCView Joycon Theme.svg",
+        "changes": [
+          "label:Nintendo Switch Logo"
+        ]
+      },
+      "dualshock-4-detailed": {
+        "source": "DualShock 4 Controller Images/Default Theme/Theme SVG/DS4 V2 VSC SVG.svg",
+        "changes": [
+          "label:PS Icon"
+        ]
+      },
+      "dualsense-detailed": {
+        "source": "DualSense Controller Image/Default/Theme SVG/DualSense VSCView SVG.svg",
+        "changes": [
+          "label:PS Button"
+        ],
+        "note": "the PS button is the logo itself"
+      },
+      "xbox-360-detailed": {
+        "source": "Xbox 360 Controller Images/Default Theme/Theme SVG/Xbox 360 VSCView - Black.svg",
+        "changes": [
+          "label:Microsoft Text",
+          "label:Xbox 360 Text",
+          "id:path29313"
+        ],
+        "note": "path29313: the X on Guide"
+      },
+      "xbox-one-detailed": {
+        "source": "Xbox Wireless Controller Images/Default Theme/Theme SVG/Xbox One Color/Xbox One Controller VSCView Black.svg",
+        "changes": [
+          "id:path8160-9-5"
+        ],
+        "note": "path8160-9-5: the logo on Guide"
+      },
+      "xbox-one-s-detailed": {
+        "source": "Xbox Wireless Controller Images/Default Theme/Theme SVG/Xbox One Color/Xbox One S Controller VSCView Blue.svg",
+        "changes": [
+          "id:path8160-9-5"
+        ],
+        "note": "path8160-9-5: the logo on Guide"
+      },
+      "xbox-series-detailed": {
+        "source": "Xbox Wireless Controller Images/Default Theme/Theme SVG/Xbox Series X Color/Xbox Series X Controller VSCView Black.svg",
+        "changes": [
+          "id:path8160-9-5"
+        ],
+        "note": "path8160-9-5: the logo on Guide"
+      },
+      "steam-controller-detailed": {
+        "source": "Steam Controller Images/Default Theme/Theme SVG/Black/Steam Controller VSCView.svg",
+        "changes": [
+          "label:Steam Logo"
+        ]
+      },
+      "steam-deck-detailed": {
+        "source": "Steam Deck Images/Theme SVG/Black/Steam Deck VSCView Overlay.svg",
+        "changes": [
+          "id:path8593",
+          "id:path17439",
+          "show:label:Triggers"
+        ],
+        "note": "path8593: the STEAM wordmark on Guide; path17439: the screen's chroma-key green; the triggers are drawn but hidden in the original"
+      }
+    }
+  }
+}

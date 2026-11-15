@@ -47,7 +47,7 @@ Content lives in JSON under `src/pawz/data/`, logic in the code. `pawz.data_file
 | `controllers/` | Controller catalogue and its schema, auto-detect rules; `identification.json` (USB ids and name fragments that match a device to a model, most specific first), `prompts.json` (the icon of each input: model, family, printed letter, default, position), `artwork.json` (family silhouettes, Gamepad Asset Pack file names for Name inputs) |
 | `i18n/` | `languages.json`: interface languages, their native names, estimated quality, right-to-left, aliases and regional varieties; translations (Qt Linguist); Qt's buttons for languages Qt does not translate |
 
-What stays in the code is protocol rather than content: SDL button and axis indices, Windows virtual-key codes and mouse flags, the logical button names and the old names they replace, and tuning constants such as stick thresholds.
+The development scripts keep their content apart too: `scripts/vendor-controller-assets.json` says what the vendoring script fetches. What stays in the code is protocol rather than content: SDL button and axis indices, Windows virtual-key codes and mouse flags, the logical button names and the old names they replace, and tuning constants such as stick thresholds.
 
 ## Default shortcuts
 The shortcuts a new settings file starts with are JSON files in `src/pawz/data/shortcuts/`, one per context: `global.json` (everywhere), `edit-layer.json` (ZL held), `apps/browsers.json`, `apps/vlc.exe.json`, `sites/youtube.com.json`. A file without `apps` or `sites` applies everywhere; otherwise to those executables or domains, and an application or website added in Settings gets the shortcuts of the files that name it. `shortcuts.schema.json` describes the format, and a test checks every file:
@@ -91,7 +91,7 @@ The stylesheet (`CSS` in `ui/windows.py`), inline styles and icons are written i
 - `run-windows.ps1`, `build-windows.ps1`, `test-build-windows.ps1`: run from source, build, check a build (below).
 - `update-translations.py`: extract and compile translations (above).
 - `update-logo.py`: rebuilds `src/pawz/ui/assets/logo.svg` (framed square, PowerPoint's invisible text layer removed) and `logo.ico` from `design/logo/logo.svg`; `design/` (git-ignored) holds the working files.
-- `vendor-controller-assets.py`: downloads the pinned Gamepad Prompt Asset Pack and Gamepad Asset Pack files and rewrites `upstream-manifest.json`; `DETAILED_ARTWORK` lists the detailed drawings and what changes in them, by Inkscape label or element id: elements removed (logos, a chroma-key screen) and hidden layers shown (`show:`), recorded in the manifest. Never run by the app.
+- `vendor-controller-assets.py`: downloads the pinned Gamepad Prompt Asset Pack and Gamepad Asset Pack files and rewrites `upstream-manifest.json`. What it fetches is in `scripts/vendor-controller-assets.json`: the pinned revisions, the prompt folders, the silhouettes, and the detailed drawings with what changes in them, by Inkscape label or element id: elements removed (logos, a chroma-key screen) and hidden layers shown (`show:`), recorded in the manifest. Never run by the app.
 - `generate-controller-illustrations.py`: redraws the four pawz controller drawings and the axis icons.
 
 ## Build
