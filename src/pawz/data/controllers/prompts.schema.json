@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Icons drawn for controller inputs",
+  "type": "object",
+  "required": ["description", "default", "families", "models", "printed_letter", "face_positions"],
+  "additionalProperties": false,
+  "$defs": {
+    "icons": {
+      "type": "object",
+      "propertyNames": {"pattern": "^[A-Z0-9_]+$"},
+      "additionalProperties": {"type": "string", "pattern": "\\.svg$"}
+    }
+  },
+  "properties": {
+    "description": {"type": "string"},
+    "default": {"$ref": "#/$defs/icons"},
+    "families": {"type": "object", "additionalProperties": {"$ref": "#/$defs/icons"}},
+    "models": {"type": "object", "additionalProperties": {"$ref": "#/$defs/icons"}},
+    "printed_letter": {
+      "type": "object",
+      "required": ["pattern", "letters"],
+      "additionalProperties": false,
+      "properties": {
+        "pattern": {"type": "string", "pattern": "\\{label\\}.*\\.svg$"},
+        "letters": {"type": "string", "minLength": 1}
+      }
+    },
+    "face_positions": {"$ref": "#/$defs/icons"}
+  }
+}

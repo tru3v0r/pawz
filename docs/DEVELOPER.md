@@ -36,14 +36,14 @@ See [Architecture](ARCHITECTURE.md) for threading, gestures, magnetism and persi
 - Lint and types: `python -m ruff check .`, `pyright src`.
 
 ## Data files
-Content lives in JSON under `src/pawz/data/`, logic in the code. `pawz.data_files` reads a file once and checks it against its folder's schema (`<folder>/<folder>.schema.json`); a broken file stops pawz at startup with its path, and `tests/test_data_files.py` checks every file. Strings shown to the user are English, under `label` keys: `scripts/update-translations.py` marks them for `pyside6-lupdate` through a temporary stub (`data_files.write_translation_stub()`), so they go through the translation files like the code's.
+Content lives in JSON under `src/pawz/data/`, logic in the code. `pawz.data_files` reads a file once and checks it against its own schema (`<name>.schema.json` next to it) or its folder's (`<folder>/<folder>.schema.json`); a broken file stops pawz at startup with its path, and `tests/test_data_files.py` checks every file. Strings shown to the user are English, under `label` keys: `scripts/update-translations.py` marks them for `pyside6-lupdate` through a temporary stub (`data_files.write_translation_stub()`), so they go through the translation files like the code's.
 
 | Folder | Content |
 |---|---|
 | `shortcuts/` | Default shortcuts, one file per context (below) |
 | `actions/actions.json` | Actions a button can trigger, in the order Settings lists them: id, label, mouse button or fixed keys; internal ones are also handled in the code |
 | `applications/applications.json` | Known applications: display name, browser (website shortcuts), never in game mode, install paths for their icon |
-| `controllers/` | Controller catalogue and its schema, auto-detect rules |
+| `controllers/` | Controller catalogue and its schema, auto-detect rules; `identification.json` (USB ids and name fragments that match a device to a model, most specific first), `prompts.json` (the icon of each input: model, family, printed letter, default, position), `artwork.json` (family silhouettes, Gamepad Asset Pack file names for Name inputs) |
 | `i18n/` | Translations (Qt Linguist), Qt's buttons for languages Qt does not translate |
 
 What stays in the code is protocol rather than content: SDL button and axis indices, Windows virtual-key codes and mouse flags, the logical button names and the old names they replace, and tuning constants such as stick thresholds.

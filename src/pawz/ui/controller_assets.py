@@ -11,6 +11,7 @@ from PySide6.QtGui import QPainter
 from PySide6.QtSvg import QSvgRenderer
 from PySide6.QtWidgets import QStyledItemDelegate, QWidget
 
+from pawz import data_files
 from pawz.core.controller_catalog import ControllerDefinition
 from pawz.infra.storage import DATA_DIR
 from pawz.ui import artwork_styles, themes
@@ -18,55 +19,24 @@ from pawz.ui.themes import themed
 
 ASSET_DIR = Path(__file__).resolve().parent / "assets" / "controllers"
 # Gamepad Asset Pack silhouettes for models without artwork of their own (custom copies).
-FAMILY_ARTWORK = {"xbox": "library/xbox-wireless.svg", "playstation": "library/dualsense.svg",
-                  "nintendo": "library/switch-pro.svg"}
+FAMILY_ARTWORK: dict[str, str] = data_files.load("controllers/artwork.json")["family_silhouettes"]
+PROMPTS = data_files.load("controllers/prompts.json")
 
 
 def prompt_path(logical: str, model: ControllerDefinition | None) -> Path | None:
-    """Select reviewed upstream vectors by position, independently of bindings."""
+    """The icon of an input on ``model``, chosen by position, independently of
+    bindings (``data/controllers/prompts.json``): the model's, its family's, a face
+    button's printed letter, the default, then the face button's position."""
     family = model.family if model else "generic"
     labels = model.physical_labels if model else {}
-    if logical in ("LEFT_X", "LEFT_Y", "RIGHT_X", "RIGHT_Y"):
-        return ASSET_DIR / "input-icons" / (logical.lower().replace("_", "-") + ".svg")
-    shared = {
-        "LEFT_SHOULDER": "Left Bumper", "RIGHT_SHOULDER": "Right Bumper",
-        "LEFT_TRIGGER": "Left Trigger", "RIGHT_TRIGGER": "Right Trigger",
-        "LEFT_STICK": "Left Stick Click", "RIGHT_STICK": "Right Stick Click",
-        "RIGHT_STICK_LEFT": "Right Joystick Left", "RIGHT_STICK_RIGHT": "Right Joystick Right",
-        "BACK": "Select", "START": "Start", "DPAD_UP": "D-PAD Up",
-        "DPAD_DOWN": "D-PA Down", "DPAD_LEFT": "D-PAD Left", "DPAD_RIGHT": "D-PAD Right",
-    }
-    relative = "Shared/shared-" + shared[logical] + ".svg" if logical in shared else None
-    if logical in ("SOUTH", "EAST", "WEST", "NORTH"):
-        label = labels.get(logical)
-        if family == "playstation":
-            label = {"SOUTH": "Cross", "EAST": "Circle", "WEST": "Square", "NORTH": "Triangle"}[logical]
-            relative = f"PlayStation/ps-{label}.svg"
-        elif label in ("A", "B", "X", "Y"):
-            relative = f"Shared/shared-{label}.svg"
-        else:
-            position = {"SOUTH": "A", "EAST": "B", "WEST": "X", "NORTH": "Y"}[logical]
-            relative = f"Shared/shared-{position}-Color.svg"
-    if family == "nintendo":
-        names = {"LEFT_SHOULDER": "L", "RIGHT_SHOULDER": "R", "LEFT_TRIGGER": "ZL",
-                 "RIGHT_TRIGGER": "ZR", "LEFT_STICK": "L Click", "RIGHT_STICK": "R Click",
-                 "BACK": "Minus", "START": "Plus"}
-        if logical in names:
-            relative = f"Nintendo/nintendo-{names[logical]}.svg"
-    elif family == "playstation":
-        names = {"LEFT_SHOULDER": "L1", "RIGHT_SHOULDER": "R1", "LEFT_TRIGGER": "L2",
-                 "RIGHT_TRIGGER": "R2", "LEFT_STICK": "L3 Click", "RIGHT_STICK": "R3 Click"}
-        if logical in names:
-            relative = f"Shared/shared-{names[logical]}.svg"
-        if logical == "BACK":
-            relative = "PlayStation/ps3-Select.svg" if model.id == "sony.dualshock-3" else "PlayStation/ps4-Share.svg"
-        elif logical == "START":
-            relative = "PlayStation/ps3-Start.svg" if model.id == "sony.dualshock-3" else "PlayStation/ps4-Option.svg"
-    elif family == "xbox" and logical in ("BACK", "START", "MISC1"):
-        relative = "Xbox/xbox-" + {"BACK": "View", "START": "Menu", "MISC1": "Share"}[logical] + ".svg"
-    if logical.startswith("PADDLE"):
-        relative = "Xbox/xbox-P" + logical[-1] + ".svg"
-    path = ASSET_DIR / "prompts" / relative if relative else None
+    letter = PROMPTS["printed_letter"]
+    relative = (PROMPTS["models"].get(model.id if model else "", {}).get(logical)
+                or PROMPTS["families"].get(family, {}).get(logical))
+    printed = labels.get(logical, "")
+    if relative is None and logical in PROMPTS["face_positions"] and printed and printed in letter["letters"]:
+        relative = letter["pattern"].format(label=printed)
+    relative = relative or PROMPTS["default"].get(logical) or PROMPTS["face_positions"].get(logical)
+    path = ASSET_DIR / relative if relative else None
     if path:
         colored = path.with_name(path.stem + "-Color.svg")
         if colored.is_file():

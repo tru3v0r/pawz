@@ -43,10 +43,12 @@ def _validate(data: Any, schema_path: Path, path: Path) -> None:
 
 @cache
 def load(relative: str) -> Any:
-    """``data/<relative>``, validated against ``<its folder>.schema.json`` if any."""
+    """``data/<relative>``, validated against its own ``<name>.schema.json`` next to
+    it, or else its folder's ``<folder>.schema.json``, if there is one."""
     path = BUNDLED_DATA / relative
     data = _read(path)
-    _validate(data, path.parent / f"{path.parent.name}.schema.json", path)
+    own = path.with_name(path.name.removesuffix(".json") + ".schema.json")
+    _validate(data, own if own.is_file() else path.parent / f"{path.parent.name}.schema.json", path)
     return data
 
 

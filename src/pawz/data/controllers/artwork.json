@@ -1,0 +1,21 @@
+{
+  "description": "Controller drawings. family_silhouettes: the drawing of a family for custom models without one of their own. asset_pack_files: bundled drawings and their file names in the Gamepad Asset Pack repository (Connection Icon Pack/Controller Type/SVG/), so Name inputs can save a copy ready for a pull request.",
+  "family_silhouettes": {
+    "xbox": "library/xbox-wireless.svg",
+    "playstation": "library/dualsense.svg",
+    "nintendo": "library/switch-pro.svg"
+  },
+  "asset_pack_files": {
+    "library-generic.svg": "VSCView Generic Controller.svg",
+    "library/xbox-360.svg": "VSCView Xbox 360 Controller.svg",
+    "library/xbox-wireless.svg": "VSCView Xbox Wireless Controller.svg",
+    "library/dualshock-3.svg": "VSCView DualShock 3 Controller.svg",
+    "library/dualshock-4.svg": "VSCView DualShock 4 Controller.svg",
+    "library/dualsense.svg": "VSCView DualSense Controller.svg",
+    "library/switch-pro.svg": "VSCView Switch Pro Controller.svg",
+    "library/joycon.svg": "VSCView Switch Joy-Con.svg",
+    "library/joycon-grip.svg": "VSCView Switch Joy-Con Grip.svg",
+    "library/steam-controller.svg": "VSCView Steam Controller.svg",
+    "library/steam-deck.svg": "VSCView Steam Deck.svg"
+  }
+}

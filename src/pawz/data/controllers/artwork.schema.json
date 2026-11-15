@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Controller drawings",
+  "type": "object",
+  "required": ["description", "family_silhouettes", "asset_pack_files"],
+  "additionalProperties": false,
+  "properties": {
+    "description": {"type": "string"},
+    "family_silhouettes": {
+      "type": "object",
+      "additionalProperties": {"type": "string", "pattern": "\\.svg$"}
+    },
+    "asset_pack_files": {
+      "type": "object",
+      "propertyNames": {"pattern": "\\.svg$"},
+      "additionalProperties": {"type": "string", "pattern": "\\.svg$"}
+    }
+  }
+}

@@ -35,6 +35,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from pawz import data_files
 from pawz.core.models import BUTTONS
 from pawz.engine.auto_detect import detect, load_rules
 from pawz.i18n import tr
@@ -44,20 +45,8 @@ from pawz.ui.themes import BUTTON_OUTLINE, themed
 
 ASSET_PACK_EXPORT_DIR = DATA_DIR / "asset-pack-names"
 ASSET_PACK_FOLDER = "Connection Icon Pack/Controller Type/SVG/"
-# Bundled file -> its path in the Gamepad Asset Pack repository.
-ASSET_PACK_FILES = {
-    "library-generic.svg": "VSCView Generic Controller.svg",
-    "library/xbox-360.svg": "VSCView Xbox 360 Controller.svg",
-    "library/xbox-wireless.svg": "VSCView Xbox Wireless Controller.svg",
-    "library/dualshock-3.svg": "VSCView DualShock 3 Controller.svg",
-    "library/dualshock-4.svg": "VSCView DualShock 4 Controller.svg",
-    "library/dualsense.svg": "VSCView DualSense Controller.svg",
-    "library/switch-pro.svg": "VSCView Switch Pro Controller.svg",
-    "library/joycon.svg": "VSCView Switch Joy-Con.svg",
-    "library/joycon-grip.svg": "VSCView Switch Joy-Con Grip.svg",
-    "library/steam-controller.svg": "VSCView Steam Controller.svg",
-    "library/steam-deck.svg": "VSCView Steam Deck.svg",
-}
+# Bundled file -> its path in the Gamepad Asset Pack repository (data/controllers/artwork.json).
+ASSET_PACK_FILES: dict[str, str] = data_files.load("controllers/artwork.json")["asset_pack_files"]
 # DPAD names a whole cross drawn as one shape; each arm lights up within it.
 # LEFT_/RIGHT_TOUCHPAD name the two pads of a Steam Controller or Steam Deck.
 INPUTS = (*BUTTONS, "LEFT_STICK", "RIGHT_STICK", "DPAD", "LEFT_TOUCHPAD", "RIGHT_TOUCHPAD")

@@ -54,3 +54,31 @@ def test_every_key_named_in_the_data_exists():
 def test_data_labels_are_marked_for_translation(tmp_path):
     stub = data_files.write_translation_stub(tmp_path / "labels.py").read_text(encoding="utf-8")
     assert 'QT_TR_NOOP("Left click")' in stub and 'QT_TR_NOOP("Toggle game mode")' in stub
+
+
+@pytest.mark.parametrize("path", sorted(path for path in data_files.BUNDLED_DATA.rglob("*.json")
+                                        if not path.name.endswith(".schema.json")),
+                         ids=lambda path: path.relative_to(data_files.BUNDLED_DATA).as_posix())
+def test_every_file_follows_its_own_schema(path):
+    data_files.load(path.relative_to(data_files.BUNDLED_DATA).as_posix())
+
+
+def test_controller_data_points_at_existing_models_and_drawings():
+    from pawz.core.controller_catalog import load_builtin_catalog
+    from pawz.ui.controller_assets import ASSET_DIR
+    models = {model.id for model in load_builtin_catalog()}
+    identification = data_files.load("controllers/identification.json")
+    assert set(identification["usb_ids"]) <= models
+    assert {model for _, model in identification["name_hints"]} <= models
+    prompts = data_files.load("controllers/prompts.json")
+    assert set(prompts["models"]) <= models
+    icons = [*prompts["default"].values(), *prompts["face_positions"].values(),
+             *(icon for table in (*prompts["families"].values(), *prompts["models"].values())
+               for icon in table.values())]
+    icons += [prompts["printed_letter"]["pattern"].format(label=letter)
+              for letter in prompts["printed_letter"]["letters"]]
+    for icon in icons:
+        assert (ASSET_DIR / icon).is_file(), icon
+    artwork = data_files.load("controllers/artwork.json")
+    for drawing in [*artwork["family_silhouettes"].values(), *artwork["asset_pack_files"]]:
+        assert (ASSET_DIR / drawing).is_file(), drawing

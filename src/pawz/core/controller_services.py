@@ -4,46 +4,18 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from uuid import uuid4
 
+from pawz import data_files
 from pawz.core.controller_catalog import ControllerDefinition
 from pawz.core.controller_inputs import LogicalAxis, LogicalButton
 
 GENERIC_MODEL = "generic.sdl-gamecontroller"
 
 
-# USB vendor:product ids (as in SDL's usb_ids.h) of the built-in models.
-MODEL_USB_IDS = {
-    "microsoft.xbox-360": ("045e:028e", "045e:02a1", "045e:0719"),
-    "microsoft.xbox-one": ("045e:02d1", "045e:02dd"),
-    "microsoft.xbox-one-s": ("045e:02ea", "045e:02e0", "045e:02fd", "045e:0b20"),
-    "microsoft.xbox-series": ("045e:0b12", "045e:0b13"),
-    "microsoft.elite-1": ("045e:02e3",),
-    "microsoft.elite-2": ("045e:0b00", "045e:0b05", "045e:0b22"),
-    "microsoft.adaptive": ("045e:0b0a", "045e:0b0c", "045e:0b21"),
-    "sony.dualshock-3": ("054c:0268",),
-    "sony.dualshock-4": ("054c:05c4", "054c:09cc", "054c:0ba0"),
-    "sony.dualsense": ("054c:0ce6",),
-    "sony.dualsense-edge": ("054c:0df2",),
-    "nintendo.switch-pro": ("057e:2009",),
-    "nintendo.joycon": ("057e:2006", "057e:2007", "057e:200e"),
-    "logitech.f310": ("046d:c216", "046d:c21d"),
-    "logitech.f510": ("046d:c218", "046d:c21e"),
-    "logitech.f710": ("046d:c219", "046d:c21f"),
-    "valve.steam-controller": ("28de:1102", "28de:1106", "28de:1142"),
-    "valve.steam-deck": ("28de:1205",),
-}
-# Fragments of SDL device names, most specific first.
-NAME_HINTS = (
-    ("elite series 2", "microsoft.elite-2"), ("elite", "microsoft.elite-1"),
-    ("adaptive", "microsoft.adaptive"), ("xbox series", "microsoft.xbox-series"),
-    ("xbox one s", "microsoft.xbox-one-s"), ("xbox one", "microsoft.xbox-one"),
-    ("xbox 360", "microsoft.xbox-360"), ("xbox", "microsoft.xbox-one"),
-    ("dualsense edge", "sony.dualsense-edge"), ("dualsense", "sony.dualsense"),
-    ("ps5", "sony.dualsense"), ("dualshock 4", "sony.dualshock-4"), ("ps4", "sony.dualshock-4"),
-    ("dualshock 3", "sony.dualshock-3"), ("ps3", "sony.dualshock-3"),
-    ("pro controller", "nintendo.switch-pro"), ("joy-con", "nintendo.joycon"),
-    ("steam deck", "valve.steam-deck"), ("steam controller", "valve.steam-controller"),
-    ("f310", "logitech.f310"), ("f510", "logitech.f510"), ("f710", "logitech.f710"),
-)
+# How devices are matched to models, from data/controllers/identification.json:
+# USB vendor:product ids (as in SDL's usb_ids.h), then name fragments, most specific first.
+_IDENTIFICATION = data_files.load("controllers/identification.json")
+MODEL_USB_IDS: dict[str, list[str]] = _IDENTIFICATION["usb_ids"]
+NAME_HINTS: tuple[tuple[str, str], ...] = tuple(map(tuple, _IDENTIFICATION["name_hints"]))
 
 
 def usb_id(guid: str) -> str | None:

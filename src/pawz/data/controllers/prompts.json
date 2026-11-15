@@ -1,0 +1,74 @@
+{
+  "description": "The icon (paths under ui/assets/controllers) drawn for each input in Settings: the model's entry first, then its family's, then a face button's printed letter (the model's physical_labels: A, B, X or Y) through printed_letter, then default, then face_positions. A file with a -Color variant next to it uses the variant.",
+  "default": {
+    "LEFT_SHOULDER": "prompts/Shared/shared-Left Bumper.svg",
+    "RIGHT_SHOULDER": "prompts/Shared/shared-Right Bumper.svg",
+    "LEFT_TRIGGER": "prompts/Shared/shared-Left Trigger.svg",
+    "RIGHT_TRIGGER": "prompts/Shared/shared-Right Trigger.svg",
+    "LEFT_STICK": "prompts/Shared/shared-Left Stick Click.svg",
+    "RIGHT_STICK": "prompts/Shared/shared-Right Stick Click.svg",
+    "RIGHT_STICK_LEFT": "prompts/Shared/shared-Right Joystick Left.svg",
+    "RIGHT_STICK_RIGHT": "prompts/Shared/shared-Right Joystick Right.svg",
+    "BACK": "prompts/Shared/shared-Select.svg",
+    "START": "prompts/Shared/shared-Start.svg",
+    "DPAD_UP": "prompts/Shared/shared-D-PAD Up.svg",
+    "DPAD_DOWN": "prompts/Shared/shared-D-PA Down.svg",
+    "DPAD_LEFT": "prompts/Shared/shared-D-PAD Left.svg",
+    "DPAD_RIGHT": "prompts/Shared/shared-D-PAD Right.svg",
+    "PADDLE1": "prompts/Xbox/xbox-P1.svg",
+    "PADDLE2": "prompts/Xbox/xbox-P2.svg",
+    "PADDLE3": "prompts/Xbox/xbox-P3.svg",
+    "PADDLE4": "prompts/Xbox/xbox-P4.svg",
+    "LEFT_X": "input-icons/left-x.svg",
+    "LEFT_Y": "input-icons/left-y.svg",
+    "RIGHT_X": "input-icons/right-x.svg",
+    "RIGHT_Y": "input-icons/right-y.svg"
+  },
+  "families": {
+    "nintendo": {
+      "LEFT_SHOULDER": "prompts/Nintendo/nintendo-L.svg",
+      "RIGHT_SHOULDER": "prompts/Nintendo/nintendo-R.svg",
+      "LEFT_TRIGGER": "prompts/Nintendo/nintendo-ZL.svg",
+      "RIGHT_TRIGGER": "prompts/Nintendo/nintendo-ZR.svg",
+      "LEFT_STICK": "prompts/Nintendo/nintendo-L Click.svg",
+      "RIGHT_STICK": "prompts/Nintendo/nintendo-R Click.svg",
+      "BACK": "prompts/Nintendo/nintendo-Minus.svg",
+      "START": "prompts/Nintendo/nintendo-Plus.svg"
+    },
+    "playstation": {
+      "SOUTH": "prompts/PlayStation/ps-Cross.svg",
+      "EAST": "prompts/PlayStation/ps-Circle.svg",
+      "WEST": "prompts/PlayStation/ps-Square.svg",
+      "NORTH": "prompts/PlayStation/ps-Triangle.svg",
+      "LEFT_SHOULDER": "prompts/Shared/shared-L1.svg",
+      "RIGHT_SHOULDER": "prompts/Shared/shared-R1.svg",
+      "LEFT_TRIGGER": "prompts/Shared/shared-L2.svg",
+      "RIGHT_TRIGGER": "prompts/Shared/shared-R2.svg",
+      "LEFT_STICK": "prompts/Shared/shared-L3 Click.svg",
+      "RIGHT_STICK": "prompts/Shared/shared-R3 Click.svg",
+      "BACK": "prompts/PlayStation/ps4-Share.svg",
+      "START": "prompts/PlayStation/ps4-Option.svg"
+    },
+    "xbox": {
+      "BACK": "prompts/Xbox/xbox-View.svg",
+      "START": "prompts/Xbox/xbox-Menu.svg",
+      "MISC1": "prompts/Xbox/xbox-Share.svg"
+    }
+  },
+  "models": {
+    "sony.dualshock-3": {
+      "BACK": "prompts/PlayStation/ps3-Select.svg",
+      "START": "prompts/PlayStation/ps3-Start.svg"
+    }
+  },
+  "printed_letter": {
+    "pattern": "prompts/Shared/shared-{label}.svg",
+    "letters": "ABXY"
+  },
+  "face_positions": {
+    "SOUTH": "prompts/Shared/shared-A-Color.svg",
+    "EAST": "prompts/Shared/shared-B-Color.svg",
+    "WEST": "prompts/Shared/shared-X-Color.svg",
+    "NORTH": "prompts/Shared/shared-Y-Color.svg"
+  }
+}
