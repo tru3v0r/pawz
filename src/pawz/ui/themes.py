@@ -1,13 +1,13 @@
 """Colour themes.
 
-The stylesheet, inline styles and icons are written in Midnight Blue colours.
+The stylesheet, inline styles and icons are written in Corporate Blue colours.
 Another theme maps each of those colours to its own. Comfy Turquoise makes the
 button fill its accent #00a8b0 and keeps the luminance ratios between colours:
 every blue's luminance is multiplied by the same factor (accent / button fill,
 about 4, capped at white) and its hue turned towards the accent's. The app name
 also takes the accent. Danger Red does the same with a dark red fill, every colour
 taking exactly the accent's hue, and bright red button outlines and title; Cheeky
-Green, Juicy Orange and Squeeshy Purple are its twins, with #00ff00, #ff8c00 and
+Green, Juicy Orange and Squishy Purple are its twins, with #00ff00, #ff8c00 and
 #b026ff outlines and title. Neutral and status colours (battery, controller artwork,
 YouTube red) are not blue and stay as they are.
 
@@ -26,12 +26,12 @@ from PySide6.QtSvg import QSvgRenderer
 
 from pawz.i18n import QT_TR_NOOP
 
-MIDNIGHT_BLUE = "midnight_blue"
+CORPORATE_BLUE = "midnight_blue"  # its id from when it was named Corporate Blue: saved settings use it
 COMFY_TURQUOISE = "comfy_turquoise"
 DANGER_RED = "danger_red"
 CHEEKY_GREEN = "cheeky_green"
 JUICY_ORANGE = "juicy_orange"
-SQUEESHY_PURPLE = "squeeshy_purple"
+SQUISHY_PURPLE = "squishy_purple"
 DEFAULT = COMFY_TURQUOISE
 BRAND = "#3989cf"  # application name in window headers
 BUTTON_FILL = "#20527b"  # button background
@@ -64,7 +64,8 @@ THEMES = {theme.id: theme for theme in (
           keep_hue_offsets=False),
     Theme(COMFY_TURQUOISE, QT_TR_NOOP("Comfy Turquoise"), "#00a8b0", BUTTON_FILL,
           {BRAND: "#00a8b0", BUTTON_FILL: "#00a8b0"}),
-    # Dark like Midnight Blue (the fill has about its luminance), with bright red
+    Theme(CORPORATE_BLUE, QT_TR_NOOP("Corporate Blue")),
+    # Dark like Corporate Blue (the fill has about its luminance), with bright red
     # button outlines and title.
     Theme(DANGER_RED, QT_TR_NOOP("Danger Red"), "#9b1c1c", BUTTON_FILL,
           {BRAND: "#ff2d2d", BUTTON_FILL: "#9b1c1c", BUTTON_OUTLINE: "#ff2d2d"},
@@ -73,13 +74,12 @@ THEMES = {theme.id: theme for theme in (
     Theme(JUICY_ORANGE, QT_TR_NOOP("Juicy Orange"), "#7b4000", BUTTON_FILL,
           {BRAND: "#ff8c00", BUTTON_FILL: "#7b4000", BUTTON_OUTLINE: "#ff8c00"},
           keep_hue_offsets=False),
-    Theme(MIDNIGHT_BLUE, QT_TR_NOOP("Midnight Blue")),
     # Same recipe, the fill about as saturated as Danger Red's.
-    Theme(SQUEESHY_PURPLE, QT_TR_NOOP("Squeeshy Purple"), "#6d329a", BUTTON_FILL,
+    Theme(SQUISHY_PURPLE, QT_TR_NOOP("Squishy Purple"), "#6d329a", BUTTON_FILL,
           {BRAND: "#b026ff", BUTTON_FILL: "#6d329a", BUTTON_OUTLINE: "#b026ff"},
           keep_hue_offsets=False),
 )}
-_current = THEMES[MIDNIGHT_BLUE]
+_current = THEMES[CORPORATE_BLUE]
 
 
 def set_current(theme_id: str) -> Theme:
@@ -95,7 +95,7 @@ def current() -> Theme:
 
 
 def themed(text: str, theme: Theme | None = None) -> str:
-    """``text`` (CSS or SVG) with its Midnight Blue colours in ``theme``'s colours."""
+    """``text`` (CSS or SVG) with its Corporate Blue colours in ``theme``'s colours."""
     theme = theme or _current
     if theme.accent is None:
         return text

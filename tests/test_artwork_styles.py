@@ -61,7 +61,7 @@ def test_eye_candy_skips_hidden_and_translucent_shapes():
            '<ellipse cx="50" cy="90" rx="40" ry="5" fill="#000000" opacity="0.3"/>'
            '<path d="M0 0h10v10z" style="display:none;fill:#00ff87"/>'
            '<circle cx="50" cy="50" r="20" fill="white"/></svg>')
-    root = ET.fromstring(styles.styled(svg, styles.EYE_CANDY, themes.THEMES[themes.MIDNIGHT_BLUE]))
+    root = ET.fromstring(styles.styled(svg, styles.EYE_CANDY, themes.THEMES[themes.CORPORATE_BLUE]))
     shadow, hidden, button = list(root)
     assert "stroke" not in styles._style_map(shadow)
     assert styles._style_map(hidden).get("fill") == "#00ff87"

@@ -1116,7 +1116,7 @@ def test_primary_crown_stands_on_the_drawings_top_line(qtbot):
     # The crown's base sits on the outline, and it is drawn inside the widget.
     assert abs(widget.crown_rect.bottom() - 2 - (rect.top() + top)) <= 2.5
     assert widget.crown_rect.top() >= -2
-    assert color.name() == "#3187c7"  # Eye Candy outline (Midnight Blue)
+    assert color.name() == "#3187c7"  # Eye Candy outline (Corporate Blue)
     crown_centre = widget.crown_rect.center().toPoint()
     assert image.pixelColor(crown_centre.x(), crown_centre.y() + 2).name() == "#f9c74f"
 

@@ -10,7 +10,7 @@ dark areas are the controller's body and light areas its buttons and sticks:
 - Light: the same with a light body and the button fill for details.
 - Original: the files' own colours.
 
-Colours are written in Midnight Blue and mapped by the current theme, so every
+Colours are written in Corporate Blue and mapped by the current theme, so every
 style follows the theme. Unlike the theme, the style applies immediately.
 """
 from __future__ import annotations
@@ -26,7 +26,7 @@ EYE_CANDY, DARK, LIGHT, ORIGINAL = "eye_candy", "dark", "light", "original"
 DEFAULT = EYE_CANDY
 STYLES = {EYE_CANDY: QT_TR_NOOP("Eye Candy"), DARK: QT_TR_NOOP("Dark"),
           LIGHT: QT_TR_NOOP("Light"), ORIGINAL: QT_TR_NOOP("Original")}
-# (body, details) in Midnight Blue colours.
+# (body, details) in Corporate Blue colours.
 PALETTES = {DARK: ("#10233f", "#65baff"), LIGHT: ("#f5f7fb", themes.BUTTON_FILL),
             EYE_CANDY: ("#10233f", themes.BUTTON_FILL)}
 OUTLINE_WIDTH = 0.012  # Eye Candy outline, as a share of the drawing's largest side

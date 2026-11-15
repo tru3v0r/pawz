@@ -782,6 +782,10 @@ Emin değilseniz modeli elle seçin.</translation>
         <translation>Comfy Turquoise</translation>
     </message>
     <message>
+        <source>Corporate Blue</source>
+        <translation>Corporate Blue</translation>
+    </message>
+    <message>
         <source>Danger Red</source>
         <translation>Danger Red</translation>
     </message>
@@ -790,12 +794,8 @@ Emin değilseniz modeli elle seçin.</translation>
         <translation>Juicy Orange</translation>
     </message>
     <message>
-        <source>Midnight Blue</source>
-        <translation>Midnight Blue</translation>
-    </message>
-    <message>
-        <source>Squeeshy Purple</source>
-        <translation>Squeeshy Purple</translation>
+        <source>Squishy Purple</source>
+        <translation>Squishy Purple</translation>
     </message>
     <message>
         <source>Eye Candy</source>

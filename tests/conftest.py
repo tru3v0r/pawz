@@ -5,12 +5,12 @@ from pawz.ui import artwork_styles, controller_assets, themes
 
 @pytest.fixture(autouse=True)
 def source_theme():
-    """Tests read the source (Midnight Blue) colours and unstyled controller artwork;
+    """Tests read the source (Corporate Blue) colours and unstyled controller artwork;
     main() and the settings dialog may select others."""
-    themes.set_current(themes.MIDNIGHT_BLUE)
+    themes.set_current(themes.CORPORATE_BLUE)
     artwork_styles.set_current(artwork_styles.ORIGINAL)
     yield
-    themes.set_current(themes.MIDNIGHT_BLUE)
+    themes.set_current(themes.CORPORATE_BLUE)
     artwork_styles.set_current(artwork_styles.ORIGINAL)
 
 

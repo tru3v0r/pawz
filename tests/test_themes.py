@@ -13,15 +13,15 @@ from pawz.ui import themes, windows
 def turquoise():
     themes.set_current(themes.COMFY_TURQUOISE)
     yield themes.current()
-    themes.set_current(themes.MIDNIGHT_BLUE)
+    themes.set_current(themes.CORPORATE_BLUE)
 
 
 def source_colors() -> set[str]:
     return {color.lower() for color in re.findall(r"#[0-9a-fA-F]{6}\b", windows.CSS)}
 
 
-def test_midnight_blue_is_the_source_palette_unchanged():
-    assert themes.themed(windows.CSS, themes.THEMES[themes.MIDNIGHT_BLUE]) == windows.CSS
+def test_corporate_blue_is_the_source_palette_unchanged():
+    assert themes.themed(windows.CSS, themes.THEMES[themes.CORPORATE_BLUE]) == windows.CSS
 
 
 def test_comfy_turquoise_fills_buttons_with_the_accent_and_keeps_luminance_ratios():
@@ -66,13 +66,13 @@ def test_icons_and_inline_styles_follow_the_theme(qtbot, turquoise):
 def test_theme_setting_defaults_to_comfy_turquoise_and_round_trips():
     settings = Settings.defaults()
     assert settings.theme == themes.DEFAULT == themes.COMFY_TURQUOISE
-    settings.theme = themes.MIDNIGHT_BLUE
-    assert Settings.parse(settings.dump()).theme == themes.MIDNIGHT_BLUE
+    settings.theme = themes.CORPORATE_BLUE
+    assert Settings.parse(settings.dump()).theme == themes.CORPORATE_BLUE
     raw = settings.dump()
     raw.pop("theme")
     assert Settings.parse(raw).theme == themes.COMFY_TURQUOISE  # existing settings files
     assert themes.set_current("unknown").id == themes.DEFAULT
-    themes.set_current(themes.MIDNIGHT_BLUE)
+    themes.set_current(themes.CORPORATE_BLUE)
 
 
 def test_display_tab_lists_themes_and_flags_a_change(qtbot):
@@ -80,10 +80,10 @@ def test_display_tab_lists_themes_and_flags_a_change(qtbot):
     qtbot.addWidget(dialog)
     picker = dialog.theme_picker
     assert [picker.itemText(i) for i in range(picker.count())] == [
-        "Cheeky Green", "Comfy Turquoise", "Danger Red", "Juicy Orange", "Midnight Blue",
-        "Squeeshy Purple"]
+        "Cheeky Green", "Comfy Turquoise", "Corporate Blue", "Danger Red", "Juicy Orange",
+        "Squishy Purple"]
     assert picker.currentData() == themes.COMFY_TURQUOISE
-    picker.setCurrentIndex(picker.findData(themes.MIDNIGHT_BLUE))
+    picker.setCurrentIndex(picker.findData(themes.CORPORATE_BLUE))
     assert dialog.display_changed() and not dialog.display_note.isHidden()
 
 
@@ -117,14 +117,14 @@ def test_new_instance_waits_for_the_previous_one_and_drops_the_flag(monkeypatch)
     (themes.DANGER_RED, "#9b1c1c", "#ff2d2d"),
     (themes.CHEEKY_GREEN, "#005d00", "#00ff00"),
     (themes.JUICY_ORANGE, "#7b4000", "#ff8c00"),
-    (themes.SQUEESHY_PURPLE, "#6d329a", "#b026ff"),
+    (themes.SQUISHY_PURPLE, "#6d329a", "#b026ff"),
 ])
 def test_dark_themes_have_bright_outlines_one_hue_and_the_same_ratios(theme_id, fill, outline):
     theme = themes.THEMES[theme_id]
     assert themes.map_color(themes.BUTTON_FILL, theme.id) == fill
     assert themes.map_color(themes.BRAND, theme.id) == outline
     assert themes.map_color(themes.BUTTON_OUTLINE, theme.id) == outline
-    assert theme.luminance_factor == pytest.approx(1.0, abs=0.05)  # as dark as Midnight Blue
+    assert theme.luminance_factor == pytest.approx(1.0, abs=0.05)  # as dark as Corporate Blue
     accent_hue = themes._oklch(fill)[2]
     for color in source_colors() - {themes.BRAND, themes.BUTTON_FILL, themes.BUTTON_OUTLINE}:
         if not themes._is_blue(color):

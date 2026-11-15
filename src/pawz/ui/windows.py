@@ -286,7 +286,7 @@ CSS = CSS.replace(
 
 
 def stylesheet() -> str:
-    """The application stylesheet in the current theme (``CSS`` is Midnight Blue)."""
+    """The application stylesheet in the current theme (``CSS`` is Corporate Blue)."""
     return themed(CSS)
 
 
