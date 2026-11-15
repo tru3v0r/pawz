@@ -1,0 +1,15 @@
+{
+  "description": "Editing layer: ZL (LEFT_TRIGGER) held, then a button.",
+  "shortcuts": {
+    "LEFT_TRIGGER+SOUTH": {"keys": "ctrl+z"},
+    "LEFT_TRIGGER+EAST": {"keys": "ctrl+y"},
+    "LEFT_TRIGGER+WEST": {"keys": "ctrl+a"},
+    "LEFT_TRIGGER+NORTH": {"keys": "ctrl+x"},
+    "LEFT_TRIGGER+DPAD_UP": {"keys": "shift+up"},
+    "LEFT_TRIGGER+DPAD_DOWN": {"keys": "shift+down"},
+    "LEFT_TRIGGER+DPAD_LEFT": {"keys": "shift+left"},
+    "LEFT_TRIGGER+DPAD_RIGHT": {"keys": "shift+right"},
+    "LEFT_TRIGGER+BACK": {"keys": "backspace"},
+    "LEFT_TRIGGER+START": {"keys": "ctrl+s"}
+  }
+}

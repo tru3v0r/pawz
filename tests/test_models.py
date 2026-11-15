@@ -199,3 +199,14 @@ def test_older_settings_get_new_default_shortcuts_once_without_overwriting():
     del default.apps["vlc.exe"]["RIGHT_STICK_RIGHT"]
     again = Settings.parse(settings.dump())
     assert "RIGHT_STICK_RIGHT" not in again.profiles["Default"].apps["vlc.exe"]
+
+
+def test_default_shortcut_files_are_valid_and_cover_their_contexts():
+    from pawz.core.models import default_bindings_for, default_shortcuts
+    groups = default_shortcuts()
+    assert any(not group.apps and not group.sites for group in groups)  # global shortcuts
+    assert default_bindings_for(app="VLC.exe")["LEFT_STICK"] == Binding("key_combo", "v")
+    assert default_bindings_for(site="youtube.com")["LEFT_STICK"] == Binding("subtitles")
+    assert default_bindings_for(app="notepad.exe") == {}
+    for group in groups:
+        assert set(group.added) <= set(group.bindings)

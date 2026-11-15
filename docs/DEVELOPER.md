@@ -36,9 +36,23 @@ See [Architecture](ARCHITECTURE.md) for threading, gestures, magnetism and persi
 - Lint and types: `python -m ruff check .`, `pyright src`.
 
 ## Default shortcuts
-The shortcuts a new settings file starts with are in `src/pawz/core/models.py`: `DEFAULT_BINDINGS` and `DEFAULT_KEYS` (everywhere), `EDIT_LAYER` (ZL held), `BROWSER_BINDINGS` (browsers), `YOUTUBE_BINDINGS` and `VLC_BINDINGS` (with `SEEK_BINDINGS`, shared by both). A trigger is a logical button (`SOUTH`, `LEFT_TRIGGER`...), a chord joined by `+`, or a stick direction (`RIGHT_STICK_LEFT`, `RIGHT_STICK_RIGHT`: the right stick pushed sideways, pressed once per push past `STICK_PRESS` in `core/controllers.py`); old names such as `x` or `left_stick` are accepted. A value is an action id from `engine/actions.py`, or `("key_combo", "keys")` for a keyboard shortcut.
+The shortcuts a new settings file starts with are JSON files in `src/pawz/data/shortcuts/`, one per context: `global.json` (everywhere), `edit-layer.json` (ZL held), `apps/browsers.json`, `apps/vlc.exe.json`, `sites/youtube.com.json`. A file without `apps` or `sites` applies everywhere; otherwise to those executables or domains, and an application or website added in Settings gets the shortcuts of the files that name it. `shortcuts.schema.json` describes the format, and a test checks every file:
 
-Defaults only fill new settings files. To give existing ones a new shortcut too, also add an entry to `ADDED_DEFAULTS`: a new id with the contexts and shortcuts to add. On load, settings without that id get the shortcuts in the profiles that already have the context, on triggers still free, and record the id, so a shortcut the user removes later does not come back.
+```json
+{
+  "description": "What these shortcuts are for.",
+  "apps": ["vlc.exe"],
+  "shortcuts": {
+    "WEST": "play_pause",
+    "LEFT_STICK": {"keys": "v"},
+    "RIGHT_STICK_LEFT": {"keys": "left", "added": "video-stick-seek"}
+  }
+}
+```
+
+A trigger is a logical button (`SOUTH`, `LEFT_TRIGGER`...), a chord joined by `+` (`LEFT_TRIGGER+SOUTH`) or a stick direction (`RIGHT_STICK_LEFT`, `RIGHT_STICK_RIGHT`: the right stick pushed sideways, once per push past `STICK_PRESS` in `core/controllers.py`). A shortcut is an action id from the action catalogue, or `{"keys": "..."}` for a keyboard shortcut.
+
+Defaults only fill new settings files. To give existing ones a new shortcut too, mark it `"added": "<id>"` with an id not used before: on load, settings that have not seen that id get the shortcut once, in the profiles that already have the context, on a trigger still free, and record the id (`added_defaults`), so a shortcut the user removes later does not come back.
 
 ## Translations
 Interface strings are written in English in the code and wrapped in `tr()` from `pawz.i18n`. Strings defined at import time (action labels, table headings, error messages raised by the model) are marked with `QT_TR_NOOP()` and translated where they are displayed. Text with variables uses named placeholders, `tr("Forget “{name}”…").format(name=...)`, never an f-string, so that `pyside6-lupdate` can extract it and translators can move the variable.

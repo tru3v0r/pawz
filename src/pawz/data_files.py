@@ -1,0 +1,88 @@
+"""Data shipped with pawz, in ``src/pawz/data``: read once and validated.
+
+Everything pawz knows that is content rather than logic lives there as JSON:
+default shortcuts, known applications, actions, controller identification and
+prompts, themes, languages. A folder may hold a ``<folder>.schema.json`` (JSON
+Schema 2020-12) that every other file in it, subfolders included, must follow.
+
+Strings shown to the user are in English under ``label`` keys; the translation
+script extracts them (see ``scripts/update-translations.py``).
+"""
+from __future__ import annotations
+
+import json
+from functools import cache
+from pathlib import Path
+from typing import Any
+
+from jsonschema import Draft202012Validator
+
+BUNDLED_DATA = Path(__file__).resolve().parent / "data"
+TRANSLATABLE_KEYS = ("label",)  # their string values are user-facing English
+
+
+class DataError(ValueError):
+    """A bundled data file is missing, is not JSON, or does not follow its schema."""
+
+
+def _read(path: Path) -> Any:
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        raise DataError(f"{path.relative_to(BUNDLED_DATA)}: {exc}") from exc
+
+
+def _validate(data: Any, schema_path: Path, path: Path) -> None:
+    if not schema_path.is_file():
+        return
+    errors = sorted(Draft202012Validator(_read(schema_path)).iter_errors(data), key=str)
+    if errors:
+        where = "/".join(str(part) for part in errors[0].absolute_path)
+        raise DataError(f"{path.relative_to(BUNDLED_DATA)}: {where}: {errors[0].message}")
+
+
+@cache
+def load(relative: str) -> Any:
+    """``data/<relative>``, validated against ``<its folder>.schema.json`` if any."""
+    path = BUNDLED_DATA / relative
+    data = _read(path)
+    _validate(data, path.parent / f"{path.parent.name}.schema.json", path)
+    return data
+
+
+@cache
+def load_folder(relative: str) -> tuple[tuple[str, Any], ...]:
+    """Every JSON file under ``data/<relative>`` (subfolders too, schemas aside), as
+    (path relative to that folder, content), sorted by path; each validated against
+    ``<relative>/<folder name>.schema.json``."""
+    root = BUNDLED_DATA / relative
+    schema = root / f"{root.name}.schema.json"
+    files = []
+    for path in sorted(root.rglob("*.json")):
+        if path.name.endswith(".schema.json"):
+            continue
+        data = _read(path)
+        _validate(data, schema, path)
+        files.append((path.relative_to(root).as_posix(), data))
+    return tuple(files)
+
+
+def translatable_strings() -> list[str]:
+    """Every ``label`` in the data files, for the translation files."""
+    found: list[str] = []
+
+    def walk(value: Any) -> None:
+        if isinstance(value, dict):
+            for key, item in value.items():
+                if key in TRANSLATABLE_KEYS and isinstance(item, str):
+                    found.append(item)
+                else:
+                    walk(item)
+        elif isinstance(value, list):
+            for item in value:
+                walk(item)
+
+    for path in sorted(BUNDLED_DATA.rglob("*.json")):
+        if not path.name.endswith(".schema.json"):
+            walk(_read(path))
+    return list(dict.fromkeys(found))

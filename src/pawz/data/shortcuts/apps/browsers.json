@@ -1,0 +1,8 @@
+{
+  "description": "Web browsers.",
+  "apps": ["firefox.exe", "brave.exe", "chrome.exe", "msedge.exe"],
+  "shortcuts": {
+    "LEFT_SHOULDER": "tab_previous",
+    "RIGHT_SHOULDER": "tab_next"
+  }
+}

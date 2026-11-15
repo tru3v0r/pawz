@@ -78,8 +78,8 @@ from pawz.core.models import (
     TRIGGER_INPUTS,
     Binding,
     Profile,
+    default_bindings_for,
     normalize_trigger,
-    vlc_bindings,
 )
 from pawz.engine import actions as action_catalogue
 from pawz.i18n import AUTO, LANGUAGES, QUALITY, QUALITY_NAMES, quality_note, resolve, tr
@@ -1031,16 +1031,15 @@ class ProfileEditor(QWidget):
             self, tr("Select an installed program"),
             os.environ.get("ProgramFiles", "C:\\Program Files"), tr("Applications (*.exe)"))
         if filename:
-            self.profile.apps.setdefault(
-                Path(filename).name.lower(),
-                vlc_bindings() if Path(filename).name.lower() == "vlc.exe" else {})
+            app = Path(filename).name.lower()
+            self.profile.apps.setdefault(app, default_bindings_for(app=app))
             self.draw()
 
     def add_site(self):
         domain, ok = QInputDialog.getText(self, tr("Add a website"), tr("Domain (e.g. youtube.com)"))
         domain = domain.strip().lower().removeprefix("www.")
         if ok and domain and "." in domain and "/" not in domain and " " not in domain:
-            self.profile.sites.setdefault(domain, {})
+            self.profile.sites.setdefault(domain, default_bindings_for(site=domain))
             self.draw()
 
 

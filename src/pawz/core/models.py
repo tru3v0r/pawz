@@ -3,9 +3,11 @@ from __future__ import annotations
 
 from copy import deepcopy
 from dataclasses import asdict, dataclass, field
+from functools import cache
 from typing import Any
 from uuid import NAMESPACE_URL, uuid4, uuid5
 
+from pawz import data_files
 from pawz.core.controller_inputs import migrate_legacy_trigger
 from pawz.core.controller_services import validate_mapping
 from pawz.engine.actions import ACTION_IDS
@@ -26,40 +28,45 @@ STICK_DIRECTIONS = ("RIGHT_STICK_LEFT", "RIGHT_STICK_RIGHT")
 TRIGGER_INPUTS = BUTTONS + STICK_DIRECTIONS  # what a shortcut can be bound to
 SYSTEM_DEFAULT_PROFILE_ID = "00000000-0000-0000-0000-000000000001"
 ACTIONS = ACTION_IDS
-DEFAULT_BINDINGS = {"b": "left_click", "a": "right_click", "y": "key_combo", "x": "key_combo", "l": "previous", "r": "next", "minus": "volume_down", "plus": "volume_up", "home": "win", "right_stick": "middle_click",
-                    "dpad_up": "key_combo", "dpad_down": "key_combo",
-                    "dpad_left": "key_combo", "dpad_right": "key_combo"}
-DEFAULT_KEYS = {"dpad_up": "up", "dpad_down": "down",
-                     "dpad_left": "left", "dpad_right": "right",
-                     "y": "ctrl+c", "x": "ctrl+v"}  # NORTH: copy, WEST: paste
-# Editing layer: ZL held, then a button.
-EDIT_LAYER = {"LEFT_TRIGGER+SOUTH": "ctrl+z", "LEFT_TRIGGER+EAST": "ctrl+y",
-              "LEFT_TRIGGER+NORTH": "ctrl+x", "LEFT_TRIGGER+WEST": "ctrl+a",
-              "LEFT_TRIGGER+START": "ctrl+s", "LEFT_TRIGGER+BACK": "backspace",
-              "LEFT_TRIGGER+DPAD_UP": "shift+up", "LEFT_TRIGGER+DPAD_DOWN": "shift+down",
-              "LEFT_TRIGGER+DPAD_LEFT": "shift+left", "LEFT_TRIGGER+DPAD_RIGHT": "shift+right"}
-GAME_MODE_TRIGGER = "BACK+START"
+# Browsers report the active tab's domain through the extension (site shortcuts).
 BROWSER_PROCESSES = ("firefox.exe", "brave.exe", "chrome.exe", "msedge.exe")
-BROWSER_BINDINGS = {"l": "tab_previous", "r": "tab_next"}
-# Video shortcuts, (action, keys): the same buttons on YouTube and in VLC. Subtitles
-# use the left stick click, the one button left free; VLC toggles them with "v".
-# The right stick pushed left or right jumps back or forward, like the arrow keys.
-SEEK_BINDINGS = {"RIGHT_STICK_LEFT": ("key_combo", "left"), "RIGHT_STICK_RIGHT": ("key_combo", "right")}
-YOUTUBE_BINDINGS = {"x": ("play_pause", ""), "y": ("fullscreen", ""),
-                    "left_stick": ("subtitles", ""), **SEEK_BINDINGS}
-VLC_BINDINGS = {"x": ("play_pause", ""), "y": ("fullscreen", ""),
-                "left_stick": ("key_combo", "v"), **SEEK_BINDINGS}
-# Default shortcuts added after release, by id: settings saved before an id existed
-# get its shortcuts once, in the profiles that already have the context ("apps" or
-# "sites", then the executable or domain), on buttons still free. The id is then
-# recorded, so a shortcut removed later does not come back.
-ADDED_DEFAULTS = {
-    "video-stick-seek": (("apps", "vlc.exe", SEEK_BINDINGS), ("sites", "youtube.com", SEEK_BINDINGS)),
-}
 
 
-def vlc_bindings() -> dict[str, Binding]:
-    return {normalize_trigger(k): Binding(*v) for k, v in VLC_BINDINGS.items()}
+@dataclass(frozen=True)
+class DefaultShortcuts:
+    """One file of ``data/shortcuts``: shortcuts everywhere (no apps or sites), or for
+    some applications or websites."""
+    apps: tuple[str, ...]
+    sites: tuple[str, ...]
+    bindings: dict[str, Binding]
+    added: dict[str, str]  # trigger -> id of the later addition that brought it
+
+
+@cache
+def default_shortcuts() -> tuple[DefaultShortcuts, ...]:
+    def binding(value) -> Binding:
+        if isinstance(value, str):
+            value = {"action": value}
+        return Binding.parse({"action": value.get("action", "key_combo"), "keys": value.get("keys", "")})
+    result = []
+    for _, data in data_files.load_folder("shortcuts"):
+        shortcuts = data["shortcuts"]
+        result.append(DefaultShortcuts(
+            tuple(app.lower() for app in data.get("apps", ())),
+            tuple(site.lower() for site in data.get("sites", ())),
+            _normalize_bindings({trigger: binding(value) for trigger, value in shortcuts.items()}),
+            {normalize_trigger(trigger): value["added"] for trigger, value in shortcuts.items()
+             if isinstance(value, dict) and "added" in value}))
+    return tuple(result)
+
+
+def default_bindings_for(app: str = "", site: str = "") -> dict[str, Binding]:
+    """Default shortcuts of an application or website added in Settings."""
+    bindings: dict[str, Binding] = {}
+    for group in default_shortcuts():
+        if (app and app.lower() in group.apps) or (site and site.lower() in group.sites):
+            bindings.update(deepcopy(group.bindings))
+    return bindings
 
 
 def normalize_trigger(trigger: str) -> str:
@@ -200,30 +207,36 @@ class Settings:
 
     @classmethod
     def defaults(cls) -> Settings:
-        bindings = {k: Binding(v, DEFAULT_KEYS.get(k, ""))
-                    for k, v in DEFAULT_BINDINGS.items()}
-        bindings.update({k: Binding("key_combo", keys) for k, keys in EDIT_LAYER.items()})
-        bindings[GAME_MODE_TRIGGER] = Binding("game_mode")
-        apps = {browser: {k: Binding(v) for k, v in BROWSER_BINDINGS.items()}
-                for browser in BROWSER_PROCESSES}
-        apps["vlc.exe"] = {k: Binding(*v) for k, v in VLC_BINDINGS.items()}
-        p = Profile("Default", bindings, apps,
-                    {"youtube.com": {k: Binding(*v) for k, v in YOUTUBE_BINDINGS.items()}})
-        return cls({"Default": p}, added_defaults=list(ADDED_DEFAULTS))  # already in there
+        """A new settings file: one profile with the shortcuts of ``data/shortcuts``."""
+        profile = Profile("Default")
+        added = []
+        for group in default_shortcuts():
+            for kind, contexts in (("apps", group.apps), ("sites", group.sites)):
+                for context in contexts:
+                    getattr(profile, kind).setdefault(context, {}).update(deepcopy(group.bindings))
+            if not group.apps and not group.sites:
+                profile.global_bindings.update(deepcopy(group.bindings))
+            added += group.added.values()
+        return cls({"Default": profile}, added_defaults=sorted(set(added)))  # already in there
 
     def add_new_defaults(self) -> None:
-        """Give settings saved by an older pawz the default shortcuts added since."""
-        for addition, contexts in ADDED_DEFAULTS.items():
-            if addition in self.added_defaults:
-                continue
-            for profile in self.profiles.values():
-                for kind, context, shortcuts in contexts:
-                    bindings = getattr(profile, kind).get(context)
-                    if bindings is None:
-                        continue
-                    for trigger, binding in shortcuts.items():
-                        bindings.setdefault(normalize_trigger(trigger), Binding(*binding))
-            self.added_defaults.append(addition)
+        """Give settings saved by an older pawz the default shortcuts added since
+        (marked ``added`` in ``data/shortcuts``): once, in the profiles that already have
+        the application or website, on triggers still free."""
+        applied = set(self.added_defaults)
+        new = set()
+        for group in default_shortcuts():
+            for trigger, addition in group.added.items():
+                if addition in applied:
+                    continue
+                new.add(addition)
+                for profile in self.profiles.values():
+                    targets = ([profile.global_bindings] if not group.apps and not group.sites else
+                               [profile.apps[app] for app in group.apps if app in profile.apps]
+                               + [profile.sites[site] for site in group.sites if site in profile.sites])
+                    for bindings in targets:
+                        bindings.setdefault(trigger, deepcopy(group.bindings[trigger]))
+        self.added_defaults += sorted(new)
 
     @classmethod
     def parse(cls, raw: dict) -> Settings:

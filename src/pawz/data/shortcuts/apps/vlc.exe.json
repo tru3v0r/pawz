@@ -1,0 +1,11 @@
+{
+  "description": "VLC: the same buttons as on YouTube. Subtitles are on the left stick click, the one button left free; VLC toggles them with V. The right stick pushed left or right jumps back or forward, like the arrow keys.",
+  "apps": ["vlc.exe"],
+  "shortcuts": {
+    "WEST": "play_pause",
+    "NORTH": "fullscreen",
+    "LEFT_STICK": {"keys": "v"},
+    "RIGHT_STICK_LEFT": {"keys": "left", "added": "video-stick-seek"},
+    "RIGHT_STICK_RIGHT": {"keys": "right", "added": "video-stick-seek"}
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "description": "Everywhere, in every profile.",
+  "shortcuts": {
+    "SOUTH": "right_click",
+    "EAST": "left_click",
+    "WEST": {"keys": "ctrl+v"},
+    "NORTH": {"keys": "ctrl+c"},
+    "LEFT_SHOULDER": "previous",
+    "RIGHT_SHOULDER": "next",
+    "RIGHT_STICK": "middle_click",
+    "DPAD_UP": {"keys": "up"},
+    "DPAD_DOWN": {"keys": "down"},
+    "DPAD_LEFT": {"keys": "left"},
+    "DPAD_RIGHT": {"keys": "right"},
+    "BACK": "volume_down",
+    "BACK+START": "game_mode",
+    "START": "volume_up",
+    "GUIDE": "win"
+  }
+}

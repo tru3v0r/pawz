@@ -1,0 +1,11 @@
+{
+  "description": "YouTube: the same buttons as in VLC. The right stick pushed left or right jumps back or forward, like the arrow keys.",
+  "sites": ["youtube.com"],
+  "shortcuts": {
+    "WEST": "play_pause",
+    "NORTH": "fullscreen",
+    "LEFT_STICK": "subtitles",
+    "RIGHT_STICK_LEFT": {"keys": "left", "added": "video-stick-seek"},
+    "RIGHT_STICK_RIGHT": {"keys": "right", "added": "video-stick-seek"}
+  }
+}
