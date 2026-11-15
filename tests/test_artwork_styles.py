@@ -35,7 +35,8 @@ def test_original_keeps_the_file():
 def test_dark_and_light_use_their_palette_in_the_theme():
     text = SWITCH_PRO.read_text(encoding="utf-8")
     dark = colors(styles.styled(text, styles.DARK, TURQUOISE))
-    assert themes.map_color("#10233f", TURQUOISE.id) in dark and "#ffffff" in dark  # body, details
+    assert themes.map_color("#10233f", TURQUOISE.id) in dark  # body
+    assert themes.map_color("#65baff", TURQUOISE.id) in dark  # details: a light tint, not white
     light = colors(styles.styled(text, styles.LIGHT, TURQUOISE))
     assert "#f5f7fb" in light and "#00a8b0" in light
     assert "#000000" not in dark | light

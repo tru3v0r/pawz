@@ -29,10 +29,10 @@ def test_comfy_turquoise_fills_buttons_with_the_accent_and_keeps_luminance_ratio
     theme = themes.THEMES[themes.COMFY_TURQUOISE]
     assert themes.map_color(themes.BUTTON_FILL, theme.id) == "#00a8b0"
     assert theme.luminance_factor == pytest.approx(4.0, abs=0.05)
-    for color in source_colors() - {themes.BRAND, themes.BUTTON_FILL}:
+    for color in source_colors() - {themes.BRAND, themes.BUTTON_FILL} - set(themes.SHADES):
         mapped = themes.map_color(color, theme.id)
         if themes._is_blue(color):
-            expected = min(1.0, themes.luminance(color) * theme.luminance_factor)
+            expected = themes.scaled_luminance(themes.luminance(color), theme)
             assert themes.luminance(mapped) == pytest.approx(expected, abs=0.004), color
         else:
             assert mapped == color
@@ -88,7 +88,7 @@ def test_display_tab_lists_themes_and_previews_them_at_once(qtbot, qapp):
     try:
         picker.setCurrentIndex(picker.findData(themes.DANGER_RED))
         assert themes.current().id == themes.DANGER_RED
-        assert "#9b1c1c" in qapp.styleSheet() and "#9b1c1c" in dialog.styleSheet()
+        assert "#c0392b" in qapp.styleSheet() and "#c0392b" in dialog.styleSheet()
         assert not dialog.display_changed() and dialog.display_note.isHidden()  # no restart
         dialog.reject()  # Close without saving: back to the theme in use
         assert themes.current().id == themes.CORPORATE_BLUE
@@ -184,10 +184,32 @@ def test_new_instance_waits_for_the_previous_one_and_drops_the_flag(monkeypatch)
     assert waited == [(42, 15)]
 
 
+@pytest.mark.parametrize(("theme_id", "window", "dark"), [
+    (themes.DANGER_RED, "#c0392b", "#9e0000"),
+    (themes.JUICY_ORANGE, "#f39c12", "#fa8f00"),
+    (themes.CHEEKY_GREEN, "#27ae60", "#1c7e46"),
+])
+def test_bright_themes_use_their_window_and_dark_colours_and_are_as_vivid(theme_id, window, dark):
+    theme = themes.THEMES[theme_id]
+    assert themes.map_color(themes.WINDOW_BACKGROUND, theme_id) == window
+    assert themes.map_color(themes.PANEL, theme_id) == dark
+    assert themes.map_color(themes.BUTTON_FILL, theme_id) == window  # buttons take the window colour
+    _, window_chroma, window_hue = themes._oklch(window)
+    for color in source_colors() - set(theme.overrides) - set(themes.SHADES):
+        if not themes._is_blue(color):
+            continue
+        mapped = themes.map_color(color, theme_id)
+        expected = themes.scaled_luminance(themes.luminance(color), theme)
+        assert themes.luminance(mapped) == pytest.approx(expected, abs=0.004), color
+        lightness, chroma, hue = themes._oklch(mapped)
+        if chroma > 0.03 and 0.1 < lightness < 0.95:  # hue is meaningless for greys
+            assert abs((hue - window_hue + 180) % 360 - 180) < 6, color
+    # Not the muted look of the blues: colours are about as vivid as the window.
+    darkest = themes._oklch(themes.map_color("#10233f", theme_id))[1]
+    assert darkest > 0.6 * window_chroma
+
+
 @pytest.mark.parametrize(("theme_id", "fill", "outline"), [
-    (themes.DANGER_RED, "#9b1c1c", "#ff2d2d"),
-    (themes.CHEEKY_GREEN, "#005d00", "#00ff00"),
-    (themes.JUICY_ORANGE, "#7b4000", "#ff8c00"),
     (themes.SQUISHY_PURPLE, "#6d329a", "#b026ff"),
 ])
 def test_dark_themes_have_bright_outlines_one_hue_and_the_same_ratios(theme_id, fill, outline):
@@ -197,12 +219,38 @@ def test_dark_themes_have_bright_outlines_one_hue_and_the_same_ratios(theme_id, 
     assert themes.map_color(themes.BUTTON_OUTLINE, theme.id) == outline
     assert theme.luminance_factor == pytest.approx(1.0, abs=0.05)  # as dark as Corporate Blue
     accent_hue = themes._oklch(fill)[2]
-    for color in source_colors() - {themes.BRAND, themes.BUTTON_FILL, themes.BUTTON_OUTLINE}:
+    for color in source_colors() - {themes.BRAND, themes.BUTTON_FILL, themes.BUTTON_OUTLINE} - set(themes.SHADES):
         if not themes._is_blue(color):
             continue
         mapped = themes.map_color(color, theme.id)
-        expected = min(1.0, themes.luminance(color) * theme.luminance_factor)
+        expected = themes.scaled_luminance(themes.luminance(color), theme)
         assert themes.luminance(mapped) == pytest.approx(expected, abs=0.004), color
         lightness, chroma, hue = themes._oklch(mapped)
         if chroma > 0.03 and 0.1 < lightness < 0.95:  # hue is meaningless for greys
             assert abs((hue - accent_hue + 180) % 360 - 180) < 6, color
+
+
+@pytest.mark.parametrize("theme_id", sorted(set(themes.THEMES) - {themes.CORPORATE_BLUE}))
+def test_hover_and_selection_are_darker_shades_of_the_button_fill(theme_id):
+    fill = themes.map_color(themes.BUTTON_FILL, theme_id)
+    hover = themes.map_color(themes.BUTTON_HOVER, theme_id)
+    selection = themes.map_color(themes.SELECTION, theme_id)
+    assert themes.luminance(selection) < themes.luminance(hover) < themes.luminance(fill)
+    for shade in (hover, selection):
+        assert abs((themes._oklch(shade)[2] - themes._oklch(fill)[2] + 180) % 360 - 180) < 6, shade
+
+
+def test_theme_list_shows_a_sample_of_each_theme(qtbot):
+    dialog = windows.SettingsDialog(Settings.defaults())
+    qtbot.addWidget(dialog)
+    assert isinstance(dialog.theme_picker.itemDelegate(), windows.ThemeSwatchDelegate)
+    assert len(windows.ThemeSwatchDelegate.SAMPLED) == 5
+
+
+@pytest.mark.parametrize("theme_id", sorted(set(themes.THEMES) - {themes.CORPORATE_BLUE}))
+def test_light_colours_stay_tints_of_the_theme_instead_of_white(theme_id):
+    for color in source_colors():
+        if themes._is_blue(color):
+            assert themes.luminance(themes.map_color(color, theme_id)) <= themes.LIGHTEST + 0.005, color
+    lightest = [themes.scaled_luminance(value, themes.THEMES[theme_id]) for value in (0.3, 0.6, 0.9)]
+    assert lightest == sorted(lightest)  # compression keeps the order of colours

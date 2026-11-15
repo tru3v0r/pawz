@@ -5,10 +5,12 @@ Another theme maps each of those colours to its own. Comfy Turquoise makes the
 button fill its accent #00a8b0 and keeps the luminance ratios between colours:
 every blue's luminance is multiplied by the same factor (accent / button fill,
 about 4, capped at white) and its hue turned towards the accent's. The app name
-also takes the accent. Danger Red does the same with a dark red fill, every colour
-taking exactly the accent's hue, and bright red button outlines and title; Cheeky
-Green, Juicy Orange and Squishy Purple are its twins, with #00ff00, #ff8c00 and
-#b026ff outlines and title. Neutral and status colours (battery, controller artwork,
+also takes the accent. Squishy Purple does the same with a dark purple fill, every
+colour taking exactly the accent's hue, and bright purple button outlines and title.
+Danger Red, Juicy Orange and Cheeky Green are bright: a vivid window colour, also
+the buttons', and a darker one for panels, every other colour taking the window
+colour's hue and vividness, with the luminance ratios kept. Light colours are tints
+of the theme, never white: luminances past a knee are compressed. Neutral and status colours (battery, controller artwork,
 YouTube red) are not blue and stay as they are.
 
 The theme is chosen in Settings and applies at once. Everything themed follows a
@@ -40,6 +42,13 @@ DEFAULT = COMFY_TURQUOISE
 BRAND = "#3989cf"  # application name in window headers
 BUTTON_FILL = "#20527b"  # button background
 BUTTON_OUTLINE = "#3187c7"  # button borders
+WINDOW_BACKGROUND = "#223d68"  # main window and dialogs
+BUTTON_HOVER = "#28618e"  # hovered buttons and list items
+SELECTION = "#2765cc"  # selected list item
+# Other themes draw hover and selection as darker shades of their button fill (the
+# luminance ratio would make them lighter, up to white in bright themes).
+SHADES = {BUTTON_HOVER: 0.75, SELECTION: 0.6}
+PANEL = "#1b355b"  # the darker colour of panels, fields and lists
 _HEX = re.compile(r"#[0-9a-fA-F]{6}\b")
 
 
@@ -53,6 +62,9 @@ class Theme:
     # True: blues keep their small hue differences around the accent; False: they all
     # take the accent's hue (near red, those differences drift into brown and orange).
     keep_hue_offsets: bool = True
+    # True: every colour's chroma is scaled like the anchor's to the accent's, so a
+    # vivid accent makes the whole theme as vivid (the blues are rather muted).
+    match_chroma: bool = False
 
     @property
     def luminance_factor(self) -> float:
@@ -61,24 +73,22 @@ class Theme:
 
 
 THEMES = {theme.id: theme for theme in (
-    # Danger Red's green twin: a dark green fill with the original fill's luminance
-    # and exactly the hue of its #00ff00 button outlines and title.
-    Theme(CHEEKY_GREEN, QT_TR_NOOP("Cheeky Green"), "#005d00", BUTTON_FILL,
-          {BRAND: "#00ff00", BUTTON_FILL: "#005d00", BUTTON_OUTLINE: "#00ff00"},
-          keep_hue_offsets=False),
+    Theme(CHEEKY_GREEN, QT_TR_NOOP("Cheeky Green"), "#27ae60", WINDOW_BACKGROUND,
+          {WINDOW_BACKGROUND: "#27ae60", PANEL: "#1c7e46", BUTTON_FILL: "#27ae60"},
+          keep_hue_offsets=False, match_chroma=True),
     Theme(COMFY_TURQUOISE, QT_TR_NOOP("Comfy Turquoise"), "#00a8b0", BUTTON_FILL,
           {BRAND: "#00a8b0", BUTTON_FILL: "#00a8b0"}),
     Theme(CORPORATE_BLUE, QT_TR_NOOP("Corporate Blue")),
-    # Dark like Corporate Blue (the fill has about its luminance), with bright red
-    # button outlines and title.
-    Theme(DANGER_RED, QT_TR_NOOP("Danger Red"), "#9b1c1c", BUTTON_FILL,
-          {BRAND: "#ff2d2d", BUTTON_FILL: "#9b1c1c", BUTTON_OUTLINE: "#ff2d2d"},
-          keep_hue_offsets=False),
-    # Same recipe; an orange that dark is a brown.
-    Theme(JUICY_ORANGE, QT_TR_NOOP("Juicy Orange"), "#7b4000", BUTTON_FILL,
-          {BRAND: "#ff8c00", BUTTON_FILL: "#7b4000", BUTTON_OUTLINE: "#ff8c00"},
-          keep_hue_offsets=False),
-    # Same recipe, the fill about as saturated as Danger Red's.
+    # Bright: the window colour, also the buttons' (like Comfy Turquoise's accent),
+    # and a darker one for panels, fields and lists.
+    Theme(DANGER_RED, QT_TR_NOOP("Danger Red"), "#c0392b", WINDOW_BACKGROUND,
+          {WINDOW_BACKGROUND: "#c0392b", PANEL: "#9e0000", BUTTON_FILL: "#c0392b"},
+          keep_hue_offsets=False, match_chroma=True),
+    Theme(JUICY_ORANGE, QT_TR_NOOP("Juicy Orange"), "#f39c12", WINDOW_BACKGROUND,
+          {WINDOW_BACKGROUND: "#f39c12", PANEL: "#fa8f00", BUTTON_FILL: "#f39c12"},
+          keep_hue_offsets=False, match_chroma=True),
+    # Dark like Corporate Blue (the fill has about its luminance), with bright purple
+    # button outlines and title; the fill about as saturated as the outlines allow.
     Theme(SQUISHY_PURPLE, QT_TR_NOOP("Squishy Purple"), "#6d329a", BUTTON_FILL,
           {BRAND: "#b026ff", BUTTON_FILL: "#6d329a", BUTTON_OUTLINE: "#b026ff"},
           keep_hue_offsets=False),
@@ -203,14 +213,37 @@ def map_color(color: str, theme_id: str) -> str:
         return theme.overrides[color]
     if theme.accent is None or not _is_blue(color):
         return color
-    target = luminance(color) * theme.luminance_factor
-    if target >= 1:
-        return "#ffffff"
+    if color in SHADES:
+        _, chroma, hue = _oklch(map_color(BUTTON_FILL, theme_id))
+        return _with_luminance(luminance(map_color(BUTTON_FILL, theme_id)) * SHADES[color], chroma, hue)
+    target = scaled_luminance(luminance(color), theme)
     _, chroma, hue = _oklch(color)
+    if theme.match_chroma:
+        chroma *= _oklch(theme.accent)[1] / _oklch(theme.anchor)[1]
     hue = ((hue - _oklch(theme.anchor)[2] if theme.keep_hue_offsets else 0)
            + _oklch(theme.accent)[2]) % 360
-    # Same hue shift for every blue, then the lightness that gives the scaled
-    # luminance; chroma is reduced only when the colour would leave sRGB.
+    # Same hue shift for every blue, then the lightness that gives the scaled luminance.
+    return _with_luminance(target, chroma, hue)
+
+
+KNEE = 0.55  # scaled luminances above this are compressed below LIGHTEST
+LIGHTEST = 0.82
+
+
+def scaled_luminance(value: float, theme: Theme) -> float:
+    """``value`` times the theme's luminance factor; light results are compressed
+    smoothly below ``LIGHTEST``, so they stay tints of the theme instead of turning
+    white (the order of colours is kept)."""
+    target = value * theme.luminance_factor
+    if target <= KNEE:
+        return target
+    room = LIGHTEST - KNEE
+    return KNEE + room * (1 - math.exp(-(target - KNEE) / room))
+
+
+def _with_luminance(target: float, chroma: float, hue: float) -> str:
+    """The colour of this OKLCH chroma and hue with relative luminance ``target``;
+    chroma is reduced only when the colour would leave sRGB."""
     while True:
         low, high = 0.0, 1.0
         for _ in range(40):

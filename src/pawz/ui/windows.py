@@ -1263,6 +1263,37 @@ class LanguageQualityDelegate(QStyledItemDelegate):
         painter.restore()
 
 
+class ThemeSwatchDelegate(QStyledItemDelegate):
+    """Theme list items with a sample of the theme's main colours on the trailing side:
+    window, panels, button fill, button outline and title."""
+
+    SAMPLED = (themes.WINDOW_BACKGROUND, themes.PANEL, themes.BUTTON_FILL,
+               themes.BUTTON_OUTLINE, themes.BRAND)
+    SIZE, GAP, MARGIN = 12, 4, 10
+
+    def paint(self, painter, option, index):
+        super().paint(painter, option, index)
+        theme_id = index.data(Qt.ItemDataRole.UserRole)
+        if theme_id not in THEMES:
+            return
+        painter.save()
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        count = len(self.SAMPLED)
+        width = count * self.SIZE + (count - 1) * self.GAP
+        rect = option.rect
+        y = rect.center().y() - self.SIZE / 2 + 1
+        right_to_left = QApplication.isRightToLeft()
+        start = rect.left() + self.MARGIN if right_to_left else rect.right() - self.MARGIN - width
+        border = QColor(option.palette.text().color())
+        border.setAlphaF(0.45)
+        painter.setPen(QPen(border, 1))
+        for position, color in enumerate(self.SAMPLED):
+            painter.setBrush(QColor(themes.map_color(color, theme_id)))
+            x = start + position * (self.SIZE + self.GAP)
+            painter.drawRoundedRect(QRectF(x + 0.5, y + 0.5, self.SIZE - 1, self.SIZE - 1), 3, 3)
+        painter.restore()
+
+
 class SettingsDialog(QDialog):
     def __init__(self, settings, parent=None, debug_window: DebugWindow | None = None,
                  initial_tab: str | None = None, controller_manager=None):
@@ -1548,6 +1579,7 @@ class SettingsDialog(QDialog):
         for theme in THEMES.values():
             self.theme_picker.addItem(tr(theme.name), theme.id)
         self.theme_picker.setCurrentIndex(max(0, self.theme_picker.findData(settings.theme)))
+        self.theme_picker.setItemDelegate(ThemeSwatchDelegate(self.theme_picker))
         self._initial_theme = themes.current().id
         self.theme_picker.currentIndexChanged.connect(self._preview_theme)
         self.controller_style_picker = QComboBox()
