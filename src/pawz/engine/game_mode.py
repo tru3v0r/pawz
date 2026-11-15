@@ -15,12 +15,7 @@ from __future__ import annotations
 
 from collections.abc import Collection
 
-from pawz import APP_ID
-
-NEVER_GAMES = frozenset({
-    "explorer.exe", APP_ID + ".exe", "firefox.exe", "brave.exe", "chrome.exe", "msedge.exe",
-    "vlc.exe", "mpc-hc64.exe", "mpc-be64.exe", "applicationframehost.exe",
-})
+from pawz.applications import NEVER_GAMES  # "never_game" in data/applications
 
 
 def is_game(app: str, fullscreen: bool, *, auto: bool, games: Collection[str],

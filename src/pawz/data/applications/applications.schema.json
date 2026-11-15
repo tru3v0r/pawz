@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Applications pawz knows",
+  "type": "object",
+  "required": ["description", "applications"],
+  "additionalProperties": false,
+  "properties": {
+    "description": {"type": "string"},
+    "applications": {
+      "type": "object",
+      "propertyNames": {"pattern": "^[^A-Z]+\\.exe$"},
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "browser": {"type": "boolean"},
+          "never_game": {"type": "boolean"},
+          "install_paths": {"type": "array", "items": {"type": "string", "pattern": "\\.exe$"}}
+        }
+      }
+    }
+  }
+}

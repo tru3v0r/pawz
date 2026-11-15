@@ -35,6 +35,18 @@ See [Architecture](ARCHITECTURE.md) for threading, gestures, magnetism and persi
 - Tests: `python -m pytest -q`. With `PAWZ_VISUAL_TESTS=1`, pixel comparisons of the settings and main windows run too (see Architecture). `tests/conftest.py` resets the theme and controller style before each test and hides the named drawings saved in the user's settings folder, so a developer's own settings never change the results.
 - Lint and types: `python -m ruff check .`, `pyright src`.
 
+## Data files
+Content lives in JSON under `src/pawz/data/`, logic in the code. `pawz.data_files` reads a file once and checks it against its folder's schema (`<folder>/<folder>.schema.json`); a broken file stops pawz at startup with its path, and `tests/test_data_files.py` checks every file. Strings shown to the user are English, under `label` keys, and go through the translation files like the code's.
+
+| Folder | Content |
+|---|---|
+| `shortcuts/` | Default shortcuts, one file per context (below) |
+| `applications/applications.json` | Known applications: display name, browser (website shortcuts), never in game mode, install paths for their icon |
+| `controllers/` | Controller catalogue and its schema, auto-detect rules |
+| `i18n/` | Translations (Qt Linguist), Qt's buttons for languages Qt does not translate |
+
+What stays in the code is protocol rather than content: SDL button and axis indices, Windows virtual-key codes and mouse flags, the logical button names and the old names they replace, and tuning constants such as stick thresholds.
+
 ## Default shortcuts
 The shortcuts a new settings file starts with are JSON files in `src/pawz/data/shortcuts/`, one per context: `global.json` (everywhere), `edit-layer.json` (ZL held), `apps/browsers.json`, `apps/vlc.exe.json`, `sites/youtube.com.json`. A file without `apps` or `sites` applies everywhere; otherwise to those executables or domains, and an application or website added in Settings gets the shortcuts of the files that name it. `shortcuts.schema.json` describes the format, and a test checks every file:
 

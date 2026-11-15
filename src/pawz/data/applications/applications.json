@@ -1,0 +1,14 @@
+{
+  "description": "Applications pawz knows. name: shown in Settings instead of the executable. browser: reports the active tab's domain through the extension, for website shortcuts. never_game: never put in game mode, even full screen (video players, the desktop). install_paths: where to find the executable for its icon, under Program Files, Program Files (x86) or the user's local application data.",
+  "applications": {
+    "brave.exe": {"name": "Brave", "browser": true, "never_game": true, "install_paths": ["BraveSoftware/Brave-Browser/Application/brave.exe"]},
+    "chrome.exe": {"name": "Chrome", "browser": true, "never_game": true, "install_paths": ["Google/Chrome/Application/chrome.exe"]},
+    "firefox.exe": {"name": "Firefox", "browser": true, "never_game": true, "install_paths": ["Mozilla Firefox/firefox.exe"]},
+    "msedge.exe": {"name": "Edge", "browser": true, "never_game": true, "install_paths": ["Microsoft/Edge/Application/msedge.exe"]},
+    "vlc.exe": {"name": "VLC", "never_game": true, "install_paths": ["VideoLAN/VLC/vlc.exe"]},
+    "mpc-hc64.exe": {"name": "MPC-HC", "never_game": true},
+    "mpc-be64.exe": {"name": "MPC-BE", "never_game": true},
+    "explorer.exe": {"name": "Explorer", "never_game": true},
+    "applicationframehost.exe": {"never_game": true}
+  }
+}

@@ -7,7 +7,7 @@ from functools import cache
 from typing import Any
 from uuid import NAMESPACE_URL, uuid4, uuid5
 
-from pawz import data_files
+from pawz import applications, data_files
 from pawz.core.controller_inputs import migrate_legacy_trigger
 from pawz.core.controller_services import validate_mapping
 from pawz.engine.actions import ACTION_IDS
@@ -28,8 +28,7 @@ STICK_DIRECTIONS = ("RIGHT_STICK_LEFT", "RIGHT_STICK_RIGHT")
 TRIGGER_INPUTS = BUTTONS + STICK_DIRECTIONS  # what a shortcut can be bound to
 SYSTEM_DEFAULT_PROFILE_ID = "00000000-0000-0000-0000-000000000001"
 ACTIONS = ACTION_IDS
-# Browsers report the active tab's domain through the extension (site shortcuts).
-BROWSER_PROCESSES = ("firefox.exe", "brave.exe", "chrome.exe", "msedge.exe")
+BROWSER_PROCESSES = applications.BROWSER_PROCESSES  # report the domain: site shortcuts
 
 
 @dataclass(frozen=True)
@@ -51,8 +50,9 @@ def default_shortcuts() -> tuple[DefaultShortcuts, ...]:
     result = []
     for _, data in data_files.load_folder("shortcuts"):
         shortcuts = data["shortcuts"]
+        apps = [*data.get("apps", ()), *(BROWSER_PROCESSES if data.get("browsers") else ())]
         result.append(DefaultShortcuts(
-            tuple(app.lower() for app in data.get("apps", ())),
+            tuple(app.lower() for app in apps),
             tuple(site.lower() for site in data.get("sites", ())),
             _normalize_bindings({trigger: binding(value) for trigger, value in shortcuts.items()}),
             {normalize_trigger(trigger): value["added"] for trigger, value in shortcuts.items()

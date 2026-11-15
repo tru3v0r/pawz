@@ -1,12 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "pawz default shortcuts for one context",
-  "description": "Shortcuts a new settings file starts with. Without apps or sites they apply everywhere; with apps (executable names) or sites (domains), only there. A trigger is a logical button (SOUTH, LEFT_TRIGGER...), a chord joined by + (LEFT_TRIGGER+SOUTH) or a stick direction (RIGHT_STICK_LEFT, RIGHT_STICK_RIGHT). A shortcut is an action id, or an object: keys alone is a keyboard shortcut; added, the id of a later addition, also gives it once to settings saved before.",
+  "description": "Shortcuts a new settings file starts with. Without apps, browsers or sites they apply everywhere; with apps (executable names), browsers (every browser of applications.json) or sites (domains), only there. A trigger is a logical button (SOUTH, LEFT_TRIGGER...), a chord joined by + (LEFT_TRIGGER+SOUTH) or a stick direction (RIGHT_STICK_LEFT, RIGHT_STICK_RIGHT). A shortcut is an action id, or an object: keys alone is a keyboard shortcut; added, the id of a later addition, also gives it once to settings saved before.",
   "type": "object",
   "required": ["description", "shortcuts"],
   "additionalProperties": false,
   "properties": {
     "description": {"type": "string"},
+    "browsers": {"const": true, "description": "Every browser of applications.json."},
     "apps": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^[^A-Z]+\\.exe$"}},
     "sites": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^[a-z0-9.-]+$"}},
     "shortcuts": {
@@ -31,5 +32,5 @@
       }
     }
   },
-  "not": {"required": ["apps", "sites"]}
+  "not": {"anyOf": [{"required": ["apps", "sites"]}, {"required": ["browsers", "sites"]}]}
 }

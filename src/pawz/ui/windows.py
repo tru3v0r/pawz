@@ -66,7 +66,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from pawz import APP_NAME, APP_VERSION
+from pawz import APP_NAME, APP_VERSION, applications
 from pawz.core.controller_catalog import ControllerCatalog
 from pawz.core.controller_services import resolve_model
 from pawz.core.controllers import battery_percentage
@@ -664,9 +664,7 @@ class ProfileEditor(QWidget):
 
     @staticmethod
     def _application_name(executable: str) -> str:
-        names = {"brave.exe": "Brave", "firefox.exe": "Firefox", "chrome.exe": "Chrome",
-                 "msedge.exe": "Edge", "vlc.exe": "VLC"}
-        return names.get(executable.lower(), Path(executable).stem)
+        return applications.display_name(executable)
 
     @staticmethod
     def _application_icon(executable: str) -> QIcon:
@@ -675,18 +673,8 @@ class ProfileEditor(QWidget):
             Path(os.environ.get("ProgramFiles(x86)", "C:\\Program Files (x86)")),
             Path(os.environ.get("LOCALAPPDATA", "")),
         )
-        subpaths = {
-            "brave.exe": ("BraveSoftware/Brave-Browser/Application/brave.exe",),
-            "firefox.exe": ("Mozilla Firefox/firefox.exe",),
-            "chrome.exe": ("Google/Chrome/Application/chrome.exe",),
-            "msedge.exe": ("Microsoft/Edge/Application/msedge.exe",),
-            "vlc.exe": ("VideoLAN/VLC/vlc.exe",),
-        }
-        candidates = [
-            root / relative
-            for root in roots
-            for relative in subpaths.get(executable.lower(), ())
-        ]
+        candidates = [root / relative for root in roots
+                      for relative in applications.install_paths(executable)]
         application_path = next((path for path in candidates if path.is_file()), None)
         if application_path is None or os.name != "nt":
             return QIcon()
