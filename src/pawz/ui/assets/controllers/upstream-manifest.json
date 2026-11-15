@@ -808,5 +808,14 @@
     "file": "library/steam-deck.svg",
     "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Asset-Pack/a6d1113b0b3b2438bbbcb08a33f9a25eb2391d7c/Connection%20Icon%20Pack/Controller%20Type/SVG/VSCView%20Steam%20Deck.svg",
     "sha256": "c5b9d9ab248a5480c16599bc6323e4ad69ae9ff0b5d4697d14a8ab30380cf995"
+  },
+  {
+    "file": "library/switch-pro-detailed.svg",
+    "url": "https://raw.githubusercontent.com/AL2009man/Gamepad-Asset-Pack/a6d1113b0b3b2438bbbcb08a33f9a25eb2391d7c/Controller%20Asset%20Pack/Nintendo%20Switch%20Controller%20Images/Switch%20Pro%20Controller/Default%20Theme/Theme%20SVG/Switch%20Pro%20Controller%20VSCView.svg",
+    "upstream_sha256": "4a8b5c1d6b509120b0914f2fa62e7bb80f2db96bd6ecc1e772a0143f0ab6bed2",
+    "removed_layers": [
+      "Nintendo Switch Logo"
+    ],
+    "sha256": "484c28b0112edd9eb3e54303ca3ce4cf8747ef940882e0a9d6277c5202cff28a"
   }
 ]

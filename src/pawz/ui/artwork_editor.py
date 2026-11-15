@@ -70,6 +70,7 @@ class Element:
     id: str
     bounds: QRectF  # in the drawing's user units
     kind: str = ""  # SVG tag
+    label: str = ""  # Inkscape layer name, if the artist gave one
 
 
 def bundled_relative(path: Path) -> str | None:
@@ -121,7 +122,8 @@ def elements_of(text: str) -> list[Element]:
         if not hidden and tag in SELECTABLE and element_id and renderer.elementExists(element_id):
             bounds = renderer.transformForElement(element_id).mapRect(renderer.boundsOnElement(element_id))
             if bounds.width() > 0 and bounds.height() > 0:
-                found.append(Element(element_id, bounds, tag))
+                found.append(Element(element_id, bounds, tag,
+                                     node.get("{http://www.inkscape.org/namespaces/inkscape}label") or ""))
         for child in node:
             visit(child, hidden)
 
@@ -214,8 +216,9 @@ class DrawingPicker(QWidget):
 class InputNamesDialog(QDialog):
     """Assign logical inputs to the elements of an illustration, then save."""
 
-    def __init__(self, path: Path, parent=None):
+    def __init__(self, path: Path, parent=None, family: str | None = None):
         super().__init__(parent)
+        self.family = family  # controller family, for printed button letters
         self.setWindowTitle(tr("Name inputs"))
         self.setObjectName("inputNamesDialog")
         self.resize(760, 460)
@@ -317,7 +320,8 @@ class InputNamesDialog(QDialog):
             QMessageBox.warning(self, tr("Auto-detect"), str(exc))
             return
         found = detect([(element.id, element.kind, element.bounds.x(), element.bounds.y(),
-                         element.bounds.width(), element.bounds.height()) for element in self.elements], rules)
+                         element.bounds.width(), element.bounds.height(), element.label)
+                        for element in self.elements], rules, self.family)
         manual = set(self.names.values()) - {self.names[element] for element in self.confidence
                                               if element in self.names}
         for element_id, (logical, percent) in found.items():

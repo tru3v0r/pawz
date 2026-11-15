@@ -34,7 +34,8 @@ The main window lights up held buttons where they are drawn when the drawing nam
 
 - Imported drawings are renamed in place.
 - Bundled drawings stay untouched: the renamed copy goes to `%APPDATA%\pawz\artwork\` and is used instead. For Gamepad Asset Pack files, a second copy goes to `%APPDATA%\pawz\asset-pack-names\` at its path in that repository (`Connection Icon Pack/Controller Type/SVG/…`), ready for a pull request.
-- pawz ships named copies of eight silhouettes (see [Assets](ASSETS.md)), so the live display works without naming anything.
+- pawz ships named copies of eight silhouettes and of the detailed Switch Pro, whose shoulders and triggers light up too (see [Assets](ASSETS.md)), so the live display works without naming anything.
+- The detailed Switch Pro has no asset-pack copy for pull requests: its stored file lacks the upstream logo layer, so it would not be a names-only change.
 
 **Auto-detect** guesses the inputs from the positions and sizes of the elements and shows a confidence percentage for each. Names you chose by hand are kept; a manual change replaces a guess.
 
@@ -50,13 +51,15 @@ Positions are fractions of the box around all shapes (`x` 0 left to 1 right, `y`
 
 | Type | Finds | Main parameters |
 |---|---|---|
+| `labels` | layers the artist named ("ZR Trigger", "L Bumper", "X Button"): the most reliable rule, so it runs first | `patterns` (input → regular expression on the whole layer name, case-insensitive); `face_letters` per family (`nintendo`, `xbox`, `playstation`) and `face_pattern`, since a printed letter means a different position on each family; without a family, letters are left to the geometric rules |
 | `diamond` | four shapes left/right/top/bottom around one centre: face buttons, d-pad arrows | `region`, `shape` (`round`, `not-round`, `any`), `max_size`, `size_tolerance`, `alignment_tolerance`; `mirror_of` (a rule id), `mirror_tolerance`, `mirror_y_tolerance` to require the mirror image of another group; `inputs` by `left`/`right`/`top`/`bottom` |
 | `sticks` | the right stick (right half, nearest the face buttons) and the left one (left half, same size; mirror symmetry is a bonus) | `face_ratio` (size range in face-button sizes), `shape`, `size_tolerance`, `mirror_tolerance`, `inputs` by `right`/`left` |
 | `mirror` | one shape where a reference would be, mirrored left-right: a one-piece d-pad | `mirror_of` (inputs or rule ids, tried in order), `region`, `face_ratio`, `tolerance`, `prefer_shape`, `input` |
+| `top_pairs` | wide shapes mirrored at the top of the drawing, topmost first: triggers (behind), then bumpers; a single pair is taken for the bumpers | `region`, `min_aspect` (width / height), `tolerance`, `pairs` |
 | `centre_pairs` | small shapes mirrored around the centre line, widest pair first | `region`, `face_ratio`, `tolerance`, `pairs` (a list of `[left, right]` inputs) |
-| `centre_single` | one shape on the centre line: Guide, a touchpad | `region`, `face_ratio` or `min_width`/`max_width`, `shape`, `tolerance`, `input` |
+| `centre_single` | one shape on the centre line: Guide, a touchpad | `region`, `face_ratio` or `min_width`/`max_width`, `max_aspect`, `shape`, `tolerance`, `input` |
 
-`face_ratio` sizes are relative to the face buttons the first `diamond` rule found (the `face-buttons` rule). A new kind of pattern needs a new rule type in `src/pawz/engine/auto_detect.py`; new rules of the existing types only need the JSON. `tests/test_auto_detect.py` runs the rules on the bundled silhouettes: the Switch Pro result must match the names given by hand.
+`face_ratio` sizes are relative to the face buttons the first `diamond` rule found (the `face-buttons` rule). Name inputs passes the model's family, so the `labels` rule can read printed letters. A new kind of pattern needs a new rule type in `src/pawz/engine/auto_detect.py`; new rules of the existing types only need the JSON. `tests/test_auto_detect.py` runs the rules on the bundled silhouettes: the Switch Pro result must match the names given by hand.
 
 Artwork is resolved in this order: the device's own choice, the model's drawing, its family's, the generic one. For a bundled drawing, a copy with named inputs is used when there is one: yours in `%APPDATA%\pawz\artwork\`, then the one shipped with pawz. A disconnected device keeps a dimmed drawing. **Forget** removes its settings, mapping and profile assignment.
 

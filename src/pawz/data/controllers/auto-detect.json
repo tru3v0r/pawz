@@ -14,6 +14,32 @@
            "max_size": 0.6, "min_size": 0.02},
   "rules": [
     {
+      "id": "layer-names",
+      "type": "labels",
+      "comment": "Layers the artist named, matched whole and case-insensitively. Face-button letters depend on the family; a drawing without a family leaves them to the geometric rules.",
+      "patterns": {
+        "LEFT_TRIGGER": "^(zl|lt|l2)( trigger)?$|^left trigger$",
+        "RIGHT_TRIGGER": "^(zr|rt|r2)( trigger)?$|^right trigger$",
+        "LEFT_SHOULDER": "^(l|lb|l1)( bumper| button)?$|^left (bumper|shoulder)$",
+        "RIGHT_SHOULDER": "^(r|rb|r1)( bumper| button)?$|^right (bumper|shoulder)$",
+        "LEFT_STICK": "^left (joystick|analog stick|thumbstick|stick)$|^(l3|ls)$",
+        "RIGHT_STICK": "^right (joystick|analog stick|thumbstick|stick)$|^(r3|rs)$",
+        "DPAD": "^d-?pad$",
+        "BACK": "^(minus|select|back|view)( button)?$",
+        "START": "^(plus|start|menu|options)( button)?$",
+        "GUIDE": "^(home|guide|ps|xbox)( button)?$",
+        "MISC1": "^capture( button)?$",
+        "TOUCHPAD": "^touch ?pad$"
+      },
+      "face_pattern": "^{letter}( button)?$",
+      "face_letters": {
+        "nintendo": {"A": "EAST", "B": "SOUTH", "X": "NORTH", "Y": "WEST"},
+        "xbox": {"A": "SOUTH", "B": "EAST", "X": "WEST", "Y": "NORTH"},
+        "playstation": {"Cross": "SOUTH", "Circle": "EAST", "Square": "WEST", "Triangle": "NORTH"}
+      },
+      "confidence": 0.98
+    },
+    {
       "id": "face-buttons",
       "type": "diamond",
       "comment": "Four same-size buttons in a diamond on the right half.",
@@ -64,6 +90,16 @@
       "confidence": 0.85
     },
     {
+      "id": "shoulders-and-triggers",
+      "type": "top_pairs",
+      "comment": "Wide shapes mirrored at the top of the drawing, topmost first: the triggers sit behind the bumpers. A single pair is taken for the bumpers.",
+      "region": {"y_max": 0.2},
+      "min_aspect": 1.6,
+      "tolerance": 0.06,
+      "pairs": [["LEFT_TRIGGER", "RIGHT_TRIGGER"], ["LEFT_SHOULDER", "RIGHT_SHOULDER"]],
+      "confidence": 0.85
+    },
+    {
       "id": "centre-pairs",
       "type": "centre_pairs",
       "comment": "Small buttons mirrored around the centre: the widest pair is Back/Start (minus/plus, share/options), the next Misc/Guide (capture/home).",
@@ -86,10 +122,11 @@
     {
       "id": "touchpad",
       "type": "centre_single",
-      "comment": "A wide rectangle centred near the top: a touchpad.",
+      "comment": "A wide rectangle centred near the top: a touchpad (not a thin strip such as the top of the shoulders).",
       "region": {"y_max": 0.45},
       "min_width": 0.2,
       "max_width": 0.6,
+      "max_aspect": 4,
       "shape": "not-round",
       "tolerance": 0.05,
       "input": "TOUCHPAD",

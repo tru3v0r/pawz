@@ -54,7 +54,7 @@ def test_naming_a_bundled_drawing_saves_a_used_copy_and_an_asset_pack_copy(qtbot
     assert pr_copy.read_text(encoding="utf-8") == saved.read_text(encoding="utf-8")
     assert 'id="SOUTH"' not in SWITCH_PRO.read_text(encoding="utf-8")  # bundled file untouched
     model = next(m for m in load_builtin_catalog() if m.id == "nintendo.switch-pro")
-    assert resolve_artwork(model) == saved  # pawz now uses the named copy
+    assert resolve_artwork(model, "asset:library/switch-pro.svg") == saved  # the named copy is used
 
 
 def test_imported_illustrations_are_renamed_in_place(qtbot, folders, tmp_path):

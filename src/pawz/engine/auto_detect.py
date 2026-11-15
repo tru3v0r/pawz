@@ -9,6 +9,7 @@ from __future__ import annotations
 import itertools
 import json
 import math
+import re
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -42,9 +43,9 @@ def load_rules(*paths: Path) -> dict:
     raise FileNotFoundError("No auto-detect rules file")
 
 
-def shapes_from_bounds(elements: list[tuple[str, str, float, float, float, float]],
-                       rules: dict) -> list[Shape]:
-    """``(id, kind, x, y, width, height)`` in drawing units -> shapes relative to the body.
+def shapes_from_bounds(elements: list[tuple], rules: dict) -> list[Shape]:
+    """``(id, kind, x, y, width, height[, label])`` in drawing units -> shapes relative to
+    the box around them all.
 
     The reference frame is the box around every shape (the body, or both Joy-Con);
     elements larger than ``body.max_size`` of it (the body, outlines, rails) or smaller
@@ -59,7 +60,7 @@ def shapes_from_bounds(elements: list[tuple[str, str, float, float, float, float
     bh = max(element[3] + element[5] for element in solid) - by
     limits = rules.get("body", {})
     shapes = []
-    for element_id, kind, x, y, width, height in solid:
+    for element_id, kind, x, y, width, height, *_ in solid:
         size = max(width, height) / bw
         if not limits.get("min_size", 0) <= size <= limits.get("max_size", 0.6):
             continue
@@ -89,8 +90,10 @@ def _shape_ok(shape: Shape, wanted: str | None) -> float:
 
 
 class Detector:
-    def __init__(self, rules: dict):
+    def __init__(self, rules: dict, family: str | None = None, labels: dict[str, str] | None = None):
         self.rules = rules
+        self.family = family  # controller family: decides what a printed letter means
+        self.labels = labels or {}  # element id -> Inkscape layer name
         self.found: dict[str, tuple[str, float]] = {}  # element id -> (input, score 0..1)
         self.groups: dict[str, tuple[float, float]] = {}  # rule id -> centre found
         self.face_size: float | None = None
@@ -119,6 +122,52 @@ class Detector:
         return low * face, high * face
 
     # -- rule types -----------------------------------------------------------------
+
+    def _labels(self, rule: dict, shapes: list[Shape]):
+        """Layers the artist named: "ZR Trigger", "L Bumper", "X Button"...
+
+        Printed face-button letters depend on the family (X is the top button on a
+        Nintendo controller, the left one on an Xbox one); without a family they are
+        left to the geometric rules.
+        """
+        patterns = {name: re.compile(pattern, re.IGNORECASE) for name, pattern in rule.get("patterns", {}).items()}
+        letters = rule.get("face_letters", {}).get(self.family or "", {})
+        face_pattern = rule.get("face_pattern", "^{letter}( button)?$")
+        for letter, name in letters.items():
+            patterns.setdefault(name, re.compile(face_pattern.format(letter=re.escape(letter)), re.IGNORECASE))
+        for element_id, label in self.labels.items():
+            for name, pattern in patterns.items():
+                if pattern.search(label.strip()) and not self._taken(name):
+                    self.found[element_id] = (name, rule.get("confidence", 1))
+                    break
+
+    def _top_pairs(self, rule: dict, shapes: list[Shape]):
+        """Wide shapes mirrored around the centre at the top of the drawing, topmost first:
+        the triggers sit behind (higher), the bumpers in front. A single pair is taken
+        for the bumpers, the ones a front view always shows."""
+        region = rule.get("region", {})
+        pool = [shape for shape in shapes if _in_region(shape, region)
+                and shape.width >= rule.get("min_aspect", 1.5) * shape.height]
+        tolerance = rule.get("tolerance", 0.06)
+        pairs = []
+        for a, b in itertools.combinations(pool, 2):
+            left, right = sorted((a, b), key=lambda shape: shape.x)
+            error = math.hypot(left.x + right.x - 1, (left.y - right.y) * left.aspect)
+            size_error = abs(left.size - right.size) / max(left.size, right.size)
+            if right.x - left.x > 0.2 and error < tolerance and size_error < 0.25:
+                pairs.append(((left.y + right.y) / 2, left, right, _fit(error, tolerance) * (1 - size_error)))
+        chosen, used = [], set()
+        for _, left, right, score in sorted(pairs, key=lambda pair: pair[0]):  # topmost first
+            if left.id not in used and right.id not in used:
+                chosen.append((left, right, score))
+                used |= {left.id, right.id}
+        names = rule["pairs"]
+        if len(chosen) == 1:  # one pair: bumpers, with less certainty
+            names = names[-1:]
+            chosen = [(left, right, score * 0.7) for left, right, score in chosen]
+        for (left, right, score), pair_names in zip(chosen, names):
+            for shape, name in zip((left, right), pair_names):
+                self._assign(shape, name, score * rule.get("confidence", 1))
 
     def _diamond(self, rule: dict, shapes: list[Shape]):
         """Four shapes: one left, one right, one top, one bottom around a common centre."""
@@ -243,6 +292,7 @@ class Detector:
         low, high = self._face_range(rule)
         pool = [shape for shape in shapes if _in_region(shape, rule.get("region", {}))
                 and _shape_ok(shape, rule.get("shape")) > 0
+                and shape.width <= rule.get("max_aspect", 99) * shape.height
                 and (("min_width" in rule and rule["min_width"] <= shape.width <= rule.get("max_width", 1))
                      or ("min_width" not in rule and low <= shape.size <= high))]
         tolerance = rule.get("tolerance", 0.03)
@@ -262,6 +312,11 @@ class Detector:
         return self._positions_store
 
 
-def detect(elements: list[tuple[str, str, float, float, float, float]], rules: dict) -> dict[str, tuple[str, int]]:
-    """``{element id: (input, confidence %)}`` for the elements the rules recognise."""
-    return Detector(rules).run(shapes_from_bounds(elements, rules))
+def detect(elements: list[tuple], rules: dict, family: str | None = None) -> dict[str, tuple[str, int]]:
+    """``{element id: (input, confidence %)}`` for the elements the rules recognise.
+
+    ``elements`` are ``(id, kind, x, y, width, height[, label])``; ``family`` is the
+    controller family (``nintendo``, ``xbox``, ``playstation``...), used by label rules.
+    """
+    labels = {element[0]: element[6] for element in elements if len(element) > 6 and element[6]}
+    return Detector(rules, family, labels).run(shapes_from_bounds(elements, rules))

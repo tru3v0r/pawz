@@ -1790,6 +1790,24 @@ class ControllerArtwork(QWidget):
                       rect.y() + (bounds.y() - view.y()) * scale_y,
                       bounds.width() * scale_x, bounds.height() * scale_y)
 
+    def _glow(self, painter: QPainter, element: str, area: QRectF, color: QColor):
+        """Paint ``element`` again over itself, filled with ``color``: an exact-shape glow."""
+        ratio = self.devicePixelRatioF()
+        image = QImage(max(1, round(area.width() * ratio)), max(1, round(area.height() * ratio)),
+                       QImage.Format.Format_ARGB32_Premultiplied)
+        image.fill(Qt.GlobalColor.transparent)
+        shape = QPainter(image)
+        shape.setRenderHint(QPainter.RenderHint.Antialiasing)
+        self.svg_renderer.render(shape, element, QRectF(0, 0, image.width(), image.height()))
+        shape.setCompositionMode(QPainter.CompositionMode.CompositionMode_SourceIn)
+        shape.fillRect(image.rect(), color)
+        shape.end()
+        image.setDevicePixelRatio(ratio)
+        painter.save()
+        painter.setOpacity(0.8)
+        painter.drawImage(area.topLeft(), image)
+        painter.restore()
+
     def _prompt(self, logical: str) -> QSvgRenderer:
         key = (logical, self.model.id if self.model else "")
         if key not in self._prompt_renderers:
@@ -1810,11 +1828,9 @@ class ControllerArtwork(QWidget):
         glow = QColor(accent)
         glow.setAlpha(150)
         for logical in sorted(pressed, key=lambda name: BUTTONS.index(name) if name in BUTTONS else 99):
-            if logical in self.named_elements:  # light up the button where it is drawn
-                area = self._element_rect(self.named_elements[logical], rect)
-                painter.setPen(QPen(accent, 1.5))
-                painter.setBrush(glow)
-                painter.drawEllipse(area.adjusted(-1, -1, 1, 1))
+            if logical in self.named_elements:  # light up the button, in its own shape
+                self._glow(painter, self.named_elements[logical], self._element_rect(
+                    self.named_elements[logical], rect), accent)
             elif logical in DPAD_ARMS and "DPAD" in self.named_elements:  # its arm of the cross
                 arm = dpad_arm(self._element_rect(self.named_elements["DPAD"], rect), logical)
                 painter.setPen(QPen(accent, 1.5))

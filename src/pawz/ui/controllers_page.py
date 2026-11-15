@@ -536,7 +536,7 @@ class ControllersPage(QWidget):
     def name_inputs(self):
         definition = self.catalog.get(self.model.currentData())
         path = resolve_artwork(definition, self.preferences().get("svg"))
-        if path is not None and InputNamesDialog(path, self).exec() == QDialog.DialogCode.Accepted:
+        if path is not None and InputNamesDialog(path, self, definition.family).exec() == QDialog.DialogCode.Accepted:
             self.refresh()
 
     def choose_svg(self):

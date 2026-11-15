@@ -104,3 +104,13 @@ def test_display_tab_previews_the_style_and_restores_it_on_cancel(qtbot):
     assert not dialog.display_note.isVisible() and not dialog.display_changed()  # no restart needed
     dialog.reject()
     assert styles.current() == styles.EYE_CANDY
+
+
+def test_eye_candy_keeps_small_glyphs_light_and_unoutlined():
+    path = ASSET_DIR / "library" / "switch-pro-detailed.svg"
+    svg = styles.styled(path.read_text(encoding="utf-8"), styles.EYE_CANDY, TURQUOISE)
+    root = ET.fromstring(svg)
+    letter = next(node for node in root.iter() if node.get("id") == "path5694")  # the X on its button
+    style = styles._style_map(letter)
+    assert style["stroke"] == "none"
+    assert style["fill"] == themes.map_color(themes.BUTTON_OUTLINE, TURQUOISE.id)

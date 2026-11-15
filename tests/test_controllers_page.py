@@ -296,4 +296,4 @@ def test_named_drawings_ship_and_differ_from_the_originals_only_by_names():
         assert without_names(text) == without_names(original), path.name
         assert re.search(r'\bid="(SOUTH|EAST|LEFT_STICK)"', text), path.name
     model = next(model for model in load_builtin_catalog() if model.id == "nintendo.switch-pro")
-    assert resolve_artwork(model) == NAMED_DIR / "library" / "switch-pro.svg"
+    assert resolve_artwork(model) == NAMED_DIR / "library" / "switch-pro-detailed.svg"

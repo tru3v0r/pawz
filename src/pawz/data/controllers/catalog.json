@@ -369,7 +369,7 @@
         "NORTH": "X"
       },
       "hardware_mapping": {},
-      "svg": "library/switch-pro.svg",
+      "svg": "library/switch-pro-detailed.svg",
       "verified": false,
       "provenance": "Presentation only; hardware mapping delegated to installed SDL2. https://github.com/libsdl-org/SDL/blob/SDL2/include/SDL_gamecontroller.h; no device verified by pawz."
     },
