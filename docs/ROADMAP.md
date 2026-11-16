@@ -11,9 +11,18 @@ Where pawz is going, one version at a time. It is a plan, not a promise: version
 ## 0.2.0 — On-screen keyboard and finding the pointer
 Typing without a keyboard: an address bar, a search, a file name. It comes first because the later features need it.
 - A keyboard drawn by pawz over the active window, without taking focus away from it.
-- A layout that follows the interface or Windows language (AZERTY, QWERTY, QWERTZ…), with layouts described in `data/`.
+- A classic layout that follows the language: AZERTY by default in French and the other languages that use it, QWERTY in those that use QWERTY (and QWERTZ…), with layouts described in `data/`.
 - Keys chosen with the stick or the D-pad, typed with a face button; shortcuts for space, backspace, Enter, Shift and closing.
 - Opened by a shortcut, and offered automatically when a text field takes focus (if Windows reports it reliably).
+- Keyboard languages, a setting in the Display tab under the interface language: the interface language by default, others can be added; the chosen languages are shown below the field as tags, each removable. A key on the keyboard switches from one language's layout to the next.
+
+Typing modes, so each user can pick the one that suits them best. The mode is chosen in the settings; the classic keyboard is the default.
+- **Classic**: the keys of the language's layout, as above.
+- **Spiral**: the letters from A to Z laid out on a spiral. Left and right move along the spiral's thread; the spiral turns, and the selected letter always stays in the centre. Up and down jump to the next or previous arm. The alphabet has landmark letters: L + left or right jumps from one vowel to the next.
+- **Flick**: inspired by Japanese flick input, where a key is pressed and pushed in a direction to choose among the characters it holds. For the kana, each key holds a consonant and the directions give its five vowels. **To decide**: an equivalent for the Latin alphabet, for example keys holding a group of letters, or keys built around the vowels.
+
+Choosing a language:
+- The language lists (interface and keyboard) can be searched by typing: only the matching languages stay, with the typed text shown in bold in their names.
 
 Finding the pointer on a large or distant screen:
 - Clicking the left stick draws circles in the theme's main colour that shrink onto the pointer, on any screen and at any scaling, without catching clicks.
