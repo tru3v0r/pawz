@@ -93,11 +93,19 @@ The stylesheet (`CSS` in `ui/windows.py`), inline styles and icons are written i
 - `update-logo.py`: rebuilds `src/pawz/ui/assets/logo.svg` (framed square, PowerPoint's invisible text layer removed) and `logo.ico` from `design/logo/logo.svg`; `design/` (git-ignored) holds the working files.
 - `vendor-controller-assets.py`: downloads the pinned Gamepad Prompt Asset Pack and Gamepad Asset Pack files and rewrites `upstream-manifest.json`. What it fetches is in `scripts/vendor-controller-assets.json`: the pinned revisions, the prompt folders, the silhouettes, and the detailed drawings with what changes in them, by Inkscape label or element id: elements removed (logos, a chroma-key screen) and hidden layers shown (`show:`), recorded in the manifest. Never run by the app.
 - `generate-controller-illustrations.py`: redraws the four pawz controller drawings and the axis icons.
+- `bump-version.py`: releases a new version (below).
 
 ## Build
 `powershell -ExecutionPolicy Bypass -File scripts\build-windows.ps1`
 
 PyInstaller must run **on Windows**. The build is a `onedir` distribution in `dist\pawz` (do not move the `.exe` alone), with the docs, the example settings, the extension and the licence copied next to it. `pawz.spec` only ships what pawz uses: Qt Core/Gui/Widgets/Svg, the controller part of pygame and Qt's own translations for the target languages. `scripts/test-build-windows.ps1` then starts the executable from `%TEMP%` with isolated settings and checks the catalogue, schema, SVGs and fonts; it catches a library removed by mistake. If the build cannot empty `dist\pawz` ("being used by another process"), close pawz, Explorer windows on that folder and any sync client watching it, or rename the folder aside.
+
+## Versions and releases
+Versions follow [Semantic Versioning](https://semver.org/); while pawz is in 0.x, a new feature raises the middle number and fixes raise the last one. The plan is in [ROADMAP.md](ROADMAP.md), what each version changed in [CHANGELOG.md](../CHANGELOG.md).
+
+- The version is written once, `APP_VERSION` in `src/pawz/__init__.py`; `pyproject.toml` reads it (`[tool.setuptools.dynamic]`). The browser extension has its own version in `browser-extension/manifest.json`, raised when the extension changes.
+- Every notable change gets a line under **Unreleased** in `CHANGELOG.md`, in the commit that makes it.
+- To release: `python scripts/bump-version.py 0.2.0` sets `APP_VERSION`, turns Unreleased into `## [0.2.0] - <date>` and updates the comparison links. It refuses a version that is not higher or an empty Unreleased section. Then build, commit (`Release 0.2.0`), tag `v0.2.0` (annotated) and push the branch and the tag.
 
 ## Settings file
 `schema_version` 2, with a backup and migration from v1. `profiles` maps names to rules; `assignments` maps a registered device id to a profile name (old `GUID#occurrence` keys stay readable). `known_devices` remembers discovered controllers. `game_mode_auto`, `games` and `non_games` drive game mode. `language` is `auto` or a language code; `theme` is `comfy_turquoise`, `danger_red` or `midnight_blue`; `controller_style` is `eye_candy`, `dark`, `light` or `original`. `browser_token` is generated on first launch: never publish a settings file containing it. `config/example-settings.json` shows the defaults.

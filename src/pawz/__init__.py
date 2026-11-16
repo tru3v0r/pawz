@@ -7,7 +7,7 @@ import os
 
 APP_NAME = "pawz"  # shown to the user
 APP_ID = "pawz"  # settings folder, startup entry, identifiers
-APP_VERSION = "0.1.0"  # keep in step with pyproject.toml
+APP_VERSION = "0.1.0"  # the only place it is written: pyproject.toml reads it; see scripts/bump-version.py
 PREVIOUS_IDS = ("squidz",)  # earlier names: settings and startup entry are migrated
 ENV_PREFIX = APP_ID.upper() + "_"  # PAWZ_DATA_DIR, PAWZ_MAGNET_TRACE...
 
